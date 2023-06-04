@@ -19,6 +19,7 @@ public class Launcher extends Application {
             Stage stage = new Stage();
             Scene scene = new Scene(fxmlLoader.load(), width, height);
             stage.setTitle("Nuclear Throne");
+            stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

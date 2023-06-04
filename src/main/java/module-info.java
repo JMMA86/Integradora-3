@@ -1,7 +1,7 @@
 module com.nt.throne {
     requires javafx.controls;
     requires javafx.fxml;
-
+    requires javafx.media;
 
     opens com.nt.throne to javafx.fxml;
     exports com.nt.throne;
