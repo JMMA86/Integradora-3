@@ -1,5 +1,6 @@
 package com.nt.throne;
 
+import com.nt.throne.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,7 +14,7 @@ public class Launcher extends Application {
         renderView("main-menu-view.fxml", 1280, 720);
     }
 
-    public FXMLLoader renderView(String fxml, int width, int height) {
+    public void renderView(String fxml, int width, int height) {
         FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource(fxml));
         try {
             Stage stage = new Stage();
@@ -21,11 +22,15 @@ public class Launcher extends Application {
             stage.setTitle("Nuclear Throne");
             stage.setResizable(false);
             stage.setScene(scene);
+            stage.setOnCloseRequest(windowEvent -> {
+                MainController controller = fxmlLoader.getController();
+                controller.setRunning(false);
+
+            });
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return fxmlLoader;
     }
 
     public static void main(String[] args) {
