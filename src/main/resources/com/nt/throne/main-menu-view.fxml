@@ -17,7 +17,8 @@
             <Text fx:id="playBtn" fill="WHITE" text="Play" visible="false"/>
             <Text fx:id="skinBtn" fill="WHITE" text="Skins" visible="false"/>
             <Text fx:id="exitBtn" fill="WHITE" text="Exit" visible="false"/>
-            <Text fx:id="loadingText" fill="WHITE" text="Loading..."/>
         </VBox>
+        <Canvas fx:id="loader" height="720" width="1280"/>
+        <Text fx:id="loadingText" fill="WHITE" text="Loading..."/>
     </StackPane>
 </AnchorPane>

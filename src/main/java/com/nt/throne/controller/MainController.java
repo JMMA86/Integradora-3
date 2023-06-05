@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
+    @FXML
+    private Canvas loader;
     @FXML
     private Text loadingText;
     @FXML
@@ -53,12 +56,15 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Attributes initialization
-        isRunning = true;
         screens = new ArrayList<>();
         screens.add(new MenuScreen(this.canvas));
         canvas.setFocusTraversable(true);
         videoReady = false;
         audioReady = false;
+        isRunning = true;
+        screens.get(0).getGraphicsContext().setFill(Color.BLACK);
+        loader.getGraphicsContext2D().fillRect(0,0,1280,720);
+        loader.getGraphicsContext2D().setFill(Color.BLACK);
 
         //Fonts
         InputStream inputStream = null;
@@ -78,16 +84,15 @@ public class MainController implements Initializable {
         File videoPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/MenuVideo.mp4");
         String fullVideoPath = videoPath.toURI().toString();
         videoMediaPlayer = new MediaPlayer(new Media(fullVideoPath));
-        videoBackground.setMediaPlayer(videoMediaPlayer);
         videoMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
         //Song
         File songPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/music.mp3");
         String fullSongPath = songPath.toURI().toString();
         songMediaPlayer = new MediaPlayer(new Media(fullSongPath));
+        songMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
         //Loading screen
-        screens.get(0).getGraphicsContext().setGlobalAlpha(1);
         videoMediaPlayer.setOnReady(() -> {
             videoReady = true;
         });
@@ -100,7 +105,9 @@ public class MainController implements Initializable {
                 if (videoReady && audioReady) {
                     pause(1000);
                     playResources();
+                    pause(1000);
                     loadingText.setVisible(false);
+                    loader.setVisible(false);
                     playBtn.setVisible(true);
                     skinBtn.setVisible(true);
                     exitBtn.setVisible(true);
@@ -145,7 +152,7 @@ public class MainController implements Initializable {
     }
 
     public void playResources() {
-        screens.get(0).getGraphicsContext().setGlobalAlpha(0.01);
+        videoBackground.setMediaPlayer(videoMediaPlayer);
         videoMediaPlayer.play();
         songMediaPlayer.play();
     }
