@@ -25,6 +25,8 @@ import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
     @FXML
+    private VBox skinSelector;
+    @FXML
     private VBox skinItems;
     @FXML
     private Text skinTitle;
@@ -130,7 +132,10 @@ public class MainMenuController implements Initializable {
             }
         }).start();
 
+        //Events
         initEvents();
+        skinSelector.setOnMouseClicked(event -> screens.get(1).onMouseClicked(event));
+        skinSelector.setOnMouseMoved(event -> screens.get(1).onMouseMoved(event));
 
         //Opacities
         playBtn.setOnMouseEntered(event -> playBtn.setOpacity(0.5));
@@ -161,6 +166,7 @@ public class MainMenuController implements Initializable {
 
     public void changeSkin() {
         SCREEN = 1;
+        initEvents();
         timer = 100;
         menuItems.setVisible(false);
         menuItems.setManaged(false);
@@ -170,6 +176,7 @@ public class MainMenuController implements Initializable {
 
     public void returnMenu() {
         SCREEN = 0;
+        initEvents();
         timer = 50;
         screens.get(1).getGraphicsContext().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         menuItems.setVisible(true);
@@ -194,14 +201,13 @@ public class MainMenuController implements Initializable {
     private void pause(int milliseconds){
         try {
             Thread.sleep(milliseconds);
-        }catch (InterruptedException e){
+        } catch (InterruptedException e){
             e.printStackTrace();
         }
     }
 
     public void initEvents() {
         canvas.setOnMousePressed(event -> screens.get(SCREEN).onMousePressed(event));
+        canvas.setOnMouseClicked(event -> screens.get(SCREEN).onMouseClicked(event));
     }
-
-
 }

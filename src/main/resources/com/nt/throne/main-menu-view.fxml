@@ -20,8 +20,8 @@
         </VBox>
         <VBox fx:id="skinItems" alignment="CENTER" visible="false" managed="false">
             <Text fx:id="skinTitle" fill="WHITE" text="Select skin"/>
-            <VBox prefHeight="300"/>
-            <Text fx:id="returnBtn" fill="WHITE" text="Return to menu" onMouseClicked="#returnMenu"/>
+            <VBox fx:id="skinSelector" prefHeight="300"/>
+            <Text fx:id="returnBtn" fill="WHITE" text="Confirm" onMouseClicked="#returnMenu"/>
         </VBox>
         <Canvas fx:id="loader" height="720" width="1280"/>
         <Text fx:id="loadingText" fill="WHITE" text="Loading..."/>

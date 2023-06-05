@@ -27,4 +27,8 @@ public abstract class BaseScreen {
     public abstract void paint();
 
     public abstract void onMousePressed(MouseEvent event);
+
+    public abstract void onMouseClicked(MouseEvent event);
+
+    public abstract void onMouseMoved(MouseEvent event);
 }
