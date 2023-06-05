@@ -13,9 +13,6 @@ public class SkinScreen extends BaseScreen {
     private final Image rightArrow;
     private final Image rightArrowSelected;
     private boolean rightSelected;
-    private int frameWidth = 64;
-    private int frameHeight = 64;
-    private int row = 10;
     private int imageCounter = 0;
     private int skinSelected = 0;
 
@@ -47,9 +44,14 @@ public class SkinScreen extends BaseScreen {
         } else {
             graphicsContext.drawImage(rightArrowSelected, 750, 320, 62, 62);
         }
+        //Trim configuration
+        int frameWidth = 64; //Width of frame on image
+        int frameHeight = 64; //Height of frame on image
+        int row = 10; //Animation row on spriteSheet
+        int frameLimiter = 9; //Frame limiter
         graphicsContext.drawImage(moving.get(skinSelected), frameWidth * imageCounter, row * frameHeight, frameHeight, frameWidth, 580, 280, frameWidth * 2, frameHeight * 2);
         imageCounter++;
-        if (imageCounter == 9) {
+        if (imageCounter == frameLimiter) {
             imageCounter = 0;
         }
     }
