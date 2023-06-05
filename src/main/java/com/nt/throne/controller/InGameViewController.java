@@ -5,11 +5,8 @@ import com.nt.throne.screens.Pantheon;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -33,7 +30,7 @@ public class InGameViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.screens = new ArrayList<>();
-        screens.add( new Pantheon(canvas));
+        screens.add(new Pantheon(canvas));
         isRunning = true;
 
         new Thread( () -> {

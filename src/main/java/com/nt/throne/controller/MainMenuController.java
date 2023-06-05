@@ -158,8 +158,15 @@ public class MainMenuController implements Initializable {
     }
 
     public void startGame() {
-        videoMediaPlayer.stop();
+        loader.getGraphicsContext2D().setFill(Color.rgb(0,0,0,0.1));
+        loader.setVisible(true);
+        for (double i = 1; i >= 0; i -= 0.1) {
+            songMediaPlayer.setVolume(i);
+            loader.getGraphicsContext2D().setFill(Color.rgb(0,0,0,1 - i));
+            pause(100);
+        }
         songMediaPlayer.stop();
+        videoMediaPlayer.stop();
         isRunning = false;
         Launcher.renderView("in-game-view.fxml", 1280, 720);
     }
@@ -186,6 +193,8 @@ public class MainMenuController implements Initializable {
     }
 
     public void exitGame() {
+        songMediaPlayer.stop();
+        videoMediaPlayer.stop();
         isRunning = false;
         Platform.exit();
     }
