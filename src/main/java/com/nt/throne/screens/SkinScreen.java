@@ -6,32 +6,29 @@ import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
 
 public class SkinScreen extends BaseScreen {
-    private final ArrayList<ArrayList<Image>> moving;
+    private final ArrayList<Image> moving;
     private final Image leftArrow;
     private final Image leftArrowSelected;
     private boolean leftSelected;
     private final Image rightArrow;
     private final Image rightArrowSelected;
     private boolean rightSelected;
+    private int frameWidth = 64;
+    private int frameHeight = 64;
+    private int row = 10;
     private int imageCounter = 0;
     private int skinSelected = 0;
 
     public SkinScreen(Canvas canvas) {
         super(canvas);
         moving = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            moving.add(new ArrayList<>());
-        }
         leftArrow = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/leftArrow.png");
         leftArrowSelected = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/leftArrowSelected.png");
         rightArrow = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/rightArrow.png");
         rightArrowSelected = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/rightArrowSelected.png");
         leftSelected = false;
         rightSelected = false;
-        for (int i = 0; i < 9; i++) {
-            Image image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/WalkingBack/animation-" + (i+1) + ".png");
-            moving.get(0).add(image);
-        }
+        moving.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero1.png"));
     }
 
     @Override
@@ -47,7 +44,7 @@ public class SkinScreen extends BaseScreen {
         } else {
             graphicsContext.drawImage(rightArrowSelected, 750, 320, 62, 62);
         }
-        graphicsContext.drawImage(moving.get(skinSelected).get(imageCounter), 600, 280, 80, 160);
+        graphicsContext.drawImage(moving.get(skinSelected), frameWidth * imageCounter, row * frameHeight, frameHeight, frameWidth, 580, 280, frameWidth * 2, frameHeight * 2);
         imageCounter++;
         if (imageCounter == 9) {
             imageCounter = 0;
