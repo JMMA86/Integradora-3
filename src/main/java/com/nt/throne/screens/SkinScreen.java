@@ -2,6 +2,7 @@ package com.nt.throne.screens;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
 
@@ -85,5 +86,15 @@ public class SkinScreen extends BaseScreen {
         double mouseY = event.getY();
         leftSelected = mouseX > 467 && mouseX < 529 && mouseY > 110 && mouseY < 171;
         rightSelected = mouseX > 750 && mouseX < 808 && mouseY > 110 && mouseY < 171;
+    }
+
+    @Override
+    public void onKeyPressed(KeyEvent event) {
+
+    }
+
+    @Override
+    public void onKeyReleased(KeyEvent event) {
+
     }
 }
