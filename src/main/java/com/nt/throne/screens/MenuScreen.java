@@ -1,9 +1,9 @@
 package com.nt.throne.screens;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 public class MenuScreen extends BaseScreen {
     public MenuScreen(Canvas canvas) {
@@ -12,13 +12,22 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public void paint() {
-        Text text1 = new Text("HOLAAAAA");
-        graphicsContext.setFill(Color.RED);
-        graphicsContext.fillOval(100, 50, 200, 120);
+        graphicsContext.setFill(Color.BLACK);
+        graphicsContext.fillRect(0,0,1280,720);
     }
 
     @Override
     public void onMousePressed(MouseEvent event) {
 
+    }
+
+    @Override
+    public Canvas getCanvas() {
+        return super.getCanvas();
+    }
+
+    @Override
+    public GraphicsContext getGraphicsContext() {
+        return super.getGraphicsContext();
     }
 }

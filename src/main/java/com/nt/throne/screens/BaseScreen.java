@@ -16,6 +16,14 @@ public abstract class BaseScreen {
         this.graphicsContext = canvas.getGraphicsContext2D();
     }
 
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public GraphicsContext getGraphicsContext() {
+        return graphicsContext;
+    }
+
     public abstract void paint();
 
     public abstract void onMousePressed(MouseEvent event);

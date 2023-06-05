@@ -6,19 +6,28 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
     @FXML
-    private ImageView logoImage;
+    private Text playBtn;
+    @FXML
+    private Text skinBtn;
+    @FXML
+    private Text exitBtn;
     @FXML
     private Canvas canvas;
     @FXML
@@ -41,9 +50,19 @@ public class MainController implements Initializable {
         screens = new ArrayList<>();
         screens.add(new MenuScreen(this.canvas));
         canvas.setFocusTraversable(true);
-        logoImage = new ImageView();
-        Image image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/logo.png");
-        logoImage.setImage(image);
+        screens.get(0).getGraphicsContext().setGlobalAlpha(0.01);
+
+        //Fonts
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Fonts/upheavtt.ttf");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Font customFont = Font.loadFont(inputStream, 40);
+        playBtn.setFont(customFont);
+        skinBtn.setFont(customFont);
+        exitBtn.setFont(customFont);
 
         //Video
         File videoPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/MenuVideo.mp4");
@@ -57,6 +76,7 @@ public class MainController implements Initializable {
         File songPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/music.mp3");
         String fullSongPath = songPath.toURI().toString();
         songMediaPlayer = new MediaPlayer(new Media(fullSongPath));
+        songMediaPlayer.play();
 
         //Updates from other screens
         new Thread( () -> {
@@ -67,6 +87,30 @@ public class MainController implements Initializable {
         }).start();
 
         initEvents();
+
+        //Opacity
+        playBtn.setOnMouseEntered(event -> {
+            playBtn.setOpacity(0.5);
+        });
+
+        playBtn.setOnMouseExited(event -> {
+            playBtn.setOpacity(1);
+        });
+
+        skinBtn.setOnMouseEntered(event -> {
+            skinBtn.setOpacity(0.5);
+        });
+
+        skinBtn.setOnMouseExited(event ->
+                skinBtn.setOpacity(1));
+
+        exitBtn.setOnMouseEntered(event -> {
+            exitBtn.setOpacity(0.5);
+        });
+
+        exitBtn.setOnMouseExited(event -> {
+            exitBtn.setOpacity(1);
+        });
     }
 
     public void paint(){
