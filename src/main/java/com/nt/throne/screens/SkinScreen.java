@@ -28,7 +28,9 @@ public class SkinScreen extends BaseScreen {
         rightArrowSelected = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/rightArrowSelected.png");
         leftSelected = false;
         rightSelected = false;
+        //Skin charging
         moving.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero1.png"));
+        moving.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png"));
     }
 
     @Override
@@ -66,11 +68,11 @@ public class SkinScreen extends BaseScreen {
         if (mouseX > 750 && mouseX < 808 && mouseY > 110 && mouseY < 171) {
             skinSelected++;
         }
-        if (skinSelected == 3) {
+        if (skinSelected == moving.size()) {
             skinSelected = 0;
         }
         if (skinSelected == -1) {
-            skinSelected = 2;
+            skinSelected = moving.size() - 1;
         }
     }
 
