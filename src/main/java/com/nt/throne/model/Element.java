@@ -17,7 +17,7 @@ public abstract class Element {
 
     public Element(Point2D position, Image picture) {
         this.position = position;
-        this.state = 0;;
+        this.state = 0;
         this.picture = picture;
         this.hitBox = new Rectangle(picture.getWidth(), picture.getHeight());
     }
