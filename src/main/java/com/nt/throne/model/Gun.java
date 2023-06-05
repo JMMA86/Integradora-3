@@ -10,8 +10,8 @@ public class Gun extends Element {
     private int ammo;
     private final int CHARGER_SIZE;
 
-    public Gun(Point2D position, ArrayList<ArrayList<Image>> sprites, int CHARGER_SIZE) {
-        super(position, sprites);
+    public Gun(Point2D position, Image image, int CHARGER_SIZE) {
+        super(position, image);
         this.CHARGER_SIZE = CHARGER_SIZE;
         this.ammo = CHARGER_SIZE;
     }

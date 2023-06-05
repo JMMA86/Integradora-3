@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public abstract class Enemy extends Character {
 
-    public Enemy(Point2D position, ArrayList<ArrayList<Image>> sprites) {
-        super(position, sprites);
+    public Enemy(Point2D position, Image image) {
+        super(position, image);
     }
 }

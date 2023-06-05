@@ -11,8 +11,8 @@ public abstract class Character extends AliveElement implements IAct {
     private Gun currentGun;
     private int currentFrame;
 
-    public Character(Point2D position, ArrayList<ArrayList<Image>> sprites) {
-        super(position, sprites);
+    public Character(Point2D position, Image image) {
+        super(position, image);
         this.currentGun = null;
     }
 

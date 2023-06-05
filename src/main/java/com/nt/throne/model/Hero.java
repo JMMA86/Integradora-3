@@ -17,7 +17,7 @@ public class Hero extends Character {
     public static Hero getInstance() {
         if(instance == null) {
             Image image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png" );
-            instance = new Hero(new Point2D(0,0), image) ;
+            instance = new Hero(new Point2D(0,0), image);
         }
         return instance;
     }
