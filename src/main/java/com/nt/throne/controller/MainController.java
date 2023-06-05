@@ -6,6 +6,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
+    @FXML
+    private ImageView logoImage;
     @FXML
     private Canvas canvas;
     @FXML
@@ -37,25 +41,28 @@ public class MainController implements Initializable {
         screens = new ArrayList<>();
         screens.add(new MenuScreen(this.canvas));
         canvas.setFocusTraversable(true);
+        logoImage = new ImageView();
+        Image image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/logo.png");
+        logoImage.setImage(image);
 
         //Video
         File videoPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/MenuVideo.mp4");
         String fullVideoPath = videoPath.toURI().toString();
         MediaPlayer videoMediaPlayer = new MediaPlayer(new Media(fullVideoPath));
         videoBackground.setMediaPlayer(videoMediaPlayer);
+        videoMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         videoMediaPlayer.play();
 
         //Song
         File songPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/music.mp3");
         String fullSongPath = songPath.toURI().toString();
         songMediaPlayer = new MediaPlayer(new Media(fullSongPath));
-        songMediaPlayer.play();
 
         //Updates from other screens
         new Thread( () -> {
             while (isRunning){
                 Platform.runLater(this::paint);
-                pause();
+                pause(50);
             }
         }).start();
 
@@ -70,9 +77,9 @@ public class MainController implements Initializable {
         isRunning = running;
     }
 
-    private void pause(){
+    private void pause(int milliseconds){
         try {
-            Thread.sleep(50);
+            Thread.sleep(milliseconds);
         }catch (InterruptedException e){
             e.printStackTrace();
         }
