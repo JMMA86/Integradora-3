@@ -14,7 +14,7 @@
             <ImageView fx:id="logoImage" fitHeight="224.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@../throne/Menu/logo.png" />
             </ImageView>
-            <Text fx:id="playBtn" fill="WHITE" text="Play" visible="false"/>
+            <Text fx:id="playBtn" fill="WHITE" text="Play" visible="false" onMouseClicked="#startGame"/>
             <Text fx:id="skinBtn" fill="WHITE" text="Skins" visible="false"/>
             <Text fx:id="exitBtn" fill="WHITE" text="Exit" visible="false" onMouseClicked="#exitGame"/>
         </VBox>

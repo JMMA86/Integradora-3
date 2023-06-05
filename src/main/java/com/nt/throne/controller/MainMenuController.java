@@ -1,5 +1,6 @@
 package com.nt.throne.controller;
 
+import com.nt.throne.Launcher;
 import com.nt.throne.screens.BaseScreen;
 import com.nt.throne.screens.MenuScreen;
 import javafx.application.Platform;
@@ -132,6 +133,13 @@ public class MainMenuController implements Initializable {
         videoBackground.setMediaPlayer(videoMediaPlayer);
         videoMediaPlayer.play();
         songMediaPlayer.play();
+    }
+
+    public void startGame() {
+        videoMediaPlayer.stop();
+        songMediaPlayer.stop();
+        isRunning = false;
+        Launcher.renderView("inGame-view.fxml", 1280, 720);
     }
 
     public void exitGame() {
