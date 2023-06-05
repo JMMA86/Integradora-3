@@ -33,6 +33,16 @@ public class MenuScreen extends BaseScreen {
     }
 
     @Override
+    public void onMouseClicked(MouseEvent event) {
+
+    }
+
+    @Override
+    public void onMouseMoved(MouseEvent event) {
+
+    }
+
+    @Override
     public Canvas getCanvas() {
         return super.getCanvas();
     }

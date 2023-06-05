@@ -32,4 +32,8 @@ public abstract class BaseScreen {
     public abstract void onKeyPressed(KeyEvent event);
 
     public abstract void onKeyReleased(KeyEvent event);
+
+    public abstract void onMouseClicked(MouseEvent event);
+
+    public abstract void onMouseMoved(MouseEvent event);
 }
