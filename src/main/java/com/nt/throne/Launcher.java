@@ -1,30 +1,44 @@
 package com.nt.throne;
 
+import com.nt.throne.controller.MainMenuController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class Launcher extends Application {
+    private static Stage primaryStage;
     @Override
-    public void start(Stage stage) {
+    public void start(Stage primaryStage) {
+        Launcher.primaryStage = primaryStage;
         renderView("main-menu-view.fxml", 1280, 720);
     }
 
-    public FXMLLoader renderView(String fxml, int width, int height) {
-        FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource(fxml));
+    public static void renderView(String fxml, int width, int height) {
         try {
-            Stage stage = new Stage();
+            Image icon = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/icon.png");
+            primaryStage.getIcons().add(icon);
+            FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource(fxml));
             Scene scene = new Scene(fxmlLoader.load(), width, height);
-            stage.setTitle("Nuclear Throne");
-            stage.setScene(scene);
-            stage.show();
+            primaryStage.setTitle("Nuclear Throne");
+            primaryStage.setResizable(false);
+            primaryStage.setScene(scene);
+            primaryStage.setOnCloseRequest(windowEvent -> {
+                try {
+                    MainMenuController controller = fxmlLoader.getController();
+                    controller.setRunning(false);
+                } catch (ClassCastException e) {
+                    Platform.exit();
+                }
+            });
+            primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return fxmlLoader;
     }
 
     public static void main(String[] args) {
