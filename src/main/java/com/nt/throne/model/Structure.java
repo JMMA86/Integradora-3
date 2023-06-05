@@ -7,8 +7,9 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 
 public class Structure extends AliveElement {
-    public Structure(Point2D position, ArrayList<ArrayList<Image>> sprites) {
-        super(position, sprites);
+
+    public Structure(Point2D position, Image picture) {
+        super(position, picture);
     }
 
     @Override

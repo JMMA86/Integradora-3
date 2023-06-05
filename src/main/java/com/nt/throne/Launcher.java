@@ -1,6 +1,7 @@
 package com.nt.throne;
 
 import com.nt.throne.controller.MainMenuController;
+import com.nt.throne.model.FileManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,7 @@ public class Launcher extends Application {
     @Override
     public void start(Stage primaryStage) {
         Launcher.primaryStage = primaryStage;
-        renderView("in-game-view.fxml", 1280, 720);
+        renderView("main-menu-view.fxml", 1280, 720);
     }
 
     public static void renderView(String fxml, int width, int height) {

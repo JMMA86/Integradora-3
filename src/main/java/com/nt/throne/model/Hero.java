@@ -13,14 +13,16 @@ public class Hero extends Character {
 
     public static Hero getInstance() {
         if(instance == null) {
-            instance = new Hero(new Point2D(0,0), FileManager.getInstance().loadSprites("character001") );
+            Image image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png" );
+            instance = new Hero(new Point2D(0,0), image) ;
         }
         return instance;
     }
 
-    public Hero(Point2D position, ArrayList<ArrayList<Image>> sprites) {
-        super(position, sprites);
+    public Hero(Point2D position, Image picture) {
+        super(position, picture);
     }
+
 
     @Override
     public void takeDamage() {
@@ -29,7 +31,6 @@ public class Hero extends Character {
 
     @Override
     public void move() {
-
     }
 
     @Override

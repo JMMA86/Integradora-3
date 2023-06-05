@@ -9,8 +9,8 @@ import java.util.ArrayList;
 public abstract class Character extends AliveElement implements IAct {
     private Gun currentGun;
 
-    public Character(Point2D position, ArrayList<ArrayList<Image>> sprites) {
-        super(position, sprites);
+    public Character(Point2D position, Image picture) {
+        super(position, picture);
         this.currentGun = null;
     }
 

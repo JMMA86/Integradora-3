@@ -46,4 +46,14 @@ public class Pantheon extends BaseScreen{
     public void onKeyReleased(KeyEvent event) {
 
     }
+
+    @Override
+    public void onMouseClicked(MouseEvent event) {
+
+    }
+
+    @Override
+    public void onMouseMoved(MouseEvent event) {
+
+    }
 }
