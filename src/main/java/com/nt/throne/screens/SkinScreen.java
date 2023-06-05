@@ -2,6 +2,7 @@ package com.nt.throne.screens;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
 
@@ -30,6 +31,16 @@ public class SkinScreen extends BaseScreen {
 
     @Override
     public void onMousePressed(MouseEvent event) {
+
+    }
+
+    @Override
+    public void onKeyPressed(KeyEvent event) {
+
+    }
+
+    @Override
+    public void onKeyReleased(KeyEvent event) {
 
     }
 }

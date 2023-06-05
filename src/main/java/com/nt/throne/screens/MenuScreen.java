@@ -2,6 +2,7 @@ package com.nt.throne.screens;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
@@ -18,6 +19,16 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public void onMousePressed(MouseEvent event) {
+
+    }
+
+    @Override
+    public void onKeyPressed(KeyEvent event) {
+
+    }
+
+    @Override
+    public void onKeyReleased(KeyEvent event) {
 
     }
 

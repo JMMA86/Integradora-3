@@ -2,6 +2,7 @@ package com.nt.throne.screens;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 public abstract class BaseScreen {
@@ -27,4 +28,8 @@ public abstract class BaseScreen {
     public abstract void paint();
 
     public abstract void onMousePressed(MouseEvent event);
+
+    public abstract void onKeyPressed(KeyEvent event);
+
+    public abstract void onKeyReleased(KeyEvent event);
 }

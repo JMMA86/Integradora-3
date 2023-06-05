@@ -156,7 +156,7 @@ public class MainMenuController implements Initializable {
         videoMediaPlayer.stop();
         songMediaPlayer.stop();
         isRunning = false;
-        Launcher.renderView("inGame-view.fxml", 1280, 720);
+        Launcher.renderView("in-game-view.fxml", 1280, 720);
     }
 
     public void changeSkin() {
