@@ -31,6 +31,7 @@ public class SkinScreen extends BaseScreen {
         //Skin charging
         moving.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero1.png"));
         moving.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png"));
+        moving.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero3.png"));
     }
 
     @Override
