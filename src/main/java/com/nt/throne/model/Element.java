@@ -13,14 +13,12 @@ public abstract class Element {
     private Shape hitBox;
     private Image picture;
     private int state;
-    private ArrayList<ArrayList<Image>> sprites;
 
 
-    public Element(Point2D position, ArrayList<ArrayList<Image>> sprites) {
+    public Element(Point2D position, Image picture) {
         this.position = position;
         this.state = 0;
-        this.sprites = sprites;
-        this.picture = sprites.get(0).get(0);
+        this.picture = picture;
         this.hitBox = new Rectangle(picture.getWidth(), picture.getHeight());
     }
 
@@ -54,15 +52,6 @@ public abstract class Element {
 
     public void setState(int state) {
         this.state = state;
-    }
-
-
-    public ArrayList<ArrayList<Image>> getSprites() {
-        return sprites;
-    }
-
-    public void setSprites(ArrayList<ArrayList<Image>> sprites) {
-        this.sprites = sprites;
     }
 
     public void paint(GraphicsContext context) {

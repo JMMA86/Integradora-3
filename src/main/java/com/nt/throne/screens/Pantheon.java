@@ -14,15 +14,16 @@ import java.util.ResourceBundle;
 
 public class Pantheon extends BaseScreen{
     private Hero hero = Hero.getInstance();
-    private ArrayList<Box> boxes;
+    private ArrayList<Structure> structures;
+
 
     public Pantheon(Canvas canvas) {
         super(canvas);
         initStructures();
+
     }
 
     private void initStructures() {
-
     }
 
     @Override
@@ -39,13 +40,14 @@ public class Pantheon extends BaseScreen{
 
     @Override
     public void onKeyPressed(KeyEvent event) {
-
+        hero.onKeyPressed(event);
     }
 
     @Override
     public void onKeyReleased(KeyEvent event) {
-
+        hero.onKeyReleased(event);
     }
+
 
     @Override
     public void onMouseClicked(MouseEvent event) {
