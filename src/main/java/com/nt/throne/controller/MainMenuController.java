@@ -3,10 +3,12 @@ package com.nt.throne.controller;
 import com.nt.throne.Launcher;
 import com.nt.throne.screens.BaseScreen;
 import com.nt.throne.screens.MenuScreen;
+import com.nt.throne.screens.SkinScreen;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -22,6 +24,14 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
+    @FXML
+    private VBox skinItems;
+    @FXML
+    private Text skinTitle;
+    @FXML
+    private Text returnBtn;
+    @FXML
+    private VBox menuItems;
     @FXML
     private Canvas loader;
     @FXML
@@ -41,20 +51,22 @@ public class MainMenuController implements Initializable {
     private boolean audioReady;
     private MediaPlayer songMediaPlayer;
     private boolean isRunning;
+    private int timer;
     private ArrayList<BaseScreen> screens;
     //Screens:
     /*
     0: Menu
     1: Skins
-    2: Play
      */
     public static int SCREEN = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Attributes initialization
+        timer = 50;
         screens = new ArrayList<>();
         screens.add(new MenuScreen(this.canvas));
+        screens.add(new SkinScreen(this.canvas));
         canvas.setFocusTraversable(true);
         videoReady = false;
         audioReady = false;
@@ -74,6 +86,8 @@ public class MainMenuController implements Initializable {
         playBtn.setFont(customFont);
         skinBtn.setFont(customFont);
         exitBtn.setFont(customFont);
+        skinTitle.setFont(customFont);
+        returnBtn.setFont(customFont);
         loadingText.setFont(customFont);
 
         //Video
@@ -112,7 +126,7 @@ public class MainMenuController implements Initializable {
         new Thread( () -> {
             while (isRunning){
                 Platform.runLater(this::paint);
-                pause(50);
+                pause(timer);
             }
         }).start();
 
@@ -127,6 +141,9 @@ public class MainMenuController implements Initializable {
 
         exitBtn.setOnMouseEntered(event -> exitBtn.setOpacity(0.5));
         exitBtn.setOnMouseExited(event -> exitBtn.setOpacity(1));
+
+        returnBtn.setOnMouseEntered(event -> returnBtn.setOpacity(0.5));
+        returnBtn.setOnMouseExited(event -> returnBtn.setOpacity(1));
     }
 
     public void playResources() {
@@ -142,7 +159,27 @@ public class MainMenuController implements Initializable {
         Launcher.renderView("inGame-view.fxml", 1280, 720);
     }
 
+    public void changeSkin() {
+        SCREEN = 1;
+        timer = 100;
+        menuItems.setVisible(false);
+        menuItems.setManaged(false);
+        skinItems.setVisible(true);
+        skinItems.setManaged(true);
+    }
+
+    public void returnMenu() {
+        SCREEN = 0;
+        timer = 50;
+        screens.get(1).getGraphicsContext().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        menuItems.setVisible(true);
+        menuItems.setManaged(true);
+        skinItems.setVisible(false);
+        skinItems.setManaged(false);
+    }
+
     public void exitGame() {
+        isRunning = false;
         Platform.exit();
     }
 
@@ -165,4 +202,6 @@ public class MainMenuController implements Initializable {
     public void initEvents() {
         canvas.setOnMousePressed(event -> screens.get(SCREEN).onMousePressed(event));
     }
+
+
 }
