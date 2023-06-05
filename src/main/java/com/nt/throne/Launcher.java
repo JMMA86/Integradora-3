@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,6 +20,8 @@ public class Launcher extends Application {
 
     public static void renderView(String fxml, int width, int height) {
         try {
+            Image icon = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/icon.png");
+            primaryStage.getIcons().add(icon);
             FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource(fxml));
             Scene scene = new Scene(fxmlLoader.load(), width, height);
             primaryStage.setTitle("Nuclear Throne");
