@@ -2,20 +2,16 @@ package com.nt.throne.controller;
 
 import com.nt.throne.screens.BaseScreen;
 import com.nt.throne.screens.MenuScreen;
-import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,7 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable {
+public class MainMenuController implements Initializable {
     @FXML
     private Canvas loader;
     @FXML
@@ -67,7 +63,7 @@ public class MainController implements Initializable {
         loader.getGraphicsContext2D().setFill(Color.BLACK);
 
         //Fonts
-        InputStream inputStream = null;
+        InputStream inputStream;
         try {
             inputStream = new FileInputStream(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Fonts/upheavtt.ttf");
         } catch (FileNotFoundException e) {
@@ -78,7 +74,6 @@ public class MainController implements Initializable {
         skinBtn.setFont(customFont);
         exitBtn.setFont(customFont);
         loadingText.setFont(customFont);
-
 
         //Video
         File videoPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/MenuVideo.mp4");
@@ -93,12 +88,8 @@ public class MainController implements Initializable {
         songMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
         //Loading screen
-        videoMediaPlayer.setOnReady(() -> {
-            videoReady = true;
-        });
-        songMediaPlayer.setOnReady(() -> {
-            audioReady = true;
-        });
+        videoMediaPlayer.setOnReady(() -> videoReady = true);
+        songMediaPlayer.setOnReady(() -> audioReady = true);
         new Thread( () -> {
             while (!videoReady || !audioReady){
                 pause(50);
@@ -126,35 +117,25 @@ public class MainController implements Initializable {
 
         initEvents();
 
-        //Opacity
-        playBtn.setOnMouseEntered(event -> {
-            playBtn.setOpacity(0.5);
-        });
+        //Opacities
+        playBtn.setOnMouseEntered(event -> playBtn.setOpacity(0.5));
+        playBtn.setOnMouseExited(event -> playBtn.setOpacity(1));
 
-        playBtn.setOnMouseExited(event -> {
-            playBtn.setOpacity(1);
-        });
+        skinBtn.setOnMouseEntered(event -> skinBtn.setOpacity(0.5));
+        skinBtn.setOnMouseExited(event -> skinBtn.setOpacity(1));
 
-        skinBtn.setOnMouseEntered(event -> {
-            skinBtn.setOpacity(0.5);
-        });
-
-        skinBtn.setOnMouseExited(event ->
-                skinBtn.setOpacity(1));
-
-        exitBtn.setOnMouseEntered(event -> {
-            exitBtn.setOpacity(0.5);
-        });
-
-        exitBtn.setOnMouseExited(event -> {
-            exitBtn.setOpacity(1);
-        });
+        exitBtn.setOnMouseEntered(event -> exitBtn.setOpacity(0.5));
+        exitBtn.setOnMouseExited(event -> exitBtn.setOpacity(1));
     }
 
     public void playResources() {
         videoBackground.setMediaPlayer(videoMediaPlayer);
         videoMediaPlayer.play();
         songMediaPlayer.play();
+    }
+
+    public void exitGame() {
+        Platform.exit();
     }
 
     public void paint(){

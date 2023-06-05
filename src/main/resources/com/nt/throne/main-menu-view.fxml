@@ -6,7 +6,7 @@
 <?import javafx.scene.media.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nt.throne.controller.MainController">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nt.throne.controller.MainMenuController">
     <StackPane prefHeight="720.0" prefWidth="1280.0">
         <MediaView fx:id="videoBackground" fitHeight="720.0" fitWidth="1280.0" />
         <Canvas fx:id="canvas" height="720.0" width="1280.0" />
@@ -16,7 +16,7 @@
             </ImageView>
             <Text fx:id="playBtn" fill="WHITE" text="Play" visible="false"/>
             <Text fx:id="skinBtn" fill="WHITE" text="Skins" visible="false"/>
-            <Text fx:id="exitBtn" fill="WHITE" text="Exit" visible="false"/>
+            <Text fx:id="exitBtn" fill="WHITE" text="Exit" visible="false" onMouseClicked="#exitGame"/>
         </VBox>
         <Canvas fx:id="loader" height="720" width="1280"/>
         <Text fx:id="loadingText" fill="WHITE" text="Loading..."/>
