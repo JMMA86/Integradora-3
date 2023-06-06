@@ -4,17 +4,14 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
-
-import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class Bullet extends Element implements IAct {
     private Point2D direction;
     private int aceleration;
     private double damage;
     private boolean canDamage;
+
+    private boolean movementLocked = false;
 
     public Bullet(Point2D position, Point2D direction, double damage, int acceleration, Image picture) {
         super(position, picture);
@@ -26,7 +23,7 @@ public class Bullet extends Element implements IAct {
 
     @Override
     public void move() {
-        setPosition(getPosition().add(direction.getX() * aceleration, direction.getY() * aceleration));
+        if(!movementLocked) setPosition(getPosition().add(direction.getX() * aceleration, direction.getY() * aceleration));
     }
 
     @Override
@@ -34,8 +31,13 @@ public class Bullet extends Element implements IAct {
 
     }
 
+    @Override
+    public void lockMovement(boolean state) {
+        movementLocked = state;
+    }
+
     public boolean isHurting(Element element) {
-        return getHitBox().intersects(element.getHitBox().getBoundsInParent());
+        return isColliding(element);
     }
 
     public double getDamage() {

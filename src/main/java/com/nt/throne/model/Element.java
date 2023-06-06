@@ -19,7 +19,7 @@ public abstract class Element {
         this.position = position;
         this.state = 0;
         this.picture = picture;
-        this.hitBox = new Rectangle(picture.getWidth(), picture.getHeight());
+        this.hitBox = new Rectangle(position.getX(), position.getY(), picture.getWidth(), picture.getHeight());
     }
 
     public Point2D getPosition() {
@@ -52,6 +52,10 @@ public abstract class Element {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public boolean isColliding(Element element) {
+        return getHitBox().intersects(element.getHitBox().getBoundsInParent());
     }
 
     public void paint(GraphicsContext context) {

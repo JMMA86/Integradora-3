@@ -69,11 +69,13 @@ public class Hero extends Character {
     @Override
     public void move() {
         Point2D previous = getPosition();
-        if(pressedKeys[0]) setPosition(getPosition().add(0, 8));
-        if(pressedKeys[1]) setPosition(getPosition().add(0, -8));
-        if(pressedKeys[2]) setPosition(getPosition().add(-8, 0));
-        if(pressedKeys[3]) setPosition(getPosition().add(8, 0));
-        if(previous.equals(getPosition())) setState(0);
+        if(!isMovementLocked()) {
+            if(pressedKeys[0]) setPosition(getPosition().add(0, 8));
+            if(pressedKeys[1]) setPosition(getPosition().add(0, -8));
+            if(pressedKeys[2]) setPosition(getPosition().add(-8, 0));
+            if(pressedKeys[3]) setPosition(getPosition().add(8, 0));
+        }
+        if(previous.equals(getPosition()) && !isMovementLocked()) setState(0);
     }
 
     @Override

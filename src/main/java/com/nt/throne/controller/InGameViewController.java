@@ -2,10 +2,12 @@ package com.nt.throne.controller;
 
 import com.nt.throne.screens.BaseScreen;
 import com.nt.throne.screens.Pantheon;
+import com.nt.throne.screens.Scenario;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -49,7 +51,7 @@ public class InGameViewController implements Initializable {
         //Attributes initialization
         canvas.setFocusTraversable(true);
         this.screens = new ArrayList<>();
-        screens.add(new Pantheon(canvas));
+        screens.add(new Pantheon(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1.png" )));
         isRunning = true;
 
         //Fonts
@@ -80,7 +82,7 @@ public class InGameViewController implements Initializable {
                 pause(1000);
                 if (i == 0) {
                     counter.setText("START");
-                    // initEvents();
+                    initEvents();
                 } else {
                     counter.setText(String.valueOf(i));
                 }
@@ -96,12 +98,11 @@ public class InGameViewController implements Initializable {
         songMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         songMediaPlayer.setVolume(0);
         songMediaPlayer.play();
-        for (double i = 0; i <= 1; i += 0.1) {
+        for (double i = 0; i <= 0.5; i += 0.1) {
             songMediaPlayer.setVolume(i);
             pause(100);
         }
 
-        initEvents();
     }
 
     public void paint(){
