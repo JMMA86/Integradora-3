@@ -1,6 +1,5 @@
 package com.nt.throne.model;
 
-import com.nt.throne.controller.InGameViewController;
 import com.nt.throne.screens.Scenario;
 import com.nt.throne.screens.SkinScreen;
 import javafx.geometry.Point2D;
@@ -8,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 
 public class Hero extends Character {
-    private static Scenario scenario;
     private final boolean[] pressedKeys;
     private static Hero instance;
 
@@ -69,21 +67,35 @@ public class Hero extends Character {
     @Override
     public void move() {
         Point2D previous = getPosition();
-        if(!isMovementLocked()) {
-            if(pressedKeys[0]) setPosition(getPosition().add(0, 8));
-            if(pressedKeys[1]) setPosition(getPosition().add(0, -8));
-            if(pressedKeys[2]) setPosition(getPosition().add(-8, 0));
-            if(pressedKeys[3]) setPosition(getPosition().add(8, 0));
+        if(pressedKeys[0]) {
+            if (getPosition().getY() >= Scenario.getLimitY()[1]) {
+                setPosition(getPosition().add(0, -8));
+            }
+            setPosition(getPosition().add(0, 8));
         }
-        if(previous.equals(getPosition()) && !isMovementLocked()) setState(0);
+        if(pressedKeys[1]) {
+            if (getPosition().getY() <= Scenario.getLimitY()[0]) {
+                setPosition(getPosition().add(0, 8));
+            }
+            setPosition(getPosition().add(0, -8));
+        }
+        if(pressedKeys[2]) {
+            if (getPosition().getX() <= Scenario.getLimitX()[0]) {
+                setPosition(getPosition().add(8, 0));
+            }
+            setPosition(getPosition().add(-8, 0));
+        }
+        if(pressedKeys[3]) {
+            if (getPosition().getX() >= Scenario.getLimitX()[1]) {
+                setPosition(getPosition().add(-8, 0));
+            }
+            setPosition(getPosition().add(8, 0));
+        }
+        if(previous.equals(getPosition())) setState(0);
     }
 
     @Override
     public void attack() {
 
-    }
-
-    public static void setScenario(Scenario scenario) {
-        Hero.scenario = scenario;
     }
 }

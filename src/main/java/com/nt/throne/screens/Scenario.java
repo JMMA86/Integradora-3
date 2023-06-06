@@ -13,6 +13,8 @@ import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
 
 public abstract class Scenario extends BaseScreen {
+    private static int[] limitX;
+    private static int[] limitY;
     private Hero hero = Hero.getInstance();
     private ArrayList<Enemy> enemies;
     private ArrayList<Structure> structures;
@@ -25,6 +27,13 @@ public abstract class Scenario extends BaseScreen {
         structures = new ArrayList<>();
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
+        limitX = new int[2];
+        limitY = new int[2];
+        //Limit declaration
+        limitX[0] = 80;
+        limitX[1] = 1200;
+        limitY[0] = 70;
+        limitY[1] = 620;
         initElements();
     }
 
@@ -137,5 +146,13 @@ public abstract class Scenario extends BaseScreen {
 
     public void setBullets(ArrayList<Bullet> bullets) {
         this.bullets = bullets;
+    }
+
+    public static int[] getLimitX() {
+        return limitX;
+    }
+
+    public static int[] getLimitY() {
+        return limitY;
     }
 }

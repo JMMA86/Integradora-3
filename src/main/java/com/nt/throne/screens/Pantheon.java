@@ -8,17 +8,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
 public class Pantheon extends Scenario {
-    private int[] limitX;
-    private int[] limitY;
     public Pantheon(Canvas canvas, Image background) {
         super(canvas, background);
-        limitX = new int[2];
-        limitY = new int[2];
-        //Limit declaration
-        limitX[0] = 50;
-        limitX[1] = 1230;
-        limitY[0] = 80;
-        limitY[1] = 680;
     }
 
     @Override
@@ -76,13 +67,5 @@ public class Pantheon extends Scenario {
     public void onMouseClicked(MouseEvent event) {
         System.out.println(event.getX());
         System.out.println(event.getY());
-    }
-
-    public int[] getLimitX() {
-        return limitX;
-    }
-
-    public int[] getLimitY() {
-        return limitY;
     }
 }

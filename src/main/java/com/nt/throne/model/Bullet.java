@@ -31,11 +31,6 @@ public class Bullet extends Element implements IAct {
 
     }
 
-    @Override
-    public void lockMovement(boolean state) {
-        movementLocked = state;
-    }
-
     public boolean isHurting(Element element) {
         return isColliding(element);
     }

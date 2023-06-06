@@ -39,7 +39,7 @@ public class InGameViewController implements Initializable {
     private Text ammoTxt;
     private MediaPlayer songMediaPlayer;
     private boolean isRunning;
-    private static ArrayList<Scenario> screens;
+    private ArrayList<Scenario> screens;
     //Screens:
     /*
     0: pantheon
@@ -52,7 +52,6 @@ public class InGameViewController implements Initializable {
         canvas.setFocusTraversable(true);
         screens = new ArrayList<>();
         screens.add(new Pantheon(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1.png" )));
-        Hero.setScenario(screens.get(SCREEN));
         isRunning = true;
 
         //Fonts
@@ -128,9 +127,4 @@ public class InGameViewController implements Initializable {
         canvas.setOnKeyReleased(event -> screens.get(SCREEN).onKeyReleased(event));
         canvas.setFocusTraversable(true);
     }
-
-    public static Scenario getScenario() {
-        return (Scenario) screens.get(SCREEN);
-    }
-
 }
