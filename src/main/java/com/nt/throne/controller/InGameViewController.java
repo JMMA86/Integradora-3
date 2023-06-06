@@ -47,6 +47,7 @@ public class InGameViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Attributes initialization
+        canvas.setFocusTraversable(true);
         this.screens = new ArrayList<>();
         screens.add(new Pantheon(canvas));
         isRunning = true;
@@ -79,6 +80,7 @@ public class InGameViewController implements Initializable {
                 pause(1000);
                 if (i == 0) {
                     counter.setText("START");
+                    // initEvents();
                 } else {
                     counter.setText(String.valueOf(i));
                 }
@@ -118,9 +120,10 @@ public class InGameViewController implements Initializable {
         }
     }
 
-    public void initEvents() {
-        canvas.setOnMousePressed(event -> screens.get(SCREEN).onMousePressed(event));
-        canvas.setOnKeyPressed(event -> screens.get(SCREEN).onKeyPressed(event));
-        canvas.setOnKeyReleased(event -> screens.get(SCREEN).onKeyReleased(event));
-    }
+        public void initEvents() {
+            canvas.setOnMouseClicked(event -> screens.get(SCREEN).onMouseClicked(event));
+            canvas.setOnKeyPressed(event -> screens.get(SCREEN).onKeyPressed(event));
+            canvas.setOnKeyReleased(event -> screens.get(SCREEN).onKeyReleased(event));
+            canvas.setFocusTraversable(true);
+        }
 }

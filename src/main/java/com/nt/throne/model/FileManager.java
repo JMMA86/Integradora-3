@@ -3,8 +3,11 @@ package com.nt.throne.model;
 import javafx.scene.image.Image;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 public class FileManager {
 

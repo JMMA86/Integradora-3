@@ -8,12 +8,12 @@ import java.util.ArrayList;
 
 public class ChaserEnemy extends Enemy {
 
-    public ChaserEnemy(Point2D position, Image image) {
-        super(position, image);
+    public ChaserEnemy(Point2D position, Image picture) {
+        super(position, picture);
     }
 
     @Override
-    public void takeDamage() {
+    public void takeDamage(Element origin) {
 
     }
 

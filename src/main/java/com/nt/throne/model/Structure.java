@@ -12,7 +12,7 @@ public class Structure extends AliveElement {
     }
 
     @Override
-    public void takeDamage() {
+    public void takeDamage(Element origin) {
 
     }
 }

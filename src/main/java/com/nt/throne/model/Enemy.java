@@ -7,8 +7,7 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 
 public abstract class Enemy extends Character {
-
-    public Enemy(Point2D position, Image image) {
-        super(position, image);
+    public Enemy(Point2D position, Image picture) {
+        super(position, picture);
     }
 }
