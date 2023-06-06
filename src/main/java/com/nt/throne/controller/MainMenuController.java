@@ -167,10 +167,6 @@ public class MainMenuController implements Initializable {
 
     public void checkInitialization() {
         videoMediaPlayer.stop();
-        for (double i = 1; i >=0; i-=0.1) {
-            songMediaPlayer.setVolume(i);
-            pause(200);
-        }
         songMediaPlayer.stop();
         Launcher.renderView("in-game-view.fxml", 1280, 720);
     }
