@@ -17,7 +17,7 @@ public class Launcher extends Application {
     @Override
     public void start(Stage primaryStage) {
         Launcher.primaryStage = primaryStage;
-        renderView("in-game-view.fxml", 1280, 720);
+        renderView("main-menu-view.fxml", 1280, 720);
     }
 
     public static void renderView(String fxml, int width, int height) {

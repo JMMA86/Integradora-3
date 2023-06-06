@@ -1,26 +1,26 @@
 package com.nt.throne.model;
 
+import com.nt.throne.controller.InGameViewController;
+import com.nt.throne.screens.Scenario;
+import com.nt.throne.screens.SkinScreen;
 import javafx.geometry.Point2D;
-import javafx.scene.effect.Light;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-
-import java.util.ArrayList;
 
 public class Hero extends Character {
-
-    private boolean[] pressedKeys;
-
+    private static Scenario scenario;
+    private final boolean[] pressedKeys;
     private static Hero instance;
 
     public static Hero getInstance() {
         if(instance == null) {
-            Image image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png" );
+            Image image = null;
+            //Skin selector
+            switch (SkinScreen.getSkinSelected()) {
+                case 0 -> image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero1.png" );
+                case 1 -> image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png" );
+                case 2 -> image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero3.png" );
+            }
             instance = new Hero(new Point2D(128,128), image);
         }
         return instance;
@@ -81,5 +81,9 @@ public class Hero extends Character {
     @Override
     public void attack() {
 
+    }
+
+    public static void setScenario(Scenario scenario) {
+        Hero.scenario = scenario;
     }
 }

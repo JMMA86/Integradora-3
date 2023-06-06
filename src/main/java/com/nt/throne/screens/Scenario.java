@@ -25,7 +25,6 @@ public abstract class Scenario extends BaseScreen {
         structures = new ArrayList<>();
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
-
         initElements();
     }
 

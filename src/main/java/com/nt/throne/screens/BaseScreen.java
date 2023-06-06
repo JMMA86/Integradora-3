@@ -1,5 +1,6 @@
 package com.nt.throne.screens;
 
+import com.nt.throne.model.Hero;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
