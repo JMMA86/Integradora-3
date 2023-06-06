@@ -3,6 +3,7 @@ package com.nt.throne.model;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -11,7 +12,6 @@ import java.util.ArrayList;
 public class Hero extends Character {
 
     private boolean[] pressedKeys;
-
     private static Hero instance;
 
     public static Hero getInstance() {

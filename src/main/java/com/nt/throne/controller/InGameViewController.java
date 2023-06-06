@@ -39,6 +39,7 @@ public class InGameViewController implements Initializable {
         new Thread( () -> {
             while (isRunning){
                 Platform.runLater(this::paint);
+                Platform.runLater(this::run);
                 pause(50);
             }
         }).start();
@@ -48,6 +49,14 @@ public class InGameViewController implements Initializable {
 
     public void paint(){
         if (SCREEN <= screens.size()) screens.get(SCREEN).paint();
+    }
+
+    public void run() {
+        if (SCREEN <= screens.size()) {
+            if (screens.get(SCREEN) instanceof Pantheon) {
+                ((Pantheon) screens.get(SCREEN)).run();
+            }
+        }
     }
 
     public void setRunning(boolean running) {
@@ -64,6 +73,7 @@ public class InGameViewController implements Initializable {
 
     public void initEvents() {
         canvas.setOnMousePressed(event -> screens.get(SCREEN).onMousePressed(event));
+        canvas.setOnMouseClicked(event -> screens.get(SCREEN).onMouseClicked(event));
         canvas.setOnKeyPressed(event -> screens.get(SCREEN).onKeyPressed(event));
         canvas.setOnKeyReleased(event -> screens.get(SCREEN).onKeyReleased(event));
     }
