@@ -14,7 +14,7 @@ public abstract class AliveElement extends Element {
         this.life = 100.0;
     }
 
-    public abstract void takeDamage();
+    public abstract void takeDamage(Element origin);
 
     public double getLife() {
         return life;

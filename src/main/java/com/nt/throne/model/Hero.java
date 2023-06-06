@@ -31,7 +31,7 @@ public class Hero extends Character {
     }
 
     @Override
-    public void takeDamage() {
+    public void takeDamage(Element origin) {
 
     }
 

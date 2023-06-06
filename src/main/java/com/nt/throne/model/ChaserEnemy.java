@@ -13,7 +13,7 @@ public class ChaserEnemy extends Enemy {
     }
 
     @Override
-    public void takeDamage() {
+    public void takeDamage(Element origin) {
 
     }
 
