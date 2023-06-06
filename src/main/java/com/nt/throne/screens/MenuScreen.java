@@ -23,16 +23,6 @@ public class MenuScreen extends BaseScreen {
     }
 
     @Override
-    public void onKeyPressed(KeyEvent event) {
-
-    }
-
-    @Override
-    public void onKeyReleased(KeyEvent event) {
-
-    }
-
-    @Override
     public void onMouseClicked(MouseEvent event) {
 
     }

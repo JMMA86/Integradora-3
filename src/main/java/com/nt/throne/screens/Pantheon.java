@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import java.awt.*;
 import java.lang.Character;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Pantheon extends BaseScreen {
     private Hero hero = Hero.getInstance();
@@ -28,19 +29,18 @@ public class Pantheon extends BaseScreen {
 
     public Pantheon(Canvas canvas) {
         super(canvas);
-        initStructures();
         tImage = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/TestBullet.png");
-        tEnemy = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/TestEnemy.png");
+        tEnemy = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero3.png");
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
         enemies.add(new ShooterEnemy(new Point2D(500, 500), tEnemy));
         scenarioNum = 0;
         scenario = new ArrayList<>();
         structures = new ArrayList<>();
-        initStructures();
         scenario.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1.png"));
         scenario.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-2.png"));
         scenario.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-3.png"));
+        initStructures();
     }
 
     private void initStructures() {
@@ -95,26 +95,17 @@ public class Pantheon extends BaseScreen {
     @Override
     public void paint() {
         graphicsContext.drawImage(scenario.get(scenarioNum), 0, 0);
-        for (Structure structure : structures) {
-            graphicsContext.drawImage(structure.getPicture(), structure.getPosition().getX(), structure.getPosition().getY());
-        }
+        for (Structure structure : structures) structure.paint(graphicsContext);
+        for (Enemy enemy : enemies) enemy.paint(graphicsContext);
         hero.paint(graphicsContext);
-        graphicsContext.setFill(Color.GREEN);
-        graphicsContext.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        hero.paint(graphicsContext);
-        if (bullets.size() > 0) {
-            for (Bullet bullet : bullets) {
-                bullet.paint(graphicsContext);
-            }
-        }
+        for (Bullet bullet : bullets) bullet.paint(graphicsContext);
 
-        if (enemies.size() > 0) {
-            for (Enemy enemy : enemies) {
-                enemy.paint(graphicsContext);
-            }
-        }
+        bullets.removeIf(this::bulletsLogic);
+
+        // run();
     }
 
+    /*
     public void run() {
         //The function that provides the main thread the logic
         bulletsMovement();
@@ -139,36 +130,40 @@ public class Pantheon extends BaseScreen {
         }
     }
 
+
+     */
+
+
     public boolean bulletsLogic(Bullet bullet) {
-        //This function hurts the elements
-        //if (bullet.isHurting(hero)) {
-        //    return false;
-        //} else
+        boolean ans = !isInBounds(bullet);
+
         if (enemies.size() > 0) {
             for (int i = 0; i < enemies.size(); i++) {
                 if (bullet.isHurting(enemies.get(i))) {
+                    System.out.println("auch");
                     enemies.get(i).takeDamage(bullet);
                     //Insecure execution, looking to refactor this
                     if (enemies.get(i).getLife() <= 0) {
                         enemies.remove(enemies.get(i));
                     }
-                    return true;
+                    ans = true;
                 }
             }
         }
 
-        return false;
+        return ans;
     }
 
     public boolean isInBounds(Element element) {
         //This functions checks if the element is in bounds
-        return !(element.getPosition().getX() > canvas.getWidth() + 5) && !(element.getPosition().getY() < -5)
-                && !(element.getPosition().getY() > canvas.getHeight() + 5) && !(element.getPosition().getY() < -5);
+        return !(element.getPosition().getX() > canvas.getWidth() + 5)
+                && !(element.getPosition().getX() < -5)
+                && !(element.getPosition().getY() > canvas.getHeight() + 5)
+                && !(element.getPosition().getY() < -5);
     }
 
     @Override
     public void onMousePressed(MouseEvent event) {
-
     }
 
     @Override

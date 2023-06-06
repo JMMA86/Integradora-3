@@ -8,12 +8,12 @@
 
     <StackPane>
         <Canvas fx:id="canvas" height="720" width="1280" />
-        <VBox fx:id="statsBox" prefHeight="180" prefWidth="320">
+        <VBox fx:id="statsBox" prefHeight="180" prefWidth="320" mouseTransparent="true">
             <Text fx:id="levelTxt" text="Level 1" textAlignment="CENTER" wrappingWidth="1280" />
             <Text fx:id="nameTxt" text="    Character:" />
             <Text fx:id="lifeTxt" text="    Life:" />
             <Text fx:id="ammoTxt" text="    Ammo:" />
         </VBox>
-        <Text fx:id="counter" textAlignment="CENTER" text="3" scaleX="10" scaleY="10"/>
+        <Text fx:id="counter" textAlignment="CENTER" text="3" scaleX="10" scaleY="10" mouseTransparent="true"/>
     </StackPane>
 </AnchorPane>
