@@ -48,6 +48,7 @@ public class MainMenuController implements Initializable {
     private Canvas canvas;
     @FXML
     private MediaView videoBackground;
+    private boolean preparingGame;
     private MediaPlayer videoMediaPlayer;
     private boolean videoReady;
     private boolean audioReady;
@@ -65,6 +66,7 @@ public class MainMenuController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Attributes initialization
+        preparingGame = false;
         timer = 50;
         screens = new ArrayList<>();
         screens.add(new MenuScreen(this.canvas));
@@ -158,10 +160,15 @@ public class MainMenuController implements Initializable {
     }
 
     public void startGame() {
+        loader.setVisible(true);
+        loadingText.setVisible(true);
+        preparingGame = true;
+    }
+
+    public void checkInitialization() {
         videoMediaPlayer.stop();
         songMediaPlayer.stop();
-        isRunning = false;
-        Launcher.renderView("inGame-view.fxml", 1280, 720);
+        Launcher.renderView("in-game-view.fxml", 1280, 720);
     }
 
     public void changeSkin() {
@@ -186,12 +193,18 @@ public class MainMenuController implements Initializable {
     }
 
     public void exitGame() {
+        songMediaPlayer.stop();
+        videoMediaPlayer.stop();
         isRunning = false;
         Platform.exit();
     }
 
     public void paint(){
         if (SCREEN <= screens.size()) screens.get(SCREEN).paint();
+        if (preparingGame) {
+            isRunning = false;
+            checkInitialization();
+        }
     }
 
     public void setRunning(boolean running) {

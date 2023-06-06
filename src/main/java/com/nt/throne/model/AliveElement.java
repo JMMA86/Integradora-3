@@ -4,13 +4,23 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Shape;
 
+import java.util.ArrayList;
+
 public abstract class AliveElement extends Element {
     private double life;
 
-    public AliveElement(Point2D position, Shape hitBox, Image picture, int state, double life) {
-        super(position, hitBox, picture, state);
-        this.life = life;
+    public AliveElement(Point2D position, Image image) {
+        super(position, image);
+        this.life = 100.0;
     }
 
     public abstract void takeDamage();
+
+    public double getLife() {
+        return life;
+    }
+
+    public void setLife(double life) {
+        this.life = life;
+    }
 }
