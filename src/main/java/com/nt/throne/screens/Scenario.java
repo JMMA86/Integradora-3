@@ -1,23 +1,26 @@
 package com.nt.throne.screens;
 
 import com.nt.throne.model.*;
-import com.nt.throne.model.Bullet;
-import com.nt.throne.model.Hero;
-import com.nt.throne.model.Structure;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class Scenario extends BaseScreen {
     private Hero hero = Hero.getInstance();
     private ArrayList<Enemy> enemies;
     private ArrayList<Structure> structures;
     private ArrayList<Bullet> bullets;
+    private ArrayList<Gun> guns;
     private Image background;
+    private boolean areGunsGenerated;
+    private Random random;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
@@ -25,6 +28,8 @@ public abstract class Scenario extends BaseScreen {
         structures = new ArrayList<>();
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
+        guns = new ArrayList<>();
+        random = new Random();
 
         initElements();
     }
@@ -35,11 +40,12 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void paint() {
         graphicsContext.drawImage(background,
-                0, 0);
-        for(Structure structure : structures) structure.paint(graphicsContext);
+            0, 0);
+        for (Structure structure : structures) structure.paint(graphicsContext);
         for (Enemy enemy : enemies) enemy.paint(graphicsContext);
         hero.paint(graphicsContext);
         for (Bullet bullet : bullets) bullet.paint(graphicsContext);
+        if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
         run();
     }
 
@@ -47,6 +53,13 @@ public abstract class Scenario extends BaseScreen {
         bullets.removeIf(this::bulletsLogic);
     }
 
+    /**
+     * Performs the bullet collision with elements, returns true if
+     * the bullet must be removed from the bullets list
+     *
+     * @param bullet The bullet to check
+     * @return True if the bullet hit an element
+     */
     private boolean bulletsLogic(Bullet bullet) {
         boolean ans = !isInBounds(bullet);
 
@@ -66,12 +79,60 @@ public abstract class Scenario extends BaseScreen {
         return ans;
     }
 
+    public void generateGuns() {
+        int totalGuns = 0;
+
+        while (totalGuns < 3) {
+            //326 * 121 MG
+            //284 * 47 SG
+            boolean place = true;
+            int x = random.nextInt(50, (int) (canvas.getWidth() - 50));
+            int y = random.nextInt(50, (int) (canvas.getHeight() - 50));
+
+            Shape temp = new Rectangle(x, y, 50, 50);
+            for (Structure structure : structures) {
+                if (structure.getHitBox().intersects((Bounds) temp)) {
+                    place = false;
+                    break;
+                }
+            }
+
+            if (place) {
+                if (getRandom().nextInt(0, 2) == 1) {
+                    getDisposableGuns().add(
+                        new MachineGun(
+                            new Point2D(x, y),
+                            new Image(
+                                System.getProperty("user.dir") +
+                                    "/src/main/resources/com/nt/throne/Guns/minigun.png"
+                            ),
+                            60
+                        )
+                    );
+                } else {
+                    getDisposableGuns().add(
+                        new ShotGun(
+                            new Point2D(x, y),
+                            new Image(
+                                System.getProperty("user.dir") +
+                                    "/src/main/resources/com/nt/throne/Guns/shotgun.png"
+                            ),
+                            10
+                        )
+                    );
+                }
+
+                totalGuns += 1;
+            }
+        }
+    }
+
     private boolean isInBounds(Element element) {
         //This functions checks if the element is in bounds
         return !(element.getPosition().getX() > canvas.getWidth() + 5)
-                && !(element.getPosition().getX() < -5)
-                && !(element.getPosition().getY() > canvas.getHeight() + 5)
-                && !(element.getPosition().getY() < -5);
+            && !(element.getPosition().getX() < -5)
+            && !(element.getPosition().getY() > canvas.getHeight() + 5)
+            && !(element.getPosition().getY() < -5);
     }
 
     @Override
@@ -92,8 +153,8 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void onMouseClicked(MouseEvent event) {
         bullets.add(new Bullet(hero.getPosition(), calcUnitVector(hero.getPosition(), new Point2D(event.getX(), event.getY())), 8.5, 30,
-                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Guns/bullet.png")
-                ));
+            new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Guns/bullet.png")
+        ));
     }
 
     @Override
@@ -138,5 +199,21 @@ public abstract class Scenario extends BaseScreen {
 
     public void setBullets(ArrayList<Bullet> bullets) {
         this.bullets = bullets;
+    }
+
+    public ArrayList<Gun> getDisposableGuns() {
+        return guns;
+    }
+
+    public void setDisposableGuns(ArrayList<Gun> disposableGuns) {
+        this.guns = disposableGuns;
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
     }
 }

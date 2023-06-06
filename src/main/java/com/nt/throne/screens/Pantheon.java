@@ -1,5 +1,6 @@
 package com.nt.throne.screens;
 
+import com.nt.throne.model.MachineGun;
 import com.nt.throne.model.ShooterEnemy;
 import com.nt.throne.model.Structure;
 import javafx.geometry.Point2D;
@@ -13,6 +14,8 @@ public class Pantheon extends Scenario {
 
     @Override
     public void initElements() {
+        generateGuns();
+
         getEnemies().add(new ShooterEnemy(
                 new Point2D(500, 500),
                 new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero3.png")));
