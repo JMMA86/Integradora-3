@@ -4,9 +4,12 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Shape;
 
+import java.util.ArrayList;
+
 public class Bullet extends Element implements IAct {
-    public Bullet(Point2D position, Shape hitBox, Image picture, int state) {
-        super(position, hitBox, picture, state);
+
+    public Bullet(Point2D position, Image image) {
+        super(position, image);
     }
 
     @Override

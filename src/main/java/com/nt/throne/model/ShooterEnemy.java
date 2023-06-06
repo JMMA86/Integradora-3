@@ -4,9 +4,12 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Shape;
 
+import java.util.ArrayList;
+
 public class ShooterEnemy extends Enemy {
-    public ShooterEnemy(Point2D position, Shape hitBox, Image picture, int state, double life, Gun currentGun) {
-        super(position, hitBox, picture, state, life, currentGun);
+
+    public ShooterEnemy(Point2D position, Image image) {
+        super(position, image);
     }
 
     @Override

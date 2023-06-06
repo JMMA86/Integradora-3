@@ -1,5 +1,6 @@
 package com.nt.throne;
 
+import com.nt.throne.controller.InGameViewController;
 import com.nt.throne.controller.MainMenuController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -31,6 +32,8 @@ public class Launcher extends Application {
                 try {
                     MainMenuController controller = fxmlLoader.getController();
                     controller.setRunning(false);
+                    InGameViewController controller1 = fxmlLoader.getController();
+                    controller1.setRunning(false);
                 } catch (ClassCastException e) {
                     Platform.exit();
                 }
