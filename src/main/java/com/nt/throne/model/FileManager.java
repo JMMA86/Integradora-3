@@ -21,6 +21,7 @@ public class FileManager {
     }
 
     private FileManager() {
+
     }
 
     public ArrayList<ArrayList<Image>> loadSprites(String name) {

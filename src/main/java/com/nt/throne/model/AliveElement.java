@@ -9,8 +9,8 @@ import java.util.ArrayList;
 public abstract class AliveElement extends Element {
     private double life;
 
-    public AliveElement(Point2D position, Image picture) {
-        super(position, picture);
+    public AliveElement(Point2D position, Image image) {
+        super(position, image);
         this.life = 100.0;
     }
 

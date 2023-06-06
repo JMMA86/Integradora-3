@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class BossEnemy extends Enemy {
 
-    public BossEnemy(Point2D position, Image picture) {
-        super(position, picture);
+    public BossEnemy(Point2D position, Image image) {
+        super(position, image);
     }
 
     @Override

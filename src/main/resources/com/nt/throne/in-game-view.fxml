@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.canvas.Canvas?>
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nt.throne.controller.InGameViewController">
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.nt.throne.controller.InGameViewController"
-            prefHeight="720.0" prefWidth="1280.0">
     <StackPane>
-        <VBox prefWidth="320" prefHeight="180" fx:id="statsBox">
-            <Text text="character: " fx:id="nameTxt"/>
-            <Text text="Life: " fx:id="lifeTxt"/>
-            <Text text="Ammo: " fx:id="ammoTxt"/>
+        <Canvas fx:id="canvas" height="720" width="1280" />
+        <VBox fx:id="statsBox" prefHeight="180" prefWidth="320">
+            <Text fx:id="levelTxt" text="Level 1" textAlignment="CENTER" wrappingWidth="1280" />
+            <Text fx:id="nameTxt" text="    Character:" />
+            <Text fx:id="lifeTxt" text="    Life:" />
+            <Text fx:id="ammoTxt" text="    Ammo:" />
         </VBox>
-        <Canvas fx:id="canvas" width="1280" height="720"/>
+        <Text fx:id="counter" textAlignment="CENTER" text="3" scaleX="10" scaleY="10"/>
     </StackPane>
 </AnchorPane>

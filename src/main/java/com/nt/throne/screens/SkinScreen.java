@@ -97,4 +97,14 @@ public class SkinScreen extends BaseScreen {
         leftSelected = mouseX > 467 && mouseX < 529 && mouseY > 110 && mouseY < 171;
         rightSelected = mouseX > 750 && mouseX < 808 && mouseY > 110 && mouseY < 171;
     }
+
+    @Override
+    public void onKeyPressed(KeyEvent event) {
+
+    }
+
+    @Override
+    public void onKeyReleased(KeyEvent event) {
+
+    }
 }
