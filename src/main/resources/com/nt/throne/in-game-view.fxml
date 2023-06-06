@@ -14,5 +14,6 @@
             <Text fx:id="lifeTxt" text="    Life:" />
             <Text fx:id="ammoTxt" text="    Ammo:" />
         </VBox>
+        <Text fx:id="counter" textAlignment="CENTER" text="3" scaleX="10" scaleY="10"/>
     </StackPane>
 </AnchorPane>

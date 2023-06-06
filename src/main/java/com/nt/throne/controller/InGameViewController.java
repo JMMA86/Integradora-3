@@ -22,6 +22,8 @@ import java.util.ResourceBundle;
 
 public class InGameViewController implements Initializable {
     @FXML
+    private Text counter;
+    @FXML
     private Text levelTxt;
     @FXML
     private Canvas canvas;
@@ -61,6 +63,7 @@ public class InGameViewController implements Initializable {
         nameTxt.setFont(customFont);
         lifeTxt.setFont(customFont);
         ammoTxt.setFont(customFont);
+        counter.setFont(customFont);
 
         //Painting
         new Thread( () -> {
@@ -68,6 +71,20 @@ public class InGameViewController implements Initializable {
                 Platform.runLater(this::paint);
                 pause(50);
             }
+        }).start();
+
+        //Counter
+        new Thread(() -> {
+            for (int i = 3; i >= 0; i--) {
+                pause(1000);
+                if (i == 0) {
+                    counter.setText("START");
+                } else {
+                    counter.setText(String.valueOf(i));
+                }
+            }
+            pause(1000);
+            counter.setVisible(false);
         }).start();
 
         //Song
