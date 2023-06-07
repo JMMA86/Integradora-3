@@ -86,6 +86,7 @@ public abstract class Scenario extends BaseScreen {
                 structure.takeDamage(bullet);
                 if (structure.getLife() <= 0) {
                     structures.remove(structure);
+                    ans = true;
                 }
             }
         }
@@ -101,8 +102,8 @@ public abstract class Scenario extends BaseScreen {
         while (totalGuns < 2) {
             //326 * 121 MG
             //284 * 47 SG
-            int x = random.nextInt(50, (int) (canvas.getWidth() - 50));
-            int y = random.nextInt(50, (int) (canvas.getHeight() - 50));
+            int x = random.nextInt(limitX[0] + 50, limitX[1] - 50);
+            int y = random.nextInt(limitY[0] + 50, limitY[1] - 50);
             if (checkFreePosition(x, y)) {
                 if (machineGun) {
                     getGuns().add(
