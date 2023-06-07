@@ -6,6 +6,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 
+import java.util.ArrayList;
+
 public class Hero extends Character {
     private final boolean[] pressedKeys;
     private static Hero instance;
@@ -68,30 +70,85 @@ public class Hero extends Character {
     public void move() {
         Point2D previous = getPosition();
         if(pressedKeys[0]) {
-            if (getPosition().getY() >= Scenario.getLimitY()[1]) {
+            if (getPosition().getY() >= Scenario.getLimitY()[1] || checkBlockCollision(1)) {
                 setPosition(getPosition().add(0, -8));
             }
             setPosition(getPosition().add(0, 8));
         }
         if(pressedKeys[1]) {
-            if (getPosition().getY() <= Scenario.getLimitY()[0]) {
+            if (getPosition().getY() <= Scenario.getLimitY()[0] || checkBlockCollision(0)) {
                 setPosition(getPosition().add(0, 8));
             }
             setPosition(getPosition().add(0, -8));
         }
         if(pressedKeys[2]) {
-            if (getPosition().getX() <= Scenario.getLimitX()[0]) {
+            if (getPosition().getX() <= Scenario.getLimitX()[0] || checkBlockCollision(2)) {
                 setPosition(getPosition().add(8, 0));
             }
             setPosition(getPosition().add(-8, 0));
         }
         if(pressedKeys[3]) {
-            if (getPosition().getX() >= Scenario.getLimitX()[1]) {
+            if (getPosition().getX() >= Scenario.getLimitX()[1] || checkBlockCollision(3)) {
                 setPosition(getPosition().add(-8, 0));
             }
             setPosition(getPosition().add(8, 0));
         }
         if(previous.equals(getPosition())) setState(0);
+    }
+
+    public boolean checkBlockCollision(int movement) {
+        /*
+        Lets define movement:
+        0 -> up
+        1 -> down
+        2 -> left
+        3 -> right
+         */
+        ArrayList<Structure> blocks = Scenario.getStructures();
+        for (Structure block : blocks) {
+            Point2D posHero = getPosition();
+            /*
+            Shape coords (Block = 68x68)
+            posX1 - posX2
+            posY1
+             */
+            Point2D posX1 = new Point2D(block.getPosition().getX(), block.getPosition().getY());
+            Point2D posX2 = new Point2D(block.getPosition().getX() + 68, block.getPosition().getY());
+            Point2D posY1 = new Point2D(block.getPosition().getX(), block.getPosition().getY() + 68);
+            switch (movement) {
+                case 0 -> {
+                    //From below
+                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() <= posY1.getY() && posHero.getY() > posX1.getY()) {
+                        System.out.println("Detected up pos");
+                        return true;
+                    }
+                }
+                case 1 -> {
+                    //From above
+                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() >= posX1.getY() - 70 && posHero.getY() + 10 < posY1.getY()) {
+                        System.out.println("Detected down pos");
+                        return true;
+                    }
+                }
+                case 2 -> {
+                    //From right
+                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() <= posX2.getX() + 35 && posHero.getX() > posX1.getX()) {
+                        System.out.println("Detected left pos");
+                        System.out.println("Person: " + posHero.getY());
+                        System.out.println("Block: " + posY1.getY());
+                        return true;
+                    }
+                }
+                case 3 -> {
+                    //From left
+                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() >= posX1.getX() - 35 && posHero.getX() < posX2.getX()) {
+                        System.out.println("Detected right pos");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override

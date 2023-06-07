@@ -17,7 +17,7 @@ public abstract class Scenario extends BaseScreen {
     private static int[] limitY;
     private Hero hero = Hero.getInstance();
     private ArrayList<Enemy> enemies;
-    private ArrayList<Structure> structures;
+    private static ArrayList<Structure> structures;
     private ArrayList<Bullet> bullets;
     private Image background;
 
@@ -132,7 +132,7 @@ public abstract class Scenario extends BaseScreen {
         this.enemies = enemies;
     }
 
-    public ArrayList<Structure> getStructures() {
+    public static ArrayList<Structure> getStructures() {
         return structures;
     }
 
