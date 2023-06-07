@@ -10,10 +10,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Scenario extends BaseScreen {
@@ -26,6 +23,7 @@ public abstract class Scenario extends BaseScreen {
     private CopyOnWriteArrayList<Gun> guns;
     private boolean areGunsGenerated;
     private Random random;
+    private boolean shooting;
     private final Image background;
 
     public Scenario(Canvas canvas, Image background) {
@@ -165,7 +163,18 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMousePressed(MouseEvent event) {
+        shooting = true;
+        new Thread(() -> {
+            while (shooting) {
+                shoot(event);
 
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
 
     public void shoot(MouseEvent event) {
@@ -186,12 +195,12 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMouseClicked(MouseEvent event) {
-        shoot(event);
+
     }
 
     @Override
     public void onMouseReleased(MouseEvent event) {
-
+        shooting = false;
     }
 
     @Override

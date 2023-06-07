@@ -21,40 +21,53 @@ public class MachineGun extends Gun{
                 picture.getHeight() / 2
             )
         );
-        setDelay(20);
+        setDelay(60);
+        setBulletsPerShoot(5);
+        setRechargeTime(2000);
     }
 
     @Override
     public void onShot(CopyOnWriteArrayList<Bullet> gameBullets, Point2D dest) {
-        setAmmo(getAmmo() - 5);
+        setAmmo(getAmmo() - getBulletsPerShoot());
         Timer timer = new Timer();
-        for (int i = 0; i < 5; i++) {
-            final int shotIndex = i;
+        if (getAmmo() > 0) {
+            for (int i = 0; i < getBulletsPerShoot(); i++) {
+                final int shotIndex = i;
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        gameBullets.add(
+                            new Bullet(
+                                getPosition(),
+                                calcUnitVector(
+                                    dest
+                                ), 8.5, 30,
+                                new Image(
+                                    System.getProperty("user.dir") +
+                                        "/src/main/resources/com/nt/throne/Guns/bullet.png"
+                                )
+                            )
+                        );
+
+                        if (shotIndex == getNumShots() - 1) {
+                            setNumShots(getNumShots() - 1);
+                            timer.cancel();
+                            timer.purge();
+                        }
+                    }
+                };
+
+                timer.schedule(task, (long) i * getDelay());
+            }
+        } else {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
-                    gameBullets.add(
-                        new Bullet(
-                            getPosition(),
-                            calcUnitVector(
-                                dest
-                            ), 8.5, 30,
-                            new Image(
-                                System.getProperty("user.dir") +
-                                    "/src/main/resources/com/nt/throne/Guns/bullet.png"
-                            )
-                        )
-                    );
-
-                    if (shotIndex == getNumShots() - 1) {
-                        setNumShots(getNumShots() - 1);
-                        timer.cancel();
-                        timer.purge();
-                    }
+                    setAmmo(60);
                 }
             };
 
-            timer.schedule(task, (long) i * getDelay());
+            timer.schedule(task, getRechargeTime());
         }
     }
 

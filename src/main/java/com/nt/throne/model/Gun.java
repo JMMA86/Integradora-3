@@ -18,6 +18,8 @@ public abstract class Gun extends Element {
     private Random random;
     private final int CHARGER_SIZE;
     private long delay;
+    private int bulletsPerShoot;
+    private long rechargeTime;
 
     public Gun(Point2D position, Image picture, int CHARGER_SIZE) {
         super(position, picture);
@@ -54,5 +56,21 @@ public abstract class Gun extends Element {
 
     public void setNumShots(int numShots) {
         this.numShots = numShots;
+    }
+
+    public int getBulletsPerShoot() {
+        return bulletsPerShoot;
+    }
+
+    public void setBulletsPerShoot(int bulletsPerShoot) {
+        this.bulletsPerShoot = bulletsPerShoot;
+    }
+
+    public long getRechargeTime() {
+        return rechargeTime;
+    }
+
+    public void setRechargeTime(long rechargeTime) {
+        this.rechargeTime = rechargeTime;
     }
 }
