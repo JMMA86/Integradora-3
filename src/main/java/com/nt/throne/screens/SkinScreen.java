@@ -63,6 +63,16 @@ public class SkinScreen extends BaseScreen {
     }
 
     @Override
+    public void onMouseReleased(MouseEvent event) {
+
+    }
+
+    @Override
+    public void onMouseDragged(MouseEvent event) {
+
+    }
+
+    @Override
     public void onMouseClicked(MouseEvent event) {
         double mouseX = event.getX();
         double mouseY = event.getY();

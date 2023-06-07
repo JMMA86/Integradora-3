@@ -115,7 +115,7 @@ public class InGameViewController implements Initializable {
     private void pause(int milliseconds){
         try {
             Thread.sleep(milliseconds);
-        }catch (InterruptedException e){
+        } catch (InterruptedException e){
             e.printStackTrace();
         }
     }
@@ -124,6 +124,10 @@ public class InGameViewController implements Initializable {
         canvas.setOnMouseClicked(event -> screens.get(SCREEN).onMouseClicked(event));
         canvas.setOnKeyPressed(event -> screens.get(SCREEN).onKeyPressed(event));
         canvas.setOnKeyReleased(event -> screens.get(SCREEN).onKeyReleased(event));
+        canvas.setOnMousePressed(event -> screens.get(SCREEN).onMousePressed(event));
+        canvas.setOnMouseReleased(event -> screens.get(SCREEN).onMouseReleased(event));
+        canvas.setOnMouseDragged(event -> screens.get(SCREEN).onMouseDragged(event));
+        canvas.setOnMouseMoved(event -> screens.get(SCREEN).onMouseMoved(event));
         canvas.setFocusTraversable(true);
     }
 

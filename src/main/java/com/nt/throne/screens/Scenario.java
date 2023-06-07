@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Scenario extends BaseScreen {
     private static int[] limitX;
@@ -17,15 +18,19 @@ public abstract class Scenario extends BaseScreen {
     private Hero hero = Hero.getInstance();
     private ArrayList<Enemy> enemies;
     private ArrayList<Structure> structures;
-    private ArrayList<Bullet> bullets;
+    private CopyOnWriteArrayList<Bullet> bullets; //Allows multiple iterations
     private final Image background;
+    private boolean shooting;
+    private MouseEvent mouseCoords;
+    private long lastShootTime = 0;
+    private final int SHOOT_INTERVAL = 300;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
         this.background = background;
         structures = new ArrayList<>();
         enemies = new ArrayList<>();
-        bullets = new ArrayList<>();
+        bullets = new CopyOnWriteArrayList<>();
         limitX = new int[2];
         limitY = new int[2];
         //Limit declaration
@@ -56,7 +61,6 @@ public abstract class Scenario extends BaseScreen {
 
     private boolean bulletsLogic(Bullet bullet) {
         boolean ans = !isInBounds(bullet);
-
         if (enemies.size() > 0) {
             for (int i = 0; i < enemies.size(); i++) {
                 if (bullet.isHurting(enemies.get(i))) {
@@ -73,6 +77,10 @@ public abstract class Scenario extends BaseScreen {
         return ans;
     }
 
+    public void clearBullets() {
+        bullets.clear();
+    }
+
     private boolean isInBounds(Element element) {
         //This functions checks if the element is in bounds
         return !(element.getPosition().getX() > canvas.getWidth() + 5)
@@ -83,6 +91,42 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMousePressed(MouseEvent event) {
+        shooting = true;
+        new Thread(() -> {
+            while (shooting) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastShootTime >= SHOOT_INTERVAL) {
+                    shoot(mouseCoords);
+                    lastShootTime = currentTime;
+                }
+            }
+        }).start();
+    }
+
+    public void shoot(MouseEvent event) {
+        bullets.add(new Bullet(hero.getPosition(), calcUnitVector(hero.getPosition(), new Point2D(event.getX(), event.getY())), 8.5, 30,
+                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Guns/bullet.png")
+        ));
+    }
+
+    @Override
+    public void onMouseDragged(MouseEvent event) {
+        mouseCoords = event;
+    }
+
+    @Override
+    public void onMouseMoved(MouseEvent event) {
+        mouseCoords = event;
+    }
+
+    @Override
+    public void onMouseClicked(MouseEvent event) {
+        //shoot(event);
+    }
+
+    @Override
+    public void onMouseReleased(MouseEvent event) {
+        shooting = false;
     }
 
     @Override
@@ -93,19 +137,6 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void onKeyReleased(KeyEvent event) {
         hero.onKeyReleased(event);
-    }
-
-
-    @Override
-    public void onMouseClicked(MouseEvent event) {
-        bullets.add(new Bullet(hero.getPosition(), calcUnitVector(hero.getPosition(), new Point2D(event.getX(), event.getY())), 8.5, 30,
-                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Guns/bullet.png")
-                ));
-    }
-
-    @Override
-    public void onMouseMoved(MouseEvent event) {
-
     }
 
     public Point2D calcUnitVector(Point2D origin, Point2D dest) {
@@ -139,11 +170,11 @@ public abstract class Scenario extends BaseScreen {
         this.structures = structures;
     }
 
-    public ArrayList<Bullet> getBullets() {
+    public CopyOnWriteArrayList<Bullet> getBullets() {
         return bullets;
     }
 
-    public void setBullets(ArrayList<Bullet> bullets) {
+    public void setBullets(CopyOnWriteArrayList<Bullet> bullets) {
         this.bullets = bullets;
     }
 
