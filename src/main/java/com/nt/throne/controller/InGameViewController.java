@@ -131,6 +131,10 @@ public class InGameViewController implements Initializable {
         return screens.size();
     }
 
+    public static ArrayList<Scenario> getScreens() {
+        return screens;
+    }
+
     public static void setSCREEN(int SCREEN) {
         InGameViewController.SCREEN = SCREEN;
     }

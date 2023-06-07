@@ -6,7 +6,6 @@ import com.nt.throne.screens.SkinScreen;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-
 import java.util.ArrayList;
 
 public class Hero extends Character {
@@ -119,7 +118,7 @@ public class Hero extends Character {
         2 -> left
         3 -> right
          */
-        ArrayList<Structure> blocks = Scenario.getStructures();
+        ArrayList<Structure> blocks = InGameViewController.getScreens().get(InGameViewController.getSCREEN()).getStructures();
         for (Structure block : blocks) {
             Point2D posHero = getPosition();
             /*

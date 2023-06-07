@@ -9,7 +9,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-
 import java.util.ArrayList;
 
 public abstract class Scenario extends BaseScreen {
@@ -17,9 +16,9 @@ public abstract class Scenario extends BaseScreen {
     private static int[] limitY;
     private Hero hero = Hero.getInstance();
     private ArrayList<Enemy> enemies;
-    private static ArrayList<Structure> structures;
+    private ArrayList<Structure> structures;
     private ArrayList<Bullet> bullets;
-    private Image background;
+    private final Image background;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
@@ -132,7 +131,7 @@ public abstract class Scenario extends BaseScreen {
         this.enemies = enemies;
     }
 
-    public static ArrayList<Structure> getStructures() {
+    public ArrayList<Structure> getStructures() {
         return structures;
     }
 
