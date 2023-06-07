@@ -11,8 +11,7 @@ import java.util.ArrayList;
 public class Hero extends Character {
     private final boolean[] pressedKeys;
     private static Hero instance;
-    //0: None 1: MachineGun 2: Shotgun
-    private int actualGun;
+    private Gun actualGun;
 
     public static Hero getInstance() {
         if(instance == null) {
@@ -156,5 +155,17 @@ public class Hero extends Character {
     @Override
     public void attack() {
 
+    }
+
+    public int shot() {
+        return getActualGun().onShot();
+    }
+
+    public Gun getActualGun() {
+        return actualGun;
+    }
+
+    public void setActualGun(Gun actualGun) {
+        this.actualGun = actualGun;
     }
 }

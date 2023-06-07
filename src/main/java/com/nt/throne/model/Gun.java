@@ -9,7 +9,7 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Gun extends Element {
+public abstract class Gun extends Element {
     private int ammo;
     private Random random;
     private final int CHARGER_SIZE;
@@ -32,4 +32,6 @@ public class Gun extends Element {
     public int getCHARGER_SIZE() {
         return CHARGER_SIZE;
     }
+
+    public abstract int onShot();
 }

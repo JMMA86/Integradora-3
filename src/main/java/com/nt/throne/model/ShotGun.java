@@ -19,6 +19,11 @@ public class ShotGun extends Gun{
     }
 
     @Override
+    public int onShot() {
+        return 0;
+    }
+
+    @Override
     public void paint(GraphicsContext context) {
         context.drawImage(
             getPicture(),

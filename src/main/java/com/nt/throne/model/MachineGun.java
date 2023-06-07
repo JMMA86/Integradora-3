@@ -28,4 +28,13 @@ public class MachineGun extends Gun{
             getPicture().getHeight() / 2
         );
     }
+
+    @Override
+    public int onShot() {
+        setAmmo(getAmmo() - 5);
+        if (getAmmo() > 0) {
+            return 5;
+        }
+        return getAmmo();
+    }
 }

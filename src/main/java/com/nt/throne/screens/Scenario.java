@@ -11,6 +11,8 @@ import javafx.scene.input.MouseEvent;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class Scenario extends BaseScreen {
     private static int[] limitX;
@@ -59,7 +61,7 @@ public abstract class Scenario extends BaseScreen {
     }
 
     private void run() {
-        //gunsLogic();
+        gunsLogic();
         bullets.removeIf(this::bulletsLogic);
     }
 
@@ -134,8 +136,9 @@ public abstract class Scenario extends BaseScreen {
     public void gunsLogic() {
         for (Gun gun : guns) {
             if (hero.isColliding(gun)) {
-                Point2D temp = new Point2D(random.nextInt(limitX[0], limitX[1] - 50), random.nextInt(limitY[0], limitY[1]));
-                gun.setPosition(temp);
+                hero.setActualGun(gun);
+                //Point2D temp = new Point2D(random.nextInt(limitX[0], limitX[1] - 50), random.nextInt(limitY[0], limitY[1]));
+                //gun.setPosition(temp);
             }
         }
     }
@@ -176,21 +179,41 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMouseClicked(MouseEvent event) {
-        bullets.add(
-            new Bullet(
-                hero.getPosition(),
-                calcUnitVector(
-                    hero.getPosition(),
-                    new Point2D(event.getX(), event.getY())
-                ),
-                8.5,
-                30,
-                new Image(
-                    System.getProperty("user.dir") +
-                        "/src/main/resources/com/nt/throne/Guns/bullet.png"
-                )
-            )
-        );
+        if (hero.getActualGun() != null) {
+            Timer timer = new Timer();
+            int numShots = hero.shot();
+            int shotDelay = 20;
+            for (int i = 0; i < numShots; i++) {
+                final int shotIndex = i;
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        bullets.add(
+                            new Bullet(
+                                hero.getPosition(),
+                                calcUnitVector(
+                                    hero.getPosition(),
+                                    new Point2D(event.getX(), event.getY())
+                                ),
+                                8.5,
+                                30,
+                                new Image(
+                                    System.getProperty("user.dir") +
+                                        "/src/main/resources/com/nt/throne/Guns/bullet.png"
+                                )
+                            )
+                        );
+
+                        if (shotIndex == numShots - 1) {
+                            timer.cancel();
+                            timer.purge();
+                        }
+                    }
+                };
+
+                timer.schedule(task, (long) i * shotDelay);
+            }
+        }
     }
 
     @Override
