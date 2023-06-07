@@ -7,6 +7,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Hero extends Character {
     private final boolean[] pressedKeys;
@@ -111,6 +112,7 @@ public class Hero extends Character {
             setPosition(getPosition().add(8, 0));
         }
         if(previous.equals(getPosition())) setState(0);
+        if (actualGun != null) actualGun.getPosition().add(getPosition());
     }
 
     public boolean checkBlockCollision(int movement) {
@@ -157,10 +159,6 @@ public class Hero extends Character {
     @Override
     public void attack() {
 
-    }
-
-    public int shot() {
-        return getActualGun().onShot();
     }
 
     public Gun getActualGun() {

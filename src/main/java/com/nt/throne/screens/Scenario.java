@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,10 +20,10 @@ public abstract class Scenario extends BaseScreen {
     private static int[] limitX;
     private static int[] limitY;
     private Hero hero = Hero.getInstance();
-    private ArrayList<Enemy> enemies;
+    private CopyOnWriteArrayList<Enemy> enemies;
     private ArrayList<Structure> structures;
     private CopyOnWriteArrayList<Bullet> bullets;
-    private ArrayList<Gun> guns;
+    private CopyOnWriteArrayList<Gun> guns;
     private boolean areGunsGenerated;
     private Random random;
     private final Image background;
@@ -31,9 +32,9 @@ public abstract class Scenario extends BaseScreen {
         super(canvas);
         this.background = background;
         structures = new ArrayList<>();
-        enemies = new ArrayList<>();
+        enemies = new CopyOnWriteArrayList<>();
         bullets = new CopyOnWriteArrayList<>();
-        guns = new ArrayList<>();
+        guns = new CopyOnWriteArrayList<>();
         random = new Random();
 
         bullets = new CopyOnWriteArrayList<>();
@@ -59,6 +60,7 @@ public abstract class Scenario extends BaseScreen {
         hero.paint(graphicsContext);
         for (Bullet bullet : bullets) bullet.paint(graphicsContext);
         if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
+        if (hero.getActualGun() != null) hero.getActualGun().paint(graphicsContext);
         run();
     }
 
@@ -67,20 +69,12 @@ public abstract class Scenario extends BaseScreen {
         bullets.removeIf(this::bulletsLogic);
     }
 
-    /**
-     * Performs the bullet collision with elements, returns true if
-     * the bullet must be removed from the bullets list
-     *
-     * @param bullet The bullet to check
-     * @return True if the bullet hit an element
-     */
     private boolean bulletsLogic(Bullet bullet) {
         boolean ans = !isInBounds(bullet);
         if (enemies.size() > 0) {
             for (int i = 0; i < enemies.size(); i++) {
                 if (bullet.isHurting(enemies.get(i))) {
                     enemies.get(i).takeDamage(bullet);
-                    //Insecure execution, looking to refactor this
                     if (enemies.get(i).getLife() <= 0) {
                         enemies.remove(enemies.get(i));
                     }
@@ -95,6 +89,7 @@ public abstract class Scenario extends BaseScreen {
     public void generateGuns() {
         int totalGuns = 0;
         boolean machineGun = true;
+        areGunsGenerated = false;
 
         while (totalGuns < 2) {
             //326 * 121 MG
@@ -135,11 +130,12 @@ public abstract class Scenario extends BaseScreen {
     }
 
     public void gunsLogic() {
-        for (Gun gun : guns) {
-            if (hero.isColliding(gun)) {
-                hero.setActualGun(gun);
-                //Point2D temp = new Point2D(random.nextInt(limitX[0], limitX[1] - 50), random.nextInt(limitY[0], limitY[1]));
-                //gun.setPosition(temp);
+        if (guns.size() > 0) {
+            for (Gun gun : guns) {
+                if (hero.isColliding(gun)) {
+                    hero.setActualGun(gun);
+                    guns.remove(gun);
+                }
             }
         }
     }
@@ -174,39 +170,7 @@ public abstract class Scenario extends BaseScreen {
 
     public void shoot(MouseEvent event) {
         if (hero.getActualGun() != null) {
-            Timer timer = new Timer();
-            int numShots = hero.shot();
-            int shotDelay = 20;
-            for (int i = 0; i < numShots; i++) {
-                final int shotIndex = i;
-                TimerTask task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        bullets.add(
-                            new Bullet(
-                                hero.getPosition(),
-                                calcUnitVector(
-                                    hero.getPosition(),
-                                    new Point2D(
-                                        event.getX(), event.getY()
-                                    )
-                                ), 8.5, 30,
-                                new Image(
-                                    System.getProperty("user.dir") +
-                                        "/src/main/resources/com/nt/throne/Guns/bullet.png"
-                                )
-                            )
-                        );
-
-                        if (shotIndex == numShots - 1) {
-                            timer.cancel();
-                            timer.purge();
-                        }
-                    }
-                };
-
-                timer.schedule(task, (long) i * shotDelay);
-            }
+            hero.getActualGun().onShot(bullets, new Point2D(event.getX(), event.getY()));
         }
     }
 
@@ -240,13 +204,6 @@ public abstract class Scenario extends BaseScreen {
         hero.onKeyReleased(event);
     }
 
-    public Point2D calcUnitVector(Point2D origin, Point2D dest) {
-        double deltaX = dest.getX() - origin.getX();
-        double deltaY = dest.getY() - origin.getY();
-        double magnitude = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-        return new Point2D(deltaX / magnitude, deltaY / magnitude);
-    }
-
     public Hero getHero() {
         return hero;
     }
@@ -255,11 +212,11 @@ public abstract class Scenario extends BaseScreen {
         this.hero = hero;
     }
 
-    public ArrayList<Enemy> getEnemies() {
+    public CopyOnWriteArrayList<Enemy> getEnemies() {
         return enemies;
     }
 
-    public void setEnemies(ArrayList<Enemy> enemies) {
+    public void setEnemies(CopyOnWriteArrayList<Enemy> enemies) {
         this.enemies = enemies;
     }
 
@@ -279,11 +236,11 @@ public abstract class Scenario extends BaseScreen {
         this.bullets = bullets;
     }
 
-    public ArrayList<Gun> getGuns() {
+    public CopyOnWriteArrayList<Gun> getGuns() {
         return guns;
     }
 
-    public void setGuns(ArrayList<Gun> disposableGuns) {
+    public void setGuns(CopyOnWriteArrayList<Gun> disposableGuns) {
         this.guns = disposableGuns;
     }
 

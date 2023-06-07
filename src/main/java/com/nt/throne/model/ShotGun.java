@@ -5,6 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class ShotGun extends Gun{
     public ShotGun(Point2D position, Image picture, int CHARGER_SIZE) {
         super(position, picture, CHARGER_SIZE);
@@ -16,11 +18,12 @@ public class ShotGun extends Gun{
                 picture.getHeight() / 2
             )
         );
+        setDelay(150);
     }
 
     @Override
-    public int onShot() {
-        return 0;
+    public void onShot(CopyOnWriteArrayList<Bullet> gameBullets, Point2D dest) {
+
     }
 
     @Override

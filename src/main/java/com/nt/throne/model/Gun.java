@@ -8,11 +8,16 @@ import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public abstract class Gun extends Element {
+
+    private int numShots;
     private int ammo;
     private Random random;
     private final int CHARGER_SIZE;
+    private long delay;
 
     public Gun(Point2D position, Image picture, int CHARGER_SIZE) {
         super(position, picture);
@@ -33,5 +38,21 @@ public abstract class Gun extends Element {
         return CHARGER_SIZE;
     }
 
-    public abstract int onShot();
+    public abstract void onShot(CopyOnWriteArrayList<Bullet> gameBullets, Point2D dest);
+
+    public long getDelay() {
+        return delay;
+    }
+
+    public void setDelay(long delay) {
+        this.delay = delay;
+    }
+
+    public int getNumShots() {
+        return numShots;
+    }
+
+    public void setNumShots(int numShots) {
+        this.numShots = numShots;
+    }
 }

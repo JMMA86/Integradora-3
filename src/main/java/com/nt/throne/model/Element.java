@@ -56,6 +56,13 @@ public abstract class Element {
         return getHitBox().intersects(element.getHitBox().getBoundsInParent());
     }
 
+    public Point2D calcUnitVector(Point2D dest) {
+        double deltaX = dest.getX() - position.getX();
+        double deltaY = dest.getY() - position.getY();
+        double magnitude = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        return new Point2D(deltaX / magnitude, deltaY / magnitude);
+    }
+
     public void paint(GraphicsContext context) {
         context.drawImage(this.picture, this.position.getX(), this.position.getY());
     }
