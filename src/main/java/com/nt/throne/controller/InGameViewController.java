@@ -1,8 +1,6 @@
 package com.nt.throne.controller;
 
-import com.nt.throne.screens.BaseScreen;
-import com.nt.throne.screens.Pantheon;
-import com.nt.throne.screens.Scenario;
+import com.nt.throne.screens.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +11,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,7 +36,7 @@ public class InGameViewController implements Initializable {
     private Text ammoTxt;
     private MediaPlayer songMediaPlayer;
     private boolean isRunning;
-    private ArrayList<BaseScreen> screens;
+    private static ArrayList<Scenario> screens;
     //Screens:
     /*
     0: pantheon
@@ -50,8 +47,10 @@ public class InGameViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Attributes initialization
         canvas.setFocusTraversable(true);
-        this.screens = new ArrayList<>();
+        screens = new ArrayList<>();
         screens.add(new Pantheon(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1.png" )));
+        screens.add(new Winter(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-2.png" )));
+        screens.add(new RedDesert(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-3.png" )));
         isRunning = true;
 
         //Fonts
@@ -121,10 +120,26 @@ public class InGameViewController implements Initializable {
         }
     }
 
-        public void initEvents() {
-            canvas.setOnMouseClicked(event -> screens.get(SCREEN).onMouseClicked(event));
-            canvas.setOnKeyPressed(event -> screens.get(SCREEN).onKeyPressed(event));
-            canvas.setOnKeyReleased(event -> screens.get(SCREEN).onKeyReleased(event));
-            canvas.setFocusTraversable(true);
-        }
+    public void initEvents() {
+        canvas.setOnMouseClicked(event -> screens.get(SCREEN).onMouseClicked(event));
+        canvas.setOnKeyPressed(event -> screens.get(SCREEN).onKeyPressed(event));
+        canvas.setOnKeyReleased(event -> screens.get(SCREEN).onKeyReleased(event));
+        canvas.setFocusTraversable(true);
+    }
+
+    public static int getMapsSize() {
+        return screens.size();
+    }
+
+    public static ArrayList<Scenario> getScreens() {
+        return screens;
+    }
+
+    public static void setSCREEN(int SCREEN) {
+        InGameViewController.SCREEN = SCREEN;
+    }
+
+    public static int getSCREEN() {
+        return SCREEN;
+    }
 }

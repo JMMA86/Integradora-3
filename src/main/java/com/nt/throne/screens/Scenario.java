@@ -13,14 +13,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Scenario extends BaseScreen {
+    private static int[] limitX;
+    private static int[] limitY;
     private Hero hero = Hero.getInstance();
     private ArrayList<Enemy> enemies;
     private ArrayList<Structure> structures;
     private ArrayList<Bullet> bullets;
     private ArrayList<Gun> guns;
-    private Image background;
     private boolean areGunsGenerated;
     private Random random;
+    private final Image background;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
@@ -31,6 +33,13 @@ public abstract class Scenario extends BaseScreen {
         guns = new ArrayList<>();
         random = new Random();
 
+        limitX = new int[2];
+        limitY = new int[2];
+        //Limit declaration
+        limitX[0] = 80;
+        limitX[1] = 1200;
+        limitY[0] = 70;
+        limitY[1] = 620;
         initElements();
     }
 
@@ -50,6 +59,7 @@ public abstract class Scenario extends BaseScreen {
     }
 
     private void run() {
+        //gunsLogic();
         bullets.removeIf(this::bulletsLogic);
     }
 
@@ -124,14 +134,14 @@ public abstract class Scenario extends BaseScreen {
     public void gunsLogic() {
         for (Gun gun : guns) {
             if (hero.isColliding(gun)) {
-                
-                //gun.setPosition();
+                Point2D temp = new Point2D(random.nextInt(limitX[0], limitX[1] - 50), random.nextInt(limitY[0], limitY[1]));
+                gun.setPosition(temp);
             }
         }
     }
 
     private Boolean checkFreePosition(int x, int y) {
-        Shape temp = new Rectangle(x, y, 50, 50);
+        Shape temp = new Rectangle(x, y, 30, 30);
         for (Structure structure : structures) {
             if (structure.getHitBox().intersects((Bounds) temp)) {
                 return false;
@@ -241,5 +251,13 @@ public abstract class Scenario extends BaseScreen {
 
     public void setRandom(Random random) {
         this.random = random;
+    }
+
+    public static int[] getLimitX() {
+        return limitX;
+    }
+
+    public static int[] getLimitY() {
+        return limitY;
     }
 }
