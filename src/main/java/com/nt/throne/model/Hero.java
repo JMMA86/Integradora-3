@@ -17,6 +17,8 @@ public class Hero extends Character {
     private boolean[] pressedKeys;
 
     private static Hero instance;
+    //0: None 1: MachineGun 2: Shotgun
+    private int actualGun;
 
     public static Hero getInstance() {
         if(instance == null) {

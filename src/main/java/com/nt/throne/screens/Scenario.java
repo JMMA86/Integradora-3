@@ -81,25 +81,16 @@ public abstract class Scenario extends BaseScreen {
 
     public void generateGuns() {
         int totalGuns = 0;
+        boolean machineGun = true;
 
-        while (totalGuns < 3) {
+        while (totalGuns < 2) {
             //326 * 121 MG
             //284 * 47 SG
-            boolean place = true;
             int x = random.nextInt(50, (int) (canvas.getWidth() - 50));
             int y = random.nextInt(50, (int) (canvas.getHeight() - 50));
-
-            Shape temp = new Rectangle(x, y, 50, 50);
-            for (Structure structure : structures) {
-                if (structure.getHitBox().intersects((Bounds) temp)) {
-                    place = false;
-                    break;
-                }
-            }
-
-            if (place) {
-                if (getRandom().nextInt(0, 2) == 1) {
-                    getDisposableGuns().add(
+            if (checkFreePosition(x, y)) {
+                if (machineGun) {
+                    getGuns().add(
                         new MachineGun(
                             new Point2D(x, y),
                             new Image(
@@ -109,8 +100,9 @@ public abstract class Scenario extends BaseScreen {
                             60
                         )
                     );
+                    machineGun = false;
                 } else {
-                    getDisposableGuns().add(
+                    getGuns().add(
                         new ShotGun(
                             new Point2D(x, y),
                             new Image(
@@ -120,11 +112,33 @@ public abstract class Scenario extends BaseScreen {
                             10
                         )
                     );
+                    machineGun = true;
                 }
-
                 totalGuns += 1;
             }
         }
+
+        areGunsGenerated = true;
+    }
+
+    public void gunsLogic() {
+        for (Gun gun : guns) {
+            if (hero.isColliding(gun)) {
+                
+                //gun.setPosition();
+            }
+        }
+    }
+
+    private Boolean checkFreePosition(int x, int y) {
+        Shape temp = new Rectangle(x, y, 50, 50);
+        for (Structure structure : structures) {
+            if (structure.getHitBox().intersects((Bounds) temp)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private boolean isInBounds(Element element) {
@@ -152,9 +166,21 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMouseClicked(MouseEvent event) {
-        bullets.add(new Bullet(hero.getPosition(), calcUnitVector(hero.getPosition(), new Point2D(event.getX(), event.getY())), 8.5, 30,
-            new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Guns/bullet.png")
-        ));
+        bullets.add(
+            new Bullet(
+                hero.getPosition(),
+                calcUnitVector(
+                    hero.getPosition(),
+                    new Point2D(event.getX(), event.getY())
+                ),
+                8.5,
+                30,
+                new Image(
+                    System.getProperty("user.dir") +
+                        "/src/main/resources/com/nt/throne/Guns/bullet.png"
+                )
+            )
+        );
     }
 
     @Override
@@ -201,11 +227,11 @@ public abstract class Scenario extends BaseScreen {
         this.bullets = bullets;
     }
 
-    public ArrayList<Gun> getDisposableGuns() {
+    public ArrayList<Gun> getGuns() {
         return guns;
     }
 
-    public void setDisposableGuns(ArrayList<Gun> disposableGuns) {
+    public void setGuns(ArrayList<Gun> disposableGuns) {
         this.guns = disposableGuns;
     }
 
