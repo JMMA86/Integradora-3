@@ -105,6 +105,7 @@ public class MainMenuController implements Initializable {
         String fullSongPath = songPath.toURI().toString();
         songMediaPlayer = new MediaPlayer(new Media(fullSongPath));
         songMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        songMediaPlayer.setVolume(0.5);
 
         //Loading screen
         videoMediaPlayer.setOnReady(() -> videoReady = true);

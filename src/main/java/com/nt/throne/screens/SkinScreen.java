@@ -15,7 +15,7 @@ public class SkinScreen extends BaseScreen {
     private final Image rightArrowSelected;
     private boolean rightSelected;
     private int imageCounter = 0;
-    private int skinSelected = 0;
+    private static int skinSelected = 0;
 
     public SkinScreen(Canvas canvas) {
         super(canvas);
@@ -63,6 +63,16 @@ public class SkinScreen extends BaseScreen {
     }
 
     @Override
+    public void onMouseReleased(MouseEvent event) {
+
+    }
+
+    @Override
+    public void onMouseDragged(MouseEvent event) {
+
+    }
+
+    @Override
     public void onMouseClicked(MouseEvent event) {
         double mouseX = event.getX();
         double mouseY = event.getY();
@@ -96,5 +106,9 @@ public class SkinScreen extends BaseScreen {
     @Override
     public void onKeyReleased(KeyEvent event) {
 
+    }
+
+    public static int getSkinSelected() {
+        return skinSelected;
     }
 }

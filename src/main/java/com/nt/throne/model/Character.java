@@ -3,12 +3,7 @@ package com.nt.throne.model;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-
-import java.util.ArrayList;
-
 public abstract class Character extends AliveElement implements IAct {
     private Gun currentGun;
     private int currentFrame;

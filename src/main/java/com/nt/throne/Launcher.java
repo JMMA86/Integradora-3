@@ -2,14 +2,12 @@ package com.nt.throne;
 
 import com.nt.throne.controller.InGameViewController;
 import com.nt.throne.controller.MainMenuController;
-import com.nt.throne.model.FileManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class Launcher extends Application {
@@ -33,9 +31,13 @@ public class Launcher extends Application {
                 try {
                     MainMenuController controller = fxmlLoader.getController();
                     controller.setRunning(false);
-                    InGameViewController controller1 = fxmlLoader.getController();
-                    controller1.setRunning(false);
                 } catch (ClassCastException e) {
+                    try {
+                        InGameViewController controller1 = fxmlLoader.getController();
+                        controller1.setRunning(false);
+                    } catch (ClassCastException f) {
+                        Platform.exit();
+                    }
                     Platform.exit();
                 }
             });

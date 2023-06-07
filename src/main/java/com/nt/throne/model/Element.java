@@ -6,8 +6,6 @@ import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-import java.util.ArrayList;
-
 public abstract class Element {
     private Point2D position;
     private Shape hitBox;
@@ -19,7 +17,7 @@ public abstract class Element {
         this.position = position;
         this.state = 0;
         this.picture = picture;
-        this.hitBox = new Rectangle(picture.getWidth(), picture.getHeight());
+        this.hitBox = new Rectangle(position.getX(), position.getY(), picture.getWidth(), picture.getHeight());
     }
 
     public Point2D getPosition() {
@@ -52,6 +50,17 @@ public abstract class Element {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public boolean isColliding(Element element) {
+        return getHitBox().intersects(element.getHitBox().getBoundsInParent());
+    }
+
+    public Point2D calcUnitVector(Point2D dest) {
+        double deltaX = dest.getX() - position.getX();
+        double deltaY = dest.getY() - position.getY();
+        double magnitude = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        return new Point2D(deltaX / magnitude, deltaY / magnitude);
     }
 
     public void paint(GraphicsContext context) {

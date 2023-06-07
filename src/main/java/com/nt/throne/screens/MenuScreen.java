@@ -23,6 +23,16 @@ public class MenuScreen extends BaseScreen {
     }
 
     @Override
+    public void onMouseReleased(MouseEvent event) {
+
+    }
+
+    @Override
+    public void onMouseDragged(MouseEvent event) {
+
+    }
+
+    @Override
     public void onMouseClicked(MouseEvent event) {
 
     }
