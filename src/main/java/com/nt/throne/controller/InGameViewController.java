@@ -1,9 +1,6 @@
 package com.nt.throne.controller;
 
-import com.nt.throne.model.Hero;
-import com.nt.throne.screens.BaseScreen;
-import com.nt.throne.screens.Pantheon;
-import com.nt.throne.screens.Scenario;
+import com.nt.throne.screens.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,7 +36,7 @@ public class InGameViewController implements Initializable {
     private Text ammoTxt;
     private MediaPlayer songMediaPlayer;
     private boolean isRunning;
-    private ArrayList<Scenario> screens;
+    private static ArrayList<Scenario> screens;
     //Screens:
     /*
     0: pantheon
@@ -52,6 +49,8 @@ public class InGameViewController implements Initializable {
         canvas.setFocusTraversable(true);
         screens = new ArrayList<>();
         screens.add(new Pantheon(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1.png" )));
+        screens.add(new Winter(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-2.png" )));
+        screens.add(new RedDesert(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-3.png" )));
         isRunning = true;
 
         //Fonts
@@ -126,5 +125,17 @@ public class InGameViewController implements Initializable {
         canvas.setOnKeyPressed(event -> screens.get(SCREEN).onKeyPressed(event));
         canvas.setOnKeyReleased(event -> screens.get(SCREEN).onKeyReleased(event));
         canvas.setFocusTraversable(true);
+    }
+
+    public static int getMapsSize() {
+        return screens.size();
+    }
+
+    public static void setSCREEN(int SCREEN) {
+        InGameViewController.SCREEN = SCREEN;
+    }
+
+    public static int getSCREEN() {
+        return SCREEN;
     }
 }

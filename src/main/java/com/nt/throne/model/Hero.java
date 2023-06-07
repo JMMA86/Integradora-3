@@ -1,5 +1,6 @@
 package com.nt.throne.model;
 
+import com.nt.throne.controller.InGameViewController;
 import com.nt.throne.screens.Scenario;
 import com.nt.throne.screens.SkinScreen;
 import javafx.geometry.Point2D;
@@ -82,13 +83,27 @@ public class Hero extends Character {
             setPosition(getPosition().add(0, -8));
         }
         if(pressedKeys[2]) {
-            if (getPosition().getX() <= Scenario.getLimitX()[0] || checkBlockCollision(2)) {
+            if (getPosition().getX() <= Scenario.getLimitX()[0]) {
+                if (getPosition().getY() > 330 && getPosition().getY() < 423 && InGameViewController.getSCREEN() > 0) {
+                    InGameViewController.setSCREEN(InGameViewController.getSCREEN() - 1);
+                    setPosition(new Point2D(1199, getPosition().getY()));
+                } else {
+                    setPosition(getPosition().add(8, 0));
+                }
+            } else if (checkBlockCollision(2)) {
                 setPosition(getPosition().add(8, 0));
             }
             setPosition(getPosition().add(-8, 0));
         }
         if(pressedKeys[3]) {
-            if (getPosition().getX() >= Scenario.getLimitX()[1] || checkBlockCollision(3)) {
+            if (getPosition().getX() >= Scenario.getLimitX()[1]) {
+                if (getPosition().getY() > 330 && getPosition().getY() < 423 && InGameViewController.getSCREEN() < InGameViewController.getMapsSize() - 1) {
+                    InGameViewController.setSCREEN(InGameViewController.getSCREEN() + 1);
+                    setPosition(new Point2D(81, getPosition().getY()));
+                } else {
+                    setPosition(getPosition().add(-8, 0));
+                }
+            } else if (checkBlockCollision(3)) {
                 setPosition(getPosition().add(-8, 0));
             }
             setPosition(getPosition().add(8, 0));
@@ -118,33 +133,19 @@ public class Hero extends Character {
             switch (movement) {
                 case 0 -> {
                     //From below
-                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() <= posY1.getY() && posHero.getY() > posX1.getY()) {
-                        System.out.println("Detected up pos");
-                        return true;
-                    }
+                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() <= posY1.getY() && posHero.getY() > posX1.getY()) return true;
                 }
                 case 1 -> {
                     //From above
-                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() >= posX1.getY() - 70 && posHero.getY() + 10 < posY1.getY()) {
-                        System.out.println("Detected down pos");
-                        return true;
-                    }
+                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() >= posX1.getY() - 70 && posHero.getY() + 10 < posY1.getY()) return true;
                 }
                 case 2 -> {
                     //From right
-                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() <= posX2.getX() + 35 && posHero.getX() > posX1.getX()) {
-                        System.out.println("Detected left pos");
-                        System.out.println("Person: " + posHero.getY());
-                        System.out.println("Block: " + posY1.getY());
-                        return true;
-                    }
+                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() <= posX2.getX() + 35 && posHero.getX() > posX1.getX()) return true;
                 }
                 case 3 -> {
                     //From left
-                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() >= posX1.getX() - 35 && posHero.getX() < posX2.getX()) {
-                        System.out.println("Detected right pos");
-                        return true;
-                    }
+                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() >= posX1.getX() - 35 && posHero.getX() < posX2.getX()) return true;
                 }
             }
         }
