@@ -85,6 +85,7 @@ public class Hero extends Character {
         if(pressedKeys[2]) {
             if (getPosition().getX() <= Scenario.getLimitX()[0]) {
                 if (getPosition().getY() > 330 && getPosition().getY() < 423 && InGameViewController.getSCREEN() > 0) {
+                    InGameViewController.getScreens().get(InGameViewController.getSCREEN()).clearBullets();
                     InGameViewController.setSCREEN(InGameViewController.getSCREEN() - 1);
                     setPosition(new Point2D(1199, getPosition().getY()));
                 } else {
@@ -98,6 +99,7 @@ public class Hero extends Character {
         if(pressedKeys[3]) {
             if (getPosition().getX() >= Scenario.getLimitX()[1]) {
                 if (getPosition().getY() > 330 && getPosition().getY() < 423 && InGameViewController.getSCREEN() < InGameViewController.getMapsSize() - 1) {
+                    InGameViewController.getScreens().get(InGameViewController.getSCREEN()).clearBullets();
                     InGameViewController.setSCREEN(InGameViewController.getSCREEN() + 1);
                     setPosition(new Point2D(81, getPosition().getY()));
                 } else {
