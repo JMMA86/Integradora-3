@@ -18,7 +18,7 @@ public abstract class Scenario extends BaseScreen {
     private static int[] limitY;
     private Hero hero = Hero.getInstance();
     private CopyOnWriteArrayList<Enemy> enemies;
-    private ArrayList<Structure> structures;
+    private CopyOnWriteArrayList<Structure> structures;
     private CopyOnWriteArrayList<Bullet> bullets;
     private CopyOnWriteArrayList<Gun> guns;
     private boolean areGunsGenerated;
@@ -29,7 +29,7 @@ public abstract class Scenario extends BaseScreen {
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
         this.background = background;
-        structures = new ArrayList<>();
+        structures = new CopyOnWriteArrayList<>();
         enemies = new CopyOnWriteArrayList<>();
         bullets = new CopyOnWriteArrayList<>();
         guns = new CopyOnWriteArrayList<>();
@@ -238,11 +238,11 @@ public abstract class Scenario extends BaseScreen {
         this.enemies = enemies;
     }
 
-    public ArrayList<Structure> getStructures() {
+    public CopyOnWriteArrayList<Structure> getStructures() {
         return structures;
     }
 
-    public void setStructures(ArrayList<Structure> structures) {
+    public void setStructures(CopyOnWriteArrayList<Structure> structures) {
         this.structures = structures;
     }
 
