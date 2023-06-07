@@ -10,6 +10,8 @@ public class Structure extends AliveElement {
 
     @Override
     public void takeDamage(Element origin) {
-
+        if (origin instanceof Bullet) {
+            setLife(getLife() - ((Bullet) origin).getDamage());
+        }
     }
 }

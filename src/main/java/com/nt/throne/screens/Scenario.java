@@ -81,6 +81,15 @@ public abstract class Scenario extends BaseScreen {
             }
         }
 
+        for (Structure structure : structures) {
+            if (bullet.isHurting(structure)) {
+                structure.takeDamage(bullet);
+                if (structure.getLife() <= 0) {
+                    structures.remove(structure);
+                }
+            }
+        }
+
         return ans;
     }
 
@@ -115,7 +124,7 @@ public abstract class Scenario extends BaseScreen {
                                 System.getProperty("user.dir") +
                                     "/src/main/resources/com/nt/throne/Guns/shotgun.png"
                             ),
-                            10
+                            40
                         )
                     );
                     machineGun = true;

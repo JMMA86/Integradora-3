@@ -63,7 +63,7 @@ public class MachineGun extends Gun{
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
-                    setAmmo(60);
+                    setAmmo(getCHARGER_SIZE());
                 }
             };
 

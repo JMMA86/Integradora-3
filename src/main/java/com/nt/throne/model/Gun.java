@@ -73,4 +73,12 @@ public abstract class Gun extends Element {
     public void setRechargeTime(long rechargeTime) {
         this.rechargeTime = rechargeTime;
     }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
+    }
 }
