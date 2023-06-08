@@ -157,18 +157,16 @@ public abstract class Scenario extends BaseScreen {
     }
 
     public void gunsLogic() {
-        if (guns.size() > 0) {
-            for (Gun gun : guns) {
-                if (hero.isColliding(gun)) {
-                    hero.setActualGun(gun);
-                    guns.remove(gun);
-                }
+        for (Gun gun : guns) {
+            if (hero.isColliding(gun)) {
+                hero.setActualGun(gun);
+                guns.remove(gun);
             }
         }
     }
 
     private Boolean checkFreePosition(int x, int y) {
-        Shape temp = new Rectangle(x, y, 30, 30);
+        Shape temp = new Rectangle(x, y, 60, 30);
         for (Structure structure : structures) {
             if (structure.getHitBox().intersects((Bounds) temp)) {
                 return false;
@@ -198,7 +196,7 @@ public abstract class Scenario extends BaseScreen {
                 shoot(event);
 
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(150);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
