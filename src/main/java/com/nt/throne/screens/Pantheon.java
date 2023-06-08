@@ -1,6 +1,5 @@
 package com.nt.throne.screens;
 
-import com.nt.throne.model.MachineGun;
 import com.nt.throne.model.ShooterEnemy;
 import com.nt.throne.model.Structure;
 import javafx.geometry.Point2D;

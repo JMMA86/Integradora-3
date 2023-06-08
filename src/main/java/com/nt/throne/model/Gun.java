@@ -1,22 +1,17 @@
 package com.nt.throne.model;
 
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 public abstract class Gun extends Element {
 
+    private final int CHARGER_SIZE;
     private int numShots;
     private int ammo;
     private Random random;
-    private final int CHARGER_SIZE;
     private long delay;
     private int bulletsPerShoot;
     private long rechargeTime;

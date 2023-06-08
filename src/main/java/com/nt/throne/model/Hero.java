@@ -6,32 +6,35 @@ import com.nt.throne.screens.SkinScreen;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import java.util.ArrayList;
+
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Hero extends Character {
-    private final boolean[] pressedKeys;
     private static Hero instance;
+    private final boolean[] pressedKeys;
     private Gun actualGun;
     private boolean canShot;
-
-    public static Hero getInstance() {
-        if(instance == null) {
-            Image image = null;
-            //Skin selector
-            switch (SkinScreen.getSkinSelected()) {
-                case 0 -> image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero1.png" );
-                case 1 -> image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png" );
-                case 2 -> image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero3.png" );
-            }
-            instance = new Hero(new Point2D(128,128), image);
-        }
-        return instance;
-    }
 
     private Hero(Point2D position, Image picture) {
         super(position, picture);
         pressedKeys = new boolean[]{false, false, false, false};
+    }
+
+    public static Hero getInstance() {
+        if (instance == null) {
+            Image image = null;
+            //Skin selector
+            switch (SkinScreen.getSkinSelected()) {
+                case 0 ->
+                    image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero1.png");
+                case 1 ->
+                    image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png");
+                case 2 ->
+                    image = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero3.png");
+            }
+            instance = new Hero(new Point2D(128, 128), image);
+        }
+        return instance;
     }
 
     @Override
@@ -42,11 +45,11 @@ public class Hero extends Character {
     public void onKeyPressed(KeyEvent event) {
         switch (event.getCode()) {
             case S -> {
-                if( getState() != 3 && getState() != 4 ) setState(1);
+                if (getState() != 3 && getState() != 4) setState(1);
                 pressedKeys[0] = true;
             }
             case W -> {
-                if( getState() != 3 && getState() != 4 ) setState(2);
+                if (getState() != 3 && getState() != 4) setState(2);
                 pressedKeys[1] = true;
             }
             case A -> {
@@ -72,19 +75,19 @@ public class Hero extends Character {
     @Override
     public void move() {
         Point2D previous = getPosition();
-        if(pressedKeys[0]) {
+        if (pressedKeys[0]) {
             if (getPosition().getY() >= Scenario.getLimitY()[1] || checkBlockCollision(1)) {
                 setPosition(getPosition().add(0, -8));
             }
             setPosition(getPosition().add(0, 8));
         }
-        if(pressedKeys[1]) {
+        if (pressedKeys[1]) {
             if (getPosition().getY() <= Scenario.getLimitY()[0] || checkBlockCollision(0)) {
                 setPosition(getPosition().add(0, 8));
             }
             setPosition(getPosition().add(0, -8));
         }
-        if(pressedKeys[2]) {
+        if (pressedKeys[2]) {
             if (getPosition().getX() <= Scenario.getLimitX()[0]) {
                 if (getPosition().getY() > 330 && getPosition().getY() < 423 && InGameViewController.getSCREEN() > 0) {
                     InGameViewController.getScreens().get(InGameViewController.getSCREEN()).clearBullets();
@@ -98,7 +101,7 @@ public class Hero extends Character {
             }
             setPosition(getPosition().add(-8, 0));
         }
-        if(pressedKeys[3]) {
+        if (pressedKeys[3]) {
             if (getPosition().getX() >= Scenario.getLimitX()[1]) {
                 if (getPosition().getY() > 330 && getPosition().getY() < 423 && InGameViewController.getSCREEN() < InGameViewController.getMapsSize() - 1) {
                     InGameViewController.getScreens().get(InGameViewController.getSCREEN()).clearBullets();
@@ -112,7 +115,7 @@ public class Hero extends Character {
             }
             setPosition(getPosition().add(8, 0));
         }
-        if(previous.equals(getPosition())) setState(0);
+        if (previous.equals(getPosition())) setState(0);
         if (actualGun != null) actualGun.setPosition(this.getPosition());
     }
 
@@ -138,19 +141,23 @@ public class Hero extends Character {
             switch (movement) {
                 case 0 -> {
                     //From below
-                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() <= posY1.getY() && posHero.getY() > posX1.getY()) return true;
+                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() <= posY1.getY() && posHero.getY() > posX1.getY())
+                        return true;
                 }
                 case 1 -> {
                     //From above
-                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() >= posX1.getY() - 70 && posHero.getY() + 10 < posY1.getY()) return true;
+                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() >= posX1.getY() - 70 && posHero.getY() + 10 < posY1.getY())
+                        return true;
                 }
                 case 2 -> {
                     //From right
-                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() <= posX2.getX() + 35 && posHero.getX() > posX1.getX()) return true;
+                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() <= posX2.getX() + 35 && posHero.getX() > posX1.getX())
+                        return true;
                 }
                 case 3 -> {
                     //From left
-                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() >= posX1.getX() - 35 && posHero.getX() < posX2.getX()) return true;
+                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() >= posX1.getX() - 35 && posHero.getX() < posX2.getX())
+                        return true;
                 }
             }
         }

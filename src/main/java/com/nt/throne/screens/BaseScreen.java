@@ -1,6 +1,5 @@
 package com.nt.throne.screens;
 
-import com.nt.throne.model.Hero;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
@@ -29,10 +28,16 @@ public abstract class BaseScreen {
     public abstract void paint();
 
     public abstract void onMousePressed(MouseEvent event);
+
     public abstract void onMouseReleased(MouseEvent event);
+
     public abstract void onMouseDragged(MouseEvent event);
+
     public abstract void onKeyPressed(KeyEvent event);
+
     public abstract void onKeyReleased(KeyEvent event);
+
     public abstract void onMouseClicked(MouseEvent event);
+
     public abstract void onMouseMoved(MouseEvent event);
 }

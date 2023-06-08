@@ -1,6 +1,9 @@
 package com.nt.throne.controller;
 
-import com.nt.throne.screens.*;
+import com.nt.throne.screens.Pantheon;
+import com.nt.throne.screens.RedDesert;
+import com.nt.throne.screens.Scenario;
+import com.nt.throne.screens.Winter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,6 +14,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,6 +24,12 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class InGameViewController implements Initializable {
+    //Screens:
+    /*
+    0: pantheon
+     */
+    public static int SCREEN = 0;
+    private static ArrayList<Scenario> screens;
     @FXML
     private Text counter;
     @FXML
@@ -36,21 +46,31 @@ public class InGameViewController implements Initializable {
     private Text ammoTxt;
     private MediaPlayer songMediaPlayer;
     private boolean isRunning;
-    private static ArrayList<Scenario> screens;
-    //Screens:
-    /*
-    0: pantheon
-     */
-    public static int SCREEN = 0;
+
+    public static int getMapsSize() {
+        return screens.size();
+    }
+
+    public static ArrayList<Scenario> getScreens() {
+        return screens;
+    }
+
+    public static int getSCREEN() {
+        return SCREEN;
+    }
+
+    public static void setSCREEN(int SCREEN) {
+        InGameViewController.SCREEN = SCREEN;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Attributes initialization
         canvas.setFocusTraversable(true);
         screens = new ArrayList<>();
-        screens.add(new Pantheon(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1.png" )));
-        screens.add(new Winter(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-2.png" )));
-        screens.add(new RedDesert(canvas, new Image( System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-3.png" )));
+        screens.add(new Pantheon(canvas, new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1.png")));
+        screens.add(new Winter(canvas, new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-2.png")));
+        screens.add(new RedDesert(canvas, new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-3.png")));
         isRunning = true;
 
         //Fonts
@@ -68,8 +88,8 @@ public class InGameViewController implements Initializable {
         counter.setFont(customFont);
 
         //Painting
-        new Thread( () -> {
-            while (isRunning){
+        new Thread(() -> {
+            while (isRunning) {
                 Platform.runLater(this::paint);
                 pause(50);
             }
@@ -104,7 +124,7 @@ public class InGameViewController implements Initializable {
 
     }
 
-    public void paint(){
+    public void paint() {
         if (SCREEN <= screens.size()) screens.get(SCREEN).paint();
     }
 
@@ -112,10 +132,10 @@ public class InGameViewController implements Initializable {
         isRunning = running;
     }
 
-    private void pause(int milliseconds){
+    private void pause(int milliseconds) {
         try {
             Thread.sleep(milliseconds);
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -129,21 +149,5 @@ public class InGameViewController implements Initializable {
         canvas.setOnMouseDragged(event -> screens.get(SCREEN).onMouseDragged(event));
         canvas.setOnMouseMoved(event -> screens.get(SCREEN).onMouseMoved(event));
         canvas.setFocusTraversable(true);
-    }
-
-    public static int getMapsSize() {
-        return screens.size();
-    }
-
-    public static ArrayList<Scenario> getScreens() {
-        return screens;
-    }
-
-    public static void setSCREEN(int SCREEN) {
-        InGameViewController.SCREEN = SCREEN;
-    }
-
-    public static int getSCREEN() {
-        return SCREEN;
     }
 }

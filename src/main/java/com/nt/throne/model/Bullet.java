@@ -23,7 +23,8 @@ public class Bullet extends Element implements IAct {
 
     @Override
     public void move() {
-        if(!movementLocked) setPosition(getPosition().add(direction.getX() * acceleration, direction.getY() * acceleration));
+        if (!movementLocked)
+            setPosition(getPosition().add(direction.getX() * acceleration, direction.getY() * acceleration));
     }
 
     @Override
@@ -42,7 +43,7 @@ public class Bullet extends Element implements IAct {
     @Override
     public void paint(GraphicsContext context) {
         move();
-        setHitBox( new Circle( getPosition().getX(), getPosition().getY(), 20 ));
+        setHitBox(new Circle(getPosition().getX(), getPosition().getY(), 20));
         context.drawImage(getPicture(), getPosition().getX(), getPosition().getY(), 20, 20);
     }
 }

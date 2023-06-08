@@ -4,18 +4,19 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+
 import java.util.ArrayList;
 
 public class SkinScreen extends BaseScreen {
+    private static int skinSelected = 0;
     private final ArrayList<Image> moving;
     private final Image leftArrow;
     private final Image leftArrowSelected;
-    private boolean leftSelected;
     private final Image rightArrow;
     private final Image rightArrowSelected;
+    private boolean leftSelected;
     private boolean rightSelected;
     private int imageCounter = 0;
-    private static int skinSelected = 0;
 
     public SkinScreen(Canvas canvas) {
         super(canvas);
@@ -30,6 +31,10 @@ public class SkinScreen extends BaseScreen {
         moving.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero1.png"));
         moving.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png"));
         moving.add(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero3.png"));
+    }
+
+    public static int getSkinSelected() {
+        return skinSelected;
     }
 
     @Override
@@ -106,9 +111,5 @@ public class SkinScreen extends BaseScreen {
     @Override
     public void onKeyReleased(KeyEvent event) {
 
-    }
-
-    public static int getSkinSelected() {
-        return skinSelected;
     }
 }

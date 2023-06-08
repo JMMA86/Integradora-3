@@ -9,13 +9,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Scenario extends BaseScreen {
     private static int[] limitX;
     private static int[] limitY;
+    private final Image background;
     private Hero hero = Hero.getInstance();
     private CopyOnWriteArrayList<Enemy> enemies;
     private CopyOnWriteArrayList<Structure> structures;
@@ -24,7 +24,6 @@ public abstract class Scenario extends BaseScreen {
     private boolean areGunsGenerated;
     private Random random;
     private boolean shooting;
-    private final Image background;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
@@ -44,6 +43,14 @@ public abstract class Scenario extends BaseScreen {
         limitY[0] = 70;
         limitY[1] = 620;
         initElements();
+    }
+
+    public static int[] getLimitX() {
+        return limitX;
+    }
+
+    public static int[] getLimitY() {
+        return limitY;
     }
 
     // Initialize all the enemies and structures in the scenario
@@ -269,13 +276,5 @@ public abstract class Scenario extends BaseScreen {
 
     public void setRandom(Random random) {
         this.random = random;
-    }
-
-    public static int[] getLimitX() {
-        return limitX;
-    }
-
-    public static int[] getLimitY() {
-        return limitY;
     }
 }
