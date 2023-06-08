@@ -6,6 +6,8 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -60,6 +62,8 @@ public class MachineGun extends Gun {
             timer.schedule(task, getDelay());
 
         } else {
+            reloadSound.stop();
+            reloadSound.seek(Duration.ZERO);
             reloadSound.play();
             TimerTask task = new TimerTask() {
                 @Override

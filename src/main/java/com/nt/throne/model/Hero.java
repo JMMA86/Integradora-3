@@ -19,6 +19,7 @@ public class Hero extends Character {
 
     private Hero(Point2D position, Image picture) {
         super(position, picture);
+        actualGun = null;
         pressedKeys = new boolean[]{false, false, false, false};
         prefferedArea = new Circle(getPosition().getX(), getPosition().getY(), 300);
     }

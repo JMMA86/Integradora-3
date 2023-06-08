@@ -10,7 +10,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-
 import java.awt.*;
 import java.io.File;
 import java.util.Random;
@@ -31,11 +30,14 @@ public abstract class Scenario extends BaseScreen {
     private boolean movingEnemies;
     private final MediaPlayer bodyImpactSound;
     private final MediaPlayer blockImpactSound;
+    private MouseEvent mouseCoords;
+    private boolean recharging;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
         bodyImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/bodyImpactSound.mp3").toURI().toString()));
         blockImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/blockImpactSound.mp3").toURI().toString()));
+        recharging = false;
         this.background = background;
         structures = new CopyOnWriteArrayList<>();
         enemies = new CopyOnWriteArrayList<>();
@@ -129,7 +131,6 @@ public abstract class Scenario extends BaseScreen {
         int totalGuns = 0;
         boolean machineGun = true;
         areGunsGenerated = false;
-
         while (totalGuns < 2) {
             //326 * 121 MG
             //284 * 47 SG
@@ -164,7 +165,6 @@ public abstract class Scenario extends BaseScreen {
                 totalGuns += 1;
             }
         }
-
         areGunsGenerated = true;
     }
 
@@ -208,44 +208,40 @@ public abstract class Scenario extends BaseScreen {
     public void onMousePressed(MouseEvent event) {
         shooting = true;
         new Thread(() -> {
-            makeSound();
             while (shooting) {
-                shoot(event);
-                try {
-                    Thread.sleep(150);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
                 hero.getActualGun().getShotSound().stop();
                 hero.getActualGun().getShotSound().seek(Duration.ZERO);
-            }
-        }).start();
-    }
-
-    public void makeSound() {
-        new Thread(() -> {
-            while (shooting) {
-                hero.getActualGun().getShotSound().play();
-                try {
-                    Thread.sleep((long) hero.getActualGun().getShotSound().getCycleDuration().toMillis());
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                if (hero.getActualGun().getAmmo() > 0) {
+                    hero.getActualGun().getShotSound().play();
+                }
+                if (!recharging) {
+                    shoot(mouseCoords);
+                }
+                if (hero.getActualGun().getAmmo() > 0) {
+                    try {
+                        Thread.sleep(150);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    try {
+                        recharging = true;
+                        Thread.sleep(hero.getActualGun().getRechargeTime() + 10);
+                        recharging = false;
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
-            hero.getActualGun().getShotSound().stop();
-            hero.getActualGun().getShotSound().seek(Duration.ZERO);
         }).start();
     }
 
     public void shoot(MouseEvent event) {
         if (hero.getActualGun() != null) {
-            hero.getActualGun().getShotSound().play();
             hero.getActualGun().onShot(bullets, new Point2D(event.getX(), event.getY()));
         }
         try {
             Thread.sleep(150);
-            hero.getActualGun().getShotSound().stop();
-            hero.getActualGun().getShotSound().seek(Duration.ZERO);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -253,12 +249,12 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMouseDragged(MouseEvent event) {
-
+        mouseCoords = event;
     }
 
     @Override
     public void onMouseMoved(MouseEvent event) {
-
+        mouseCoords = event;
     }
 
     @Override
@@ -269,8 +265,6 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void onMouseReleased(MouseEvent event) {
         shooting = false;
-        hero.getActualGun().getShotSound().stop();
-        hero.getActualGun().getShotSound().seek(Duration.ZERO);
     }
 
     @Override

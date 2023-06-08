@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -94,6 +95,8 @@ public class ShotGun extends Gun {
             public void run() {
                 if (getAmmo() <= 0 && getAmmo() != 35) {
                     setAmmo(getCHARGER_SIZE());
+                    reloadSound.stop();
+                    reloadSound.seek(Duration.ZERO);
                     reloadSound.play();
                 }
             }
