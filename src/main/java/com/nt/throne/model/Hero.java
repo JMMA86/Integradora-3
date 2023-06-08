@@ -8,8 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Circle;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-
 public class Hero extends Character {
     private static Hero instance;
     private final boolean[] pressedKeys;

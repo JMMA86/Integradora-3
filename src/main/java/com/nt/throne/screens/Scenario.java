@@ -5,6 +5,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
@@ -32,11 +33,13 @@ public abstract class Scenario extends BaseScreen {
     private final MediaPlayer blockImpactSound;
     private MouseEvent mouseCoords;
     private boolean recharging;
+    private final ImageView aim;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
         bodyImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/bodyImpactSound.mp3").toURI().toString()));
         blockImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/blockImpactSound.mp3").toURI().toString()));
+        aim = new ImageView(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Guns/aim.png"));
         recharging = false;
         this.background = background;
         structures = new CopyOnWriteArrayList<>();
@@ -80,6 +83,9 @@ public abstract class Scenario extends BaseScreen {
                 ((ShooterEnemy) enemy).getActualGun().paint(graphicsContext);
             }
             enemy.paint(graphicsContext);
+        }
+        if (mouseCoords != null) {
+            graphicsContext.drawImage(aim.getImage(), 0, 0, 512, 512, mouseCoords.getX() - 40, mouseCoords.getY() - 40, 80, 80);
         }
         run();
     }
@@ -250,6 +256,7 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void onMouseDragged(MouseEvent event) {
         mouseCoords = event;
+
     }
 
     @Override
