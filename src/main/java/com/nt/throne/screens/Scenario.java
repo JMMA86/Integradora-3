@@ -105,8 +105,8 @@ public abstract class Scenario extends BaseScreen {
                 structure.takeDamage(bullet);
                 if (structure.getLife() <= 0) {
                     structures.remove(structure);
-                    ans = true;
                 }
+                ans = true;
             }
         }
 

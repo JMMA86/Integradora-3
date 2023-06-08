@@ -31,8 +31,8 @@ public class ShotGun extends Gun {
         setDelay(300);
         setBulletsPerShoot(5);
         setRechargeTime(2000);
-        minAngle = Math.toRadians(-60);
-        maxAngle = Math.toRadians(60);
+        minAngle = Math.toRadians(-90);
+        maxAngle = Math.toRadians(90);
         canShot = true;
         recharging = true;
     }
