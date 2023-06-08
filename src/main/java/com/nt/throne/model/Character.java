@@ -1,5 +1,6 @@
 package com.nt.throne.model;
 
+import com.nt.throne.controller.InGameViewController;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -7,6 +8,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Character extends AliveElement implements IAct {
     private Gun currentGun;
@@ -76,6 +78,51 @@ public abstract class Character extends AliveElement implements IAct {
                 startInvulnerabilityTimer();
             }
         }
+    }
+
+    public boolean checkBlockCollision(int movement) {
+        /*
+        Lets define movement:
+        0 -> up
+        1 -> down
+        2 -> left
+        3 -> right
+         */
+        CopyOnWriteArrayList<Structure> blocks = InGameViewController.getScreens().get(InGameViewController.getSCREEN()).getStructures();
+        for (Structure block : blocks) {
+            Point2D posHero = getPosition();
+            /*
+            Shape coords (Block = 68x68)
+            posX1 - posX2
+            posY1
+             */
+            Point2D posX1 = new Point2D(block.getPosition().getX(), block.getPosition().getY());
+            Point2D posX2 = new Point2D(block.getPosition().getX() + 68, block.getPosition().getY());
+            Point2D posY1 = new Point2D(block.getPosition().getX(), block.getPosition().getY() + 68);
+            switch (movement) {
+                case 0 -> {
+                    //From below
+                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() <= posY1.getY() && posHero.getY() > posX1.getY())
+                        return true;
+                }
+                case 1 -> {
+                    //From above
+                    if (posHero.getX() > posX1.getX() - 28 && posHero.getX() < posX2.getX() + 23 && posHero.getY() >= posX1.getY() - 70 && posHero.getY() + 10 < posY1.getY())
+                        return true;
+                }
+                case 2 -> {
+                    //From right
+                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() <= posX2.getX() + 35 && posHero.getX() > posX1.getX())
+                        return true;
+                }
+                case 3 -> {
+                    //From left
+                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() >= posX1.getX() - 35 && posHero.getX() < posX2.getX())
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 
     public int getCurrentFrame() {

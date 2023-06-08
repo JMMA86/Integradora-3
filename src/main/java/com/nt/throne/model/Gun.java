@@ -2,6 +2,8 @@ package com.nt.throne.model;
 
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -15,6 +17,8 @@ public abstract class Gun extends Element {
     private long delay;
     private int bulletsPerShoot;
     private long rechargeTime;
+    private MediaPlayer shotSound;
+    private MediaPlayer reloadSound;
 
     public Gun(Point2D position, Image picture, int CHARGER_SIZE) {
         super(position, picture);
@@ -75,5 +79,13 @@ public abstract class Gun extends Element {
 
     public void setRandom(Random random) {
         this.random = random;
+    }
+
+    public MediaPlayer getShotSound() {
+        return shotSound;
+    }
+
+    public MediaPlayer getReloadSound() {
+        return reloadSound;
     }
 }

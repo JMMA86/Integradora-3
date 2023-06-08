@@ -7,8 +7,12 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import java.awt.*;
+import java.io.File;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -25,16 +29,19 @@ public abstract class Scenario extends BaseScreen {
     private Random random;
     private boolean shooting;
     private boolean movingEnemies;
+    private final MediaPlayer bodyImpactSound;
+    private final MediaPlayer blockImpactSound;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
+        bodyImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/bodyImpactSound.mp3").toURI().toString()));
+        blockImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/blockImpactSound.mp3").toURI().toString()));
         this.background = background;
         structures = new CopyOnWriteArrayList<>();
         enemies = new CopyOnWriteArrayList<>();
         bullets = new CopyOnWriteArrayList<>();
         guns = new CopyOnWriteArrayList<>();
         random = new Random();
-
         bullets = new CopyOnWriteArrayList<>();
         limitX = new int[2];
         limitY = new int[2];
@@ -70,7 +77,6 @@ public abstract class Scenario extends BaseScreen {
             if (enemy instanceof ShooterEnemy) {
                 ((ShooterEnemy) enemy).getActualGun().paint(graphicsContext);
             }
-
             enemy.paint(graphicsContext);
         }
         run();
@@ -96,6 +102,7 @@ public abstract class Scenario extends BaseScreen {
         boolean ans = !isInBounds(bullet);
         for (Enemy enemy : enemies) {
             if (bullet.isHurting(enemy)) {
+                bodyImpactSound.play();
                 enemy.takeDamage(bullet);
                 if (enemy.getLife() <= 0) {
                     enemies.remove(enemy);
@@ -106,6 +113,7 @@ public abstract class Scenario extends BaseScreen {
 
         for (Structure structure : structures) {
             if (bullet.isHurting(structure)) {
+                blockImpactSound.play();
                 structure.takeDamage(bullet);
                 if (structure.getLife() <= 0) {
                     structures.remove(structure);
@@ -164,13 +172,14 @@ public abstract class Scenario extends BaseScreen {
         for (Gun gun : guns) {
             if (hero.isColliding(gun)) {
                 if (hero.getActualGun() != null) {
+                    hero.getActualGun().setPosition(hero.getPosition());
+                    guns.add(hero.getActualGun());
                 }
                 hero.setActualGun(gun);
                 guns.remove(gun);
             }
         }
     }
-
 
     private Boolean checkFreePosition(int x, int y) {
         Shape temp = new Rectangle(x, y, 60, 30);
@@ -201,20 +210,31 @@ public abstract class Scenario extends BaseScreen {
         new Thread(() -> {
             while (shooting) {
                 shoot(event);
-
+                hero.getActualGun().getShotSound().play();
                 try {
                     Thread.sleep(150);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                hero.getActualGun().getShotSound().stop();
+                hero.getActualGun().getShotSound().seek(Duration.ZERO);
             }
         }).start();
     }
 
     public void shoot(MouseEvent event) {
         if (hero.getActualGun() != null) {
+            hero.getActualGun().getShotSound().play();
             hero.getActualGun().onShot(bullets, new Point2D(event.getX(), event.getY()));
+            hero.getActualGun().getShotSound().stop();
+            hero.getActualGun().getShotSound().seek(Duration.ZERO);
         }
+        try {
+            Thread.sleep(150);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -235,6 +255,8 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void onMouseReleased(MouseEvent event) {
         shooting = false;
+        hero.getActualGun().getShotSound().stop();
+        hero.getActualGun().getShotSound().seek(Duration.ZERO);
     }
 
     @Override
