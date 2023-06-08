@@ -85,7 +85,7 @@ public class ShotGun extends Gun {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if (getAmmo() <= 0) {
+                if (getAmmo() <= 0 && getAmmo() != 35) {
                     setAmmo(getCHARGER_SIZE());
                 }
             }
