@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class ShooterEnemy extends Enemy {
     private boolean canGetDamage;
     private long invulnerability;
+    private Point2D focus;
 
     public ShooterEnemy(Point2D position, Image picture) {
         super(position, picture);
@@ -44,6 +45,10 @@ public class ShooterEnemy extends Enemy {
         }
     }
 
+    public void setFocus(Point2D dest) {
+        focus = dest;
+    }
+
     @Override
     public void move() {
 
@@ -52,5 +57,9 @@ public class ShooterEnemy extends Enemy {
     @Override
     public void attack() {
 
+    }
+
+    public Point2D getFocus() {
+        return focus;
     }
 }
