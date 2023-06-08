@@ -6,6 +6,7 @@ import com.nt.throne.screens.SkinScreen;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Circle;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -14,10 +15,12 @@ public class Hero extends Character {
     private final boolean[] pressedKeys;
     private Gun actualGun;
     private boolean canShot;
+    private Circle prefferedArea;
 
     private Hero(Point2D position, Image picture) {
         super(position, picture);
         pressedKeys = new boolean[]{false, false, false, false};
+        prefferedArea = new Circle(getPosition().getX(), getPosition().getY(), 300);
     }
 
     public static Hero getInstance() {
@@ -116,6 +119,8 @@ public class Hero extends Character {
             setPosition(getPosition().add(8, 0));
         }
         if (previous.equals(getPosition())) setState(0);
+        prefferedArea.setCenterX(getPosition().getX());
+        prefferedArea.setCenterY(getPosition().getY());
         if (actualGun != null) actualGun.setPosition(this.getPosition());
     }
 
@@ -183,5 +188,9 @@ public class Hero extends Character {
 
     public void setCanShot(boolean canShot) {
         this.canShot = canShot;
+    }
+
+    public Circle getPrefferedArea() {
+        return prefferedArea;
     }
 }

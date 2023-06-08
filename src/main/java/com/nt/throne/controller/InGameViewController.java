@@ -149,5 +149,6 @@ public class InGameViewController implements Initializable {
         canvas.setOnMouseDragged(event -> screens.get(SCREEN).onMouseDragged(event));
         canvas.setOnMouseMoved(event -> screens.get(SCREEN).onMouseMoved(event));
         canvas.setFocusTraversable(true);
+        screens.get(SCREEN).setMovingEnemies(true);
     }
 }
