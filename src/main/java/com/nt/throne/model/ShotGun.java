@@ -15,6 +15,8 @@ public class ShotGun extends Gun {
     private final double minAngle;
     private final double maxAngle;
     private double spreadAngle;
+    private boolean canShot;
+    private boolean recharging;
 
     public ShotGun(Point2D position, Image picture, int CHARGER_SIZE) {
         super(position, picture, CHARGER_SIZE);
@@ -27,52 +29,69 @@ public class ShotGun extends Gun {
             )
         );
         setDelay(300);
-        setBulletsPerShoot(8);
+        setBulletsPerShoot(5);
         setRechargeTime(2000);
-        minAngle = Math.toRadians(-60);
-        maxAngle = Math.toRadians(60);
+        minAngle = Math.toRadians(-90);
+        maxAngle = Math.toRadians(90);
+        canShot = true;
+        recharging = true;
     }
 
     @Override
     public void onShot(CopyOnWriteArrayList<Bullet> gameBullets, Point2D dest) {
-        setAmmo(getAmmo() - getBulletsPerShoot());
-        Timer timer = new Timer();
         if (getAmmo() > 0) {
-            List<Bullet> bulletsBuffer = new ArrayList<>();
-            for (int i = 0; i < getBulletsPerShoot(); i++) {
-                spreadAngle = getRandom().nextDouble() * (maxAngle - minAngle) + minAngle;
-                double angle = Math.toRadians(i * spreadAngle - (spreadAngle * (getBulletsPerShoot() - 1)) / 2.0);
-                Point2D dispersedDest = calcUnitVectorWithSpread(dest, angle);
-                bulletsBuffer.add(new Bullet(
-                    getPosition(),
-                    dispersedDest,
-                    15,
-                    30,
-                    new Image(
-                        System.getProperty("user.dir") +
-                            "/src/main/resources/com/nt/throne/Guns/bullet.png"
-                    )
-                ));
-            }
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                    gameBullets.addAll(bulletsBuffer);
+            //TODO Fix shotguns total shots
+            if (canShot) {
+                setAmmo(getAmmo() - getBulletsPerShoot());
+                List<Bullet> bulletsBuffer = new ArrayList<>();
+                canShot = false;
+                for (int i = 0; i < getBulletsPerShoot(); i++) {
+                    spreadAngle = getRandom().nextDouble() * (maxAngle - minAngle) + minAngle;
+                    double angle = Math.toRadians(i * spreadAngle - (spreadAngle * (getBulletsPerShoot() - 1)) / 2.0);
+                    Point2D dispersedDest = calcUnitVectorWithSpread(dest, angle);
+                    bulletsBuffer.add(new Bullet(
+                        getPosition(),
+                        dispersedDest,
+                        15,
+                        30,
+                        new Image(
+                            System.getProperty("user.dir") +
+                                "/src/main/resources/com/nt/throne/Guns/bullet.png"
+                        )
+                    ));
                 }
-            };
-
-            timer.schedule(task, getDelay());
-
+                gameBullets.addAll(bulletsBuffer);
+                startDelayShotTimer();
+            }
         } else {
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
+            rechargeTimer();
+        }
+    }
+
+    public void startDelayShotTimer() {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                canShot = true;
+            }
+        };
+
+        timer.schedule(task, getDelay());
+    }
+
+    public void rechargeTimer() {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (getAmmo() <= 0 && getAmmo() != 35) {
                     setAmmo(getCHARGER_SIZE());
                 }
-            };
+            }
+        };
 
-            timer.schedule(task, getRechargeTime());
-        }
+        timer.schedule(task, getRechargeTime());
     }
 
     @Override

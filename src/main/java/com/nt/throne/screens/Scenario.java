@@ -24,6 +24,7 @@ public abstract class Scenario extends BaseScreen {
     private boolean areGunsGenerated;
     private Random random;
     private boolean shooting;
+    private boolean movingEnemies;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
@@ -61,17 +62,28 @@ public abstract class Scenario extends BaseScreen {
         graphicsContext.drawImage(background,
             0, 0);
         for (Structure structure : structures) structure.paint(graphicsContext);
-        for (Enemy enemy : enemies) enemy.paint(graphicsContext);
         hero.paint(graphicsContext);
         for (Bullet bullet : bullets) bullet.paint(graphicsContext);
         if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
         if (hero.getActualGun() != null) hero.getActualGun().paint(graphicsContext);
+        for (Enemy enemy : enemies) {
+            enemy.paint(graphicsContext);
+            ((ShooterEnemy) enemy).getActualGun().paint(graphicsContext);
+        }
         run();
     }
 
     private void run() {
         gunsLogic();
         bullets.removeIf(this::bulletsLogic);
+        if (movingEnemies) {
+            for (Enemy enemy : enemies) {
+                if (enemy instanceof ShooterEnemy) {
+                    ((ShooterEnemy) enemy).setFocus(hero.getPosition());
+                    ((ShooterEnemy) enemy).moveAndShot(hero.getPrefferedArea(), getBullets());
+                }
+            }
+        }
     }
 
     private boolean bulletsLogic(Bullet bullet) {
@@ -93,8 +105,8 @@ public abstract class Scenario extends BaseScreen {
                 structure.takeDamage(bullet);
                 if (structure.getLife() <= 0) {
                     structures.remove(structure);
-                    ans = true;
                 }
+                ans = true;
             }
         }
 
@@ -145,18 +157,16 @@ public abstract class Scenario extends BaseScreen {
     }
 
     public void gunsLogic() {
-        if (guns.size() > 0) {
-            for (Gun gun : guns) {
-                if (hero.isColliding(gun)) {
-                    hero.setActualGun(gun);
-                    guns.remove(gun);
-                }
+        for (Gun gun : guns) {
+            if (hero.isColliding(gun)) {
+                hero.setActualGun(gun);
+                guns.remove(gun);
             }
         }
     }
 
     private Boolean checkFreePosition(int x, int y) {
-        Shape temp = new Rectangle(x, y, 30, 30);
+        Shape temp = new Rectangle(x, y, 60, 30);
         for (Structure structure : structures) {
             if (structure.getHitBox().intersects((Bounds) temp)) {
                 return false;
@@ -186,7 +196,7 @@ public abstract class Scenario extends BaseScreen {
                 shoot(event);
 
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(150);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -276,5 +286,13 @@ public abstract class Scenario extends BaseScreen {
 
     public void setRandom(Random random) {
         this.random = random;
+    }
+
+    public boolean isMovingEnemies() {
+        return movingEnemies;
+    }
+
+    public void setMovingEnemies(boolean movingEnemies) {
+        this.movingEnemies = movingEnemies;
     }
 }
