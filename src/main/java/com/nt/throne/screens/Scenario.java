@@ -67,8 +67,11 @@ public abstract class Scenario extends BaseScreen {
         if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
         if (hero.getActualGun() != null) hero.getActualGun().paint(graphicsContext);
         for (Enemy enemy : enemies) {
+            if (enemy instanceof ShooterEnemy) {
+                ((ShooterEnemy) enemy).getActualGun().paint(graphicsContext);
+            }
+
             enemy.paint(graphicsContext);
-            ((ShooterEnemy) enemy).getActualGun().paint(graphicsContext);
         }
         run();
     }
@@ -78,9 +81,12 @@ public abstract class Scenario extends BaseScreen {
         bullets.removeIf(this::bulletsLogic);
         if (movingEnemies) {
             for (Enemy enemy : enemies) {
-                if (enemy instanceof ShooterEnemy) {
-                    ((ShooterEnemy) enemy).setFocus(hero.getPosition());
-                    ((ShooterEnemy) enemy).moveAndShot(hero.getPrefferedArea(), getBullets());
+                if (enemy instanceof ShooterEnemy shooter) {
+                    shooter.setFocus(hero.getPosition());
+                    shooter.moveAndShot(hero.getPrefferedArea(), getBullets());
+                }
+                if(enemy instanceof ChaserEnemy chaser) {
+                    chaser.calculateMovement();
                 }
             }
         }
@@ -88,15 +94,13 @@ public abstract class Scenario extends BaseScreen {
 
     private boolean bulletsLogic(Bullet bullet) {
         boolean ans = !isInBounds(bullet);
-        if (enemies.size() > 0) {
-            for (int i = 0; i < enemies.size(); i++) {
-                if (bullet.isHurting(enemies.get(i))) {
-                    enemies.get(i).takeDamage(bullet);
-                    if (enemies.get(i).getLife() <= 0) {
-                        enemies.remove(enemies.get(i));
-                    }
-                    ans = true;
+        for (Enemy enemy : enemies) {
+            if (bullet.isHurting(enemy)) {
+                enemy.takeDamage(bullet);
+                if (enemy.getLife() <= 0) {
+                    enemies.remove(enemy);
                 }
+                ans = true;
             }
         }
 
@@ -159,11 +163,14 @@ public abstract class Scenario extends BaseScreen {
     public void gunsLogic() {
         for (Gun gun : guns) {
             if (hero.isColliding(gun)) {
+                if (hero.getActualGun() != null) {
+                }
                 hero.setActualGun(gun);
                 guns.remove(gun);
             }
         }
     }
+
 
     private Boolean checkFreePosition(int x, int y) {
         Shape temp = new Rectangle(x, y, 60, 30);
