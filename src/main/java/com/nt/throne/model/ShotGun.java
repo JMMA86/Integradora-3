@@ -3,8 +3,11 @@ package com.nt.throne.model;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -17,9 +20,15 @@ public class ShotGun extends Gun {
     private double spreadAngle;
     private boolean canShot;
     private boolean recharging;
+    private final MediaPlayer shotSound;
+    private final MediaPlayer reloadSound;
 
     public ShotGun(Point2D position, Image picture, int CHARGER_SIZE) {
         super(position, picture, CHARGER_SIZE);
+        shotSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/shotgunShot.mp3").toURI().toString()));
+        reloadSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/reload.mp3").toURI().toString()));
+        shotSound.setVolume(0.5);
+        reloadSound.setVolume(0.5);
         setHitBox(
             new Rectangle(
                 position.getX(),
@@ -40,7 +49,6 @@ public class ShotGun extends Gun {
     @Override
     public void onShot(CopyOnWriteArrayList<Bullet> gameBullets, Point2D dest) {
         if (getAmmo() > 0) {
-            //TODO Fix shotguns total shots
             if (canShot) {
                 setAmmo(getAmmo() - getBulletsPerShoot());
                 List<Bullet> bulletsBuffer = new ArrayList<>();
@@ -76,7 +84,6 @@ public class ShotGun extends Gun {
                 canShot = true;
             }
         };
-
         timer.schedule(task, getDelay());
     }
 
@@ -87,10 +94,10 @@ public class ShotGun extends Gun {
             public void run() {
                 if (getAmmo() <= 0 && getAmmo() != 35) {
                     setAmmo(getCHARGER_SIZE());
+                    reloadSound.play();
                 }
             }
         };
-
         timer.schedule(task, getRechargeTime());
     }
 
@@ -118,5 +125,15 @@ public class ShotGun extends Gun {
         double normalizedY = offsetY / length;
 
         return new Point2D(normalizedX, normalizedY);
+    }
+
+    @Override
+    public MediaPlayer getShotSound() {
+        return shotSound;
+    }
+
+    @Override
+    public MediaPlayer getReloadSound() {
+        return reloadSound;
     }
 }

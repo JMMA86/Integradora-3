@@ -1,5 +1,6 @@
 package com.nt.throne.screens;
 
+import com.nt.throne.model.ChaserEnemy;
 import com.nt.throne.model.ShooterEnemy;
 import com.nt.throne.model.Structure;
 import javafx.geometry.Point2D;
@@ -15,9 +16,18 @@ public class Pantheon extends Scenario {
     public void initElements() {
         generateGuns();
 
-        getEnemies().add(new ShooterEnemy(
+        getEnemies().add(
+            new ShooterEnemy(
                 new Point2D(500, 500),
-                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero3.png")));
+                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero3.png")
+            )
+        );
+        getEnemies().add(
+            new ChaserEnemy(
+                new Point2D(800, 500),
+                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png")
+            )
+        );
 
         //Blocks: 68x135 (68x68 without shadow)
         getStructures().add(new Structure(new Point2D(300, 200), new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1-block.png")));
