@@ -15,6 +15,7 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,6 +25,12 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
+    //Screens:
+    /*
+    0: Menu
+    1: Skins
+     */
+    public static int SCREEN = 0;
     @FXML
     private VBox skinSelector;
     @FXML
@@ -56,12 +63,6 @@ public class MainMenuController implements Initializable {
     private boolean isRunning;
     private int timer;
     private ArrayList<BaseScreen> screens;
-    //Screens:
-    /*
-    0: Menu
-    1: Skins
-     */
-    public static int SCREEN = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -76,7 +77,7 @@ public class MainMenuController implements Initializable {
         audioReady = false;
         isRunning = true;
         screens.get(0).getGraphicsContext().setFill(Color.BLACK);
-        loader.getGraphicsContext2D().fillRect(0,0,1280,720);
+        loader.getGraphicsContext2D().fillRect(0, 0, 1280, 720);
         loader.getGraphicsContext2D().setFill(Color.BLACK);
 
         //Fonts
@@ -110,8 +111,8 @@ public class MainMenuController implements Initializable {
         //Loading screen
         videoMediaPlayer.setOnReady(() -> videoReady = true);
         songMediaPlayer.setOnReady(() -> audioReady = true);
-        new Thread( () -> {
-            while (!videoReady || !audioReady){
+        new Thread(() -> {
+            while (!videoReady || !audioReady) {
                 pause(50);
                 if (videoReady && audioReady) {
                     pause(1000);
@@ -128,8 +129,8 @@ public class MainMenuController implements Initializable {
         }).start();
 
         //Updates from other screens
-        new Thread( () -> {
-            while (isRunning){
+        new Thread(() -> {
+            while (isRunning) {
                 Platform.runLater(this::paint);
                 pause(timer);
             }
@@ -200,7 +201,7 @@ public class MainMenuController implements Initializable {
         Platform.exit();
     }
 
-    public void paint(){
+    public void paint() {
         if (SCREEN <= screens.size()) screens.get(SCREEN).paint();
         if (preparingGame) {
             isRunning = false;
@@ -212,10 +213,10 @@ public class MainMenuController implements Initializable {
         isRunning = running;
     }
 
-    private void pause(int milliseconds){
+    private void pause(int milliseconds) {
         try {
             Thread.sleep(milliseconds);
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

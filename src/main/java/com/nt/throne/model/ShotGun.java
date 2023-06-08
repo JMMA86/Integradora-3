@@ -5,13 +5,17 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ShotGun extends Gun {
-    private double spreadAngle;
     private final double minAngle;
     private final double maxAngle;
+    private double spreadAngle;
+
     public ShotGun(Point2D position, Image picture, int CHARGER_SIZE) {
         super(position, picture, CHARGER_SIZE);
         setHitBox(

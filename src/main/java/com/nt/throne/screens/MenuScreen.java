@@ -13,8 +13,8 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public void paint() {
-        graphicsContext.setFill(Color.rgb(0,0,0,0.01));
-        graphicsContext.fillRect(0,0,1280,720);
+        graphicsContext.setFill(Color.rgb(0, 0, 0, 0.01));
+        graphicsContext.fillRect(0, 0, 1280, 720);
     }
 
     @Override

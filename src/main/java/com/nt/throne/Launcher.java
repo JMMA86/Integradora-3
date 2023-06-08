@@ -8,15 +8,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class Launcher extends Application {
     private static Stage primaryStage;
-    @Override
-    public void start(Stage primaryStage) {
-        Launcher.primaryStage = primaryStage;
-        renderView("in-game-view.fxml", 1280, 720);
-    }
 
     public static void renderView(String fxml, int width, int height) {
         try {
@@ -49,5 +45,11 @@ public class Launcher extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        Launcher.primaryStage = primaryStage;
+        renderView("in-game-view.fxml", 1280, 720);
     }
 }
