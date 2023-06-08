@@ -208,9 +208,9 @@ public abstract class Scenario extends BaseScreen {
     public void onMousePressed(MouseEvent event) {
         shooting = true;
         new Thread(() -> {
+            makeSound();
             while (shooting) {
                 shoot(event);
-                hero.getActualGun().getShotSound().play();
                 try {
                     Thread.sleep(150);
                 } catch (InterruptedException e) {
@@ -222,19 +222,33 @@ public abstract class Scenario extends BaseScreen {
         }).start();
     }
 
+    public void makeSound() {
+        new Thread(() -> {
+            while (shooting) {
+                hero.getActualGun().getShotSound().play();
+                try {
+                    Thread.sleep((long) hero.getActualGun().getShotSound().getCycleDuration().toMillis());
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            hero.getActualGun().getShotSound().stop();
+            hero.getActualGun().getShotSound().seek(Duration.ZERO);
+        }).start();
+    }
+
     public void shoot(MouseEvent event) {
         if (hero.getActualGun() != null) {
             hero.getActualGun().getShotSound().play();
             hero.getActualGun().onShot(bullets, new Point2D(event.getX(), event.getY()));
-            hero.getActualGun().getShotSound().stop();
-            hero.getActualGun().getShotSound().seek(Duration.ZERO);
         }
         try {
             Thread.sleep(150);
+            hero.getActualGun().getShotSound().stop();
+            hero.getActualGun().getShotSound().seek(Duration.ZERO);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override

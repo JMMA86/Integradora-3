@@ -2,17 +2,10 @@ package com.nt.throne.model;
 
 import com.nt.throne.controller.InGameViewController;
 import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-
-import java.awt.*;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.CopyOnWriteArrayList;
-import javafx.scene.shape.Shape;
 import javafx.scene.shape.Rectangle;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ChaserEnemy extends Enemy {
     private Point2D direction;
@@ -20,7 +13,7 @@ public class ChaserEnemy extends Enemy {
 
     public ChaserEnemy(Point2D position, Image picture) {
         super(position, picture);
-        this.direction = new Point2D(4,0);
+        this.direction = new Point2D(0,0);
         this.isMovingRandomly = false;
     }
 
@@ -47,22 +40,6 @@ public class ChaserEnemy extends Enemy {
         /*
 
                 boolean rx = false, ry = false;
-        if(checkBlockCollision(0)) {
-            setPosition(getPosition().add(0, 8));
-            ry = true;
-        }
-        if (checkBlockCollision(2)) {
-            setPosition(getPosition().add(8, 0));
-            rx = true;
-        }
-        if(checkBlockCollision(3)) {
-            setPosition(getPosition().add(-8, 0));
-            rx = true;
-        }
-        if(checkBlockCollision(1)) {
-            setPosition(getPosition().add(0, -8));
-            ry = true;
-        }
 
         if(rx || ry) {
             if(rx) {
@@ -91,17 +68,24 @@ public class ChaserEnemy extends Enemy {
         setDirection( direction );
          */
 
+        if(checkBlockCollision(0)) {
+            setPosition(getPosition().add(0, 8));
+            setDirection(new Point2D(0,0));
+        }
+        if (checkBlockCollision(2)) {
+            setPosition(getPosition().add(8, 0));
+            setDirection(new Point2D(0,0));
+        }
+        if(checkBlockCollision(3)) {
+            setPosition(getPosition().add(-8, 0));
+            setDirection(new Point2D(0,0));
+        }
+        if(checkBlockCollision(1)) {
+            setPosition(getPosition().add(0, -8));
+            setDirection(new Point2D(0,0));
+        }
+
         Point2D target = Hero.getInstance().getPosition();
-
-        if(getPosition().getY() < 0 || getPosition().getY() > 720 ||
-            checkBlockCollision(0) || checkBlockCollision(1)) {
-            setDirection(new Point2D(getPosition().getX(), getPosition().getY()*(-1)));
-        }
-        if (getPosition().getX() < 0 || getPosition().getX() > 1280 ||
-            checkBlockCollision(2) || checkBlockCollision(3)) {
-            setDirection(new Point2D(getPosition().getX()*(-1), getPosition().getY()));
-        }
-
 
         if( !isThereIntersection(getPosition(), target)) {
             Point2D direction = calcUnitVector( target );
@@ -120,12 +104,6 @@ public class ChaserEnemy extends Enemy {
             setState(4);
         }
 
-
-        /*
-        if (!isMovingRandomly) {
-            randomPath();
-        }
-         */
     }
 
     private boolean isThereIntersection(Point2D position, Point2D target) {
