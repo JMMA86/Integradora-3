@@ -14,8 +14,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,6 +26,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class InGameViewController implements Initializable {
     //Screens:
@@ -94,11 +99,22 @@ public class InGameViewController implements Initializable {
         new Thread(() -> {
             while (isRunning) {
                 Platform.runLater(this::paint);
+                if(Hero.getInstance().isDamaged()) {
+                    lifeTxt.setFill(Color.RED);
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            lifeTxt.setFill(Color.BLACK);
+                        }
+                    }, 500);
+                }
                 lifeTxt.setText("    Life: " + Hero.getInstance().getLife() + " / 100");
                 if (Hero.getInstance().getActualGun() != null) {
                     if (Hero.getInstance().getActualGun().getAmmo() <= 0) {
-                        ammoTxt.setText("    Ammo: -RECHARGING-");
+                        ammoTxt.setFill(Color.BLUE);
+                        ammoTxt.setText("    Ammo: -RELOADING-");
                     } else {
+                        ammoTxt.setFill(Color.BLACK);
                         ammoTxt.setText("    Ammo: " + Hero.getInstance().getActualGun().getAmmo() + " / " + Hero.getInstance().getActualGun().getCHARGER_SIZE());
                     }
                 } else {

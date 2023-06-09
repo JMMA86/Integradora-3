@@ -50,7 +50,7 @@ public abstract class Character extends AliveElement implements IAct {
 
         if(damageFrames > 5) {
             damageFrames = 0;
-            damaged = false;
+            setDamaged(false);
         }
 
         context.drawImage( getPicture(),
