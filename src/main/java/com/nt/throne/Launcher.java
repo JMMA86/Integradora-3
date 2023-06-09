@@ -13,7 +13,6 @@ import java.io.IOException;
 
 public class Launcher extends Application {
     private static Stage primaryStage;
-
     public static void renderView(String fxml, int width, int height) {
         try {
             Image icon = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/icon.png");

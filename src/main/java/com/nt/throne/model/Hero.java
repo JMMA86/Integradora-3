@@ -105,10 +105,14 @@ public class Hero extends Character {
         }
         if (pressedKeys[3]) {
             if (getPosition().getX() >= Scenario.getLimitX()[1]) {
-                if (getPosition().getY() > 330 && getPosition().getY() < 423 && InGameViewController.getSCREEN() < InGameViewController.getMapsSize() - 1) {
-                    InGameViewController.getScreens().get(InGameViewController.getSCREEN()).clearBullets();
-                    InGameViewController.setSCREEN(InGameViewController.getSCREEN() + 1);
-                    setPosition(new Point2D(81, getPosition().getY()));
+                if (getPosition().getY() > 330 && getPosition().getY() < 423 && InGameViewController.getScreens().get(InGameViewController.getSCREEN()).isLevelPassed()) {
+                    if (InGameViewController.getSCREEN() < InGameViewController.getMapsSize() - 1) {
+                        InGameViewController.getScreens().get(InGameViewController.getSCREEN()).clearBullets();
+                        InGameViewController.setSCREEN(InGameViewController.getSCREEN() + 1);
+                        setPosition(new Point2D(81, getPosition().getY()));
+                    } else {
+                        InGameViewController.getScreens().get(InGameViewController.getSCREEN()).setEndGameWin(true);
+                    }
                 } else {
                     setPosition(getPosition().add(-8, 0));
                 }
@@ -134,6 +138,14 @@ public class Hero extends Character {
 
     public void setActualGun(Gun actualGun) {
         this.actualGun = actualGun;
+    }
+
+    public boolean isShooting() {
+        return canShot;
+    }
+
+    public void setCanShot(boolean canShot) {
+        this.canShot = canShot;
     }
 
     public Circle getPreferredArea() {
