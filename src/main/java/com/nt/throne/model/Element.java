@@ -5,7 +5,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.scene.transform.Rotate;
 
 public abstract class Element {
     private Point2D position;
@@ -18,7 +17,11 @@ public abstract class Element {
         this.position = position;
         this.state = 0;
         this.picture = picture;
-        this.hitBox = new Rectangle(position.getX()-picture.getWidth(), position.getY()-picture.getHeight(), picture.getWidth(), picture.getHeight());
+        this.hitBox = new Rectangle(position.getX(), position.getY(), picture.getWidth(), picture.getHeight());
+    }
+
+    public void updateHitBox() {
+        this.hitBox = new Rectangle(position.getX(), position.getY(), picture.getWidth(), picture.getHeight());
     }
 
     public Point2D getPosition() {
@@ -27,6 +30,7 @@ public abstract class Element {
 
     public void setPosition(Point2D position) {
         this.position = position;
+        updateHitBox();
     }
 
     public Shape getHitBox() {
@@ -82,6 +86,4 @@ public abstract class Element {
         context.drawImage(this.picture, -picture.getWidth() / 2, -picture.getHeight() / 2);
         context.restore();
     }
-
-
 }

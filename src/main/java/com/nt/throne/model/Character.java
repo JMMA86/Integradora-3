@@ -4,6 +4,7 @@ import com.nt.throne.controller.InGameViewController;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -14,16 +15,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Character extends AliveElement implements IAct {
     private Gun currentGun;
-    private int currentFrame;
-    private int currSprite;
+    private int currentFrame = 0;
+    private int currSprite = 10;
     private long invulnerability;
     private boolean canGetDamage;
+    private int damageFrames = 0;
+    boolean damaged = false;
 
     public Character(Point2D position, Image picture) {
         super(position, picture);
         this.currentGun = null;
-        this.currSprite = 10;
-        this.currentFrame = 0;
         this.canGetDamage = true;
     }
 
@@ -39,7 +40,6 @@ public abstract class Character extends AliveElement implements IAct {
     public void paint(GraphicsContext context) {
         int frameWidth = 64, frameHeight = 64;
         move();
-        setHitBox(new Rectangle(getPosition().getX() - 16, getPosition().getY() - 32, 32, 64));
 
         switch (getState()) {
             case 0 -> currentFrame = 0;
@@ -47,6 +47,11 @@ public abstract class Character extends AliveElement implements IAct {
             case 2 -> currSprite = 8;
             case 3 -> currSprite = 9;
             case 4 -> currSprite = 11;
+        }
+
+        if(damageFrames > 5) {
+            damageFrames = 0;
+            damaged = false;
         }
 
         context.drawImage( getPicture(),
@@ -57,6 +62,12 @@ public abstract class Character extends AliveElement implements IAct {
 
         if(getState() != 0) currentFrame++;
         if(currentFrame % 9 == 0) currentFrame = 0;
+
+        if(damaged) {
+            context.setFill(Color.rgb(255, 0, 0, 0.2));
+            context.fillRect(getPosition().getX()-16, getPosition().getY()-32, 32, 64);
+            damageFrames++;
+        }
     }
 
     public void startInvulnerabilityTimer() {
@@ -72,7 +83,14 @@ public abstract class Character extends AliveElement implements IAct {
     }
 
     @Override
+    public void updateHitBox() {
+        setHitBox(new Rectangle(getPosition().getX() - 16, getPosition().getY() - 32, 32, 64));
+    }
+
+    @Override
     public void takeDamage(Element origin) {
+        setDamaged(true);
+        damageFrames = 0;
         if (canGetDamage) {
             if (origin instanceof Bullet) {
                 setLife(getLife() - ((Bullet) origin).getDamage());
@@ -80,6 +98,14 @@ public abstract class Character extends AliveElement implements IAct {
                 startInvulnerabilityTimer();
             }
         }
+    }
+
+    public boolean isDamaged() {
+        return damaged;
+    }
+
+    public void setDamaged(boolean damaged) {
+        this.damaged = damaged;
     }
 
     public boolean checkBlockCollision(int movement) {

@@ -7,7 +7,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,7 +31,7 @@ public class MachineGun extends Gun {
             )
         );
         setDelay(60);
-        setBulletsPerShoot(5);
+        setBulletsPerShoot(1);
         setRechargeTime(2000);
     }
 
