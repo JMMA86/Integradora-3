@@ -139,6 +139,7 @@ public abstract class Scenario extends BaseScreen {
         bullets.removeIf(this::bulletsLogic);
         if (movingEnemies) {
             for (Enemy enemy : enemies) {
+                enemy.calculateMovement();
                 if (enemy instanceof ShooterEnemy shooter) {
                     shooter.moveAndShot(hero.getPreferredArea(), getBullets());
                 }
@@ -152,9 +153,11 @@ public abstract class Scenario extends BaseScreen {
     private boolean bulletsLogic(Bullet bullet) {
         boolean ans = !isInBounds(bullet);
         for (Enemy enemy : enemies) {
+            double previousLife = enemy.getLife();
             if (bullet.isHurting(enemy)) {
                 bodyImpactSound.play();
                 enemy.takeDamage(bullet);
+                if(previousLife == enemy.getLife()) continue;
                 if (enemy.getLife() <= 0) {
                     enemies.remove(enemy);
                 }
