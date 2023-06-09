@@ -29,7 +29,7 @@ public class InGameViewController implements Initializable {
     /*
     0: pantheon
      */
-    public static int SCREEN = 0;
+    public static int SCREEN;
     private static ArrayList<Scenario> screens;
     @FXML
     private Text counter;
@@ -67,6 +67,7 @@ public class InGameViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Attributes initialization
+        SCREEN = 0;
         canvas.setFocusTraversable(true);
         screens = new ArrayList<>();
         screens.add(new Pantheon(canvas, new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1.png")));

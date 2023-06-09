@@ -55,25 +55,14 @@ public class EndGameViewController implements Initializable {
         backBtn.setOnMouseEntered(event -> backBtn.setOpacity(0.5));
         backBtn.setOnMouseExited(event -> backBtn.setOpacity(1));
 
-        //Video
-        File videoPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/outroBackground.mp4");
-        String fullVideoPath = videoPath.toURI().toString();
-        videoMediaPlayer = new MediaPlayer(new Media(fullVideoPath));
-        videoMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        videoBackground.setMediaPlayer(videoMediaPlayer);
-
-        //Song
-        File songPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/outroSong.mp3");
-        String fullSongPath = songPath.toURI().toString();
-        songMediaPlayer = new MediaPlayer(new Media(fullSongPath));
-        songMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        songMediaPlayer.setVolume(0.5);
+        loadResources();
 
         //Loading screen
         videoMediaPlayer.setOnReady(() -> videoReady = true);
         songMediaPlayer.setOnReady(() -> audioReady = true);
 
         new Thread(() -> {
+            long currentTime = System.currentTimeMillis();
             while (!videoReady || !audioReady) {
                 pause(50);
                 if (videoReady && audioReady) {
@@ -89,8 +78,28 @@ public class EndGameViewController implements Initializable {
                     loadingScreen.setVisible(false);
                     break;
                 }
+                if (System.currentTimeMillis() - currentTime > 5000) {
+                    loadResources();
+                    currentTime = System.currentTimeMillis();
+                }
             }
         }).start();
+    }
+
+    public void loadResources() {
+        //Video
+        File videoPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/outroBackground.mp4");
+        String fullVideoPath = videoPath.toURI().toString();
+        videoMediaPlayer = new MediaPlayer(new Media(fullVideoPath));
+        videoMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        videoBackground.setMediaPlayer(videoMediaPlayer);
+
+        //Song
+        File songPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/outroSong.mp3");
+        String fullSongPath = songPath.toURI().toString();
+        songMediaPlayer = new MediaPlayer(new Media(fullSongPath));
+        songMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        songMediaPlayer.setVolume(0.5);
     }
 
     public void playResources() {

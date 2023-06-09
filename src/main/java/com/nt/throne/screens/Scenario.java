@@ -39,8 +39,8 @@ public abstract class Scenario extends BaseScreen {
     private boolean levelPassed;
     private final Image closedDoor;
     private final Image openedDoor;
-    private boolean endGameWin;
-    private boolean endGameLose;
+    private static boolean endGameWin;
+    private static boolean endGameLose;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
