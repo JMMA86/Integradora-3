@@ -11,7 +11,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.shape.Rectangle;
 import java.awt.MouseInfo;
 import javafx.util.Duration;
 import java.io.File;
@@ -159,13 +158,6 @@ public abstract class Scenario extends BaseScreen {
                 }
                 if (enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
-
-                    /*
-                    if (chaser.isColliding(hero)) {
-                        hero.takeDamage(chaser);
-                    }
-
-                     */
                 }
             }
         }
@@ -278,6 +270,9 @@ public abstract class Scenario extends BaseScreen {
     }
 
     public Boolean checkFreePosition(int x, int y, Element e) {
+        if (x < limitX[0] || x + 64 > limitX[1] || y < limitY[0] || y + 64 > limitY[1]) {
+            return false;
+        }
         for (Structure structure : structures) {
             if (e.getHitBox().intersects(structure.getHitBox().getBoundsInParent())) {
                 return false;
@@ -343,7 +338,6 @@ public abstract class Scenario extends BaseScreen {
                         }
                     }
                 }
-                hero.getActualGun().getShotSound().stop();
             }).start();
         }
     }
