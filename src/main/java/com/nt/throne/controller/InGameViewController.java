@@ -1,5 +1,6 @@
 package com.nt.throne.controller;
 
+import com.nt.throne.model.Hero;
 import com.nt.throne.screens.Pantheon;
 import com.nt.throne.screens.RedDesert;
 import com.nt.throne.screens.Scenario;
@@ -14,7 +15,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -91,6 +91,10 @@ public class InGameViewController implements Initializable {
         new Thread(() -> {
             while (isRunning) {
                 Platform.runLater(this::paint);
+                lifeTxt.setText("    Life: " + Hero.getInstance().getLife() + " / 100");
+                if (Hero.getInstance().getActualGun() != null) {
+                    ammoTxt.setText("    Ammo: " + Hero.getInstance().getActualGun().getAmmo() + " / " + Hero.getInstance().getActualGun().getCHARGER_SIZE());
+                }
                 pause(50);
             }
         }).start();

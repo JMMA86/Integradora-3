@@ -1,5 +1,6 @@
 package com.nt.throne.screens;
 
+import com.nt.throne.controller.InGameViewController;
 import com.nt.throne.model.*;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -83,6 +84,8 @@ public abstract class Scenario extends BaseScreen {
         if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
         if (hero.getActualGun() != null) {
             Point2D gunCoords = hero.getActualGun().getPosition();
+            Image gun = hero.getActualGun().getPicture();
+            graphicsContext.drawImage(gun, 200 - gun.getWidth() / 2, 133 - gun.getHeight() / 2, gun.getWidth() / 1.5, gun.getHeight() / 1.5);
             //Calculate angle
             double angle = Math.atan2(mouseCoords.getY() - gunCoords.getY(), mouseCoords.getX() - gunCoords.getX());
             hero.getActualGun().paint(graphicsContext, angle);
@@ -160,7 +163,7 @@ public abstract class Scenario extends BaseScreen {
                                 System.getProperty("user.dir") +
                                     "/src/main/resources/com/nt/throne/Guns/minigun.png"
                             ),
-                            60
+                            30
                         )
                     );
                     machineGun = false;
@@ -172,7 +175,7 @@ public abstract class Scenario extends BaseScreen {
                                 System.getProperty("user.dir") +
                                     "/src/main/resources/com/nt/throne/Guns/shotgun.png"
                             ),
-                            40
+                            30
                         )
                     );
                     machineGun = true;
@@ -222,38 +225,43 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void onMousePressed(MouseEvent event) {
         shooting = true;
-        new Thread(() -> {
-            while (shooting) {
-                hero.getActualGun().getShotSound().stop();
-                hero.getActualGun().getShotSound().seek(Duration.ZERO);
-                if (hero.getActualGun().getAmmo() > 0) {
-                    hero.getActualGun().getShotSound().play();
-                }
-                if (!recharging) {
-                    shoot(mouseCoords);
-                }
-                if (hero.getActualGun().getAmmo() > 0) {
-                    try {
-                        Thread.sleep(150);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+        if (hero.getActualGun() != null) {
+            new Thread(() -> {
+                while (shooting) {
+                    hero.getActualGun().getShotSound().stop();
+                    hero.getActualGun().getShotSound().seek(Duration.ZERO);
+                    if (hero.getActualGun().getAmmo() > 0) {
+                        hero.getActualGun().getShotSound().play();
                     }
-                } else {
-                    try {
-                        recharging = true;
-                        Thread.sleep(hero.getActualGun().getRechargeTime() + 10);
-                        recharging = false;
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                    if (!recharging) {
+                        shoot(mouseCoords);
+                    }
+                    if (hero.getActualGun().getAmmo() > 0) {
+                        try {
+                            Thread.sleep(150);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    } else {
+                        try {
+                            recharging = true;
+                            Thread.sleep(hero.getActualGun().getRechargeTime() + 10);
+                            recharging = false;
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
-            }
-        }).start();
+            }).start();
+        }
     }
 
     public void shoot(Point2D event) {
         if (hero.getActualGun() != null) {
             hero.getActualGun().onShot(bullets, new Point2D(event.getX(), event.getY()));
+            if (hero.getActualGun().getAmmo() == 0) {
+                hero.getActualGun().onShot(bullets, new Point2D(event.getX(), event.getY()));
+            }
         }
         try {
             Thread.sleep(150);
@@ -276,7 +284,6 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMouseClicked(MouseEvent event) {
-
     }
 
     @Override
