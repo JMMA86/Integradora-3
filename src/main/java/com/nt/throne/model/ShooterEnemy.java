@@ -1,7 +1,5 @@
 package com.nt.throne.model;
 
-import com.nt.throne.controller.InGameViewController;
-import com.nt.throne.screens.Scenario;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
@@ -34,12 +32,12 @@ public class ShooterEnemy extends Enemy {
         if (keep) {
             calculateMovement();
             setPosition(getPosition().add(getDirection().getX(), getDirection().getY()));
-            actualGun.setPosition(getPosition());
+            actualGun.setPosition(new Point2D(getPosition().getX()-actualGun.getPicture().getWidth()/4, getPosition().getY()));
         }
 
         if (getHitBox().intersects(collidingElement.getBoundsInParent())) {
             setState(getState());
-            actualGun.onShot(gameBullets, getDirection());
+            actualGun.onShot(gameBullets, Hero.getInstance().getPosition());
             keep = false;
         } else {
             keep = true;
