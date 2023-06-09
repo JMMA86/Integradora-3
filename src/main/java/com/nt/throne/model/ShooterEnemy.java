@@ -65,4 +65,6 @@ public class ShooterEnemy extends Enemy {
         this.actualGun = actualGun;
         actualGun.setPosition(new Point2D(getPosition().getX() - actualGun.getPicture().getWidth() / 10 , getPosition().getY()));
     }
+
+
 }

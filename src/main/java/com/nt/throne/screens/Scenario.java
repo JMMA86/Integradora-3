@@ -272,13 +272,12 @@ public abstract class Scenario extends BaseScreen {
         }
     }
 
-    private Boolean checkFreePosition(int x, int y, Element e) {
+    public Boolean checkFreePosition(int x, int y, Element e) {
         for (Structure structure : structures) {
             if (e.getHitBox().intersects(structure.getHitBox().getBoundsInParent())) {
                 return false;
             }
         }
-
         return true;
     }
 
