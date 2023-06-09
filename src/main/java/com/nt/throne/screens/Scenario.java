@@ -40,6 +40,8 @@ public abstract class Scenario extends BaseScreen {
     private boolean levelPassed;
     private final Image closedDoor;
     private final Image openedDoor;
+    private boolean endGameWin;
+    private boolean endGameLose;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
@@ -49,6 +51,8 @@ public abstract class Scenario extends BaseScreen {
         openedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/openedDoor.png");
         mouseMoved = false;
         levelPassed = false;
+        endGameWin = false;
+        endGameLose = false;
         mouseCoords = new Point2D(MouseInfo.getPointerInfo().getLocation().getX(), MouseInfo.getPointerInfo().getLocation().getY());
         aim = new ImageView(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Guns/aim.png"));
         recharging = false;
@@ -112,6 +116,15 @@ public abstract class Scenario extends BaseScreen {
         if (Hero.getInstance().getActualGun() != null && mouseMoved) {
             graphicsContext.drawImage(aim.getImage(), 0, 0, 512, 512, mouseCoords.getX() - 40, mouseCoords.getY() - 40, 80, 80);
         }
+        if (hero.getLife() <= 0) {
+            endGameLose = true;
+        }
+        if (endGameWin) {
+            InGameViewController.setWinScreen();
+        }
+        if (endGameLose) {
+            InGameViewController.setLoseScreen();
+        }
         run();
     }
 
@@ -122,7 +135,7 @@ public abstract class Scenario extends BaseScreen {
             for (Enemy enemy : enemies) {
                 if (enemy instanceof ShooterEnemy shooter) {
                     shooter.setFocus(hero.getPosition());
-                    shooter.moveAndShot(hero.getPrefferedArea(), getBullets());
+                    shooter.moveAndShot(hero.getPreferredArea(), getBullets());
                 }
                 if(enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
@@ -372,5 +385,13 @@ public abstract class Scenario extends BaseScreen {
 
     public boolean isLevelPassed() {
         return levelPassed;
+    }
+
+    public void setEndGameWin(boolean endGame) {
+        this.endGameWin = endGame;
+    }
+
+    public void setEndGameLose(boolean endGameLose) {
+        this.endGameLose = endGameLose;
     }
 }

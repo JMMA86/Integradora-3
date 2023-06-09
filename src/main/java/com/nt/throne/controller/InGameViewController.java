@@ -45,7 +45,7 @@ public class InGameViewController implements Initializable {
     @FXML
     private Text ammoTxt;
     private MediaPlayer songMediaPlayer;
-    private boolean isRunning;
+    private static boolean isRunning;
 
     public static int getMapsSize() {
         return screens.size();
@@ -158,5 +158,14 @@ public class InGameViewController implements Initializable {
         canvas.setOnMouseMoved(event -> screens.get(SCREEN).onMouseMoved(event));
         canvas.setFocusTraversable(true);
         screens.get(SCREEN).setMovingEnemies(true);
+    }
+
+    public static void setWinScreen() {
+        isRunning = false;
+
+    }
+
+    public static void setLoseScreen() {
+        isRunning = false;
     }
 }
