@@ -14,7 +14,9 @@ public abstract class Gun extends Element {
     private int numShots;
     private int ammo;
     private Random random;
+    private Point2D end;
     private long delay;
+    private double damage;
     private int bulletsPerShoot;
     private long rechargeTime;
     private MediaPlayer shotSound;
@@ -25,6 +27,7 @@ public abstract class Gun extends Element {
         this.CHARGER_SIZE = CHARGER_SIZE;
         this.ammo = CHARGER_SIZE;
         this.random = new Random();
+        this.damage = 10;
     }
 
     public int getAmmo() {
@@ -87,5 +90,21 @@ public abstract class Gun extends Element {
 
     public MediaPlayer getReloadSound() {
         return reloadSound;
+    }
+
+    public Point2D getEnd() {
+        return end;
+    }
+
+    public void setEnd(Point2D end) {
+        this.end = end;
+    }
+
+    public double getDamage() {
+        return damage;
+    }
+
+    public void setDamage(double damage) {
+        this.damage = damage;
     }
 }

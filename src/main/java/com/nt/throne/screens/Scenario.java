@@ -7,12 +7,15 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.shape.Rectangle;
 import java.awt.MouseInfo;
 import javafx.util.Duration;
+
 import java.awt.*;
 import java.io.File;
 import java.util.Random;
@@ -22,6 +25,11 @@ public abstract class Scenario extends BaseScreen {
     private static int[] limitX;
     private static int[] limitY;
     private final Image background;
+    private final MediaPlayer bodyImpactSound;
+    private final MediaPlayer blockImpactSound;
+    private final ImageView aim;
+    private final Image closedDoor;
+    private final Image openedDoor;
     private Hero hero = Hero.getInstance();
     private CopyOnWriteArrayList<Enemy> enemies;
     private CopyOnWriteArrayList<Structure> structures;
@@ -31,14 +39,10 @@ public abstract class Scenario extends BaseScreen {
     private Random random;
     private boolean shooting;
     private boolean movingEnemies;
-    private final MediaPlayer bodyImpactSound;
-    private final MediaPlayer blockImpactSound;
     private Point2D mouseCoords;
     private boolean recharging;
-    private final ImageView aim;
+    private boolean mouseMoved;
     private boolean levelPassed;
-    private final Image closedDoor;
-    private final Image openedDoor;
     private boolean endGameWin;
     private boolean endGameLose;
 
@@ -84,8 +88,7 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void paint() {
-        graphicsContext.drawImage(background,
-            0, 0);
+        graphicsContext.drawImage(background, 0, 0);
         for (Structure structure : structures) structure.paint(graphicsContext);
         if (enemies.isEmpty()) {
             levelPassed = true;
@@ -103,11 +106,15 @@ public abstract class Scenario extends BaseScreen {
             graphicsContext.drawImage(gun, 200 - gun.getWidth() / 2, 133 - gun.getHeight() / 2, gun.getWidth() / 1.5, gun.getHeight() / 1.5);
             //Calculate angle
             double angle = Math.atan2(mouseCoords.getY() - gunCoords.getY(), mouseCoords.getX() - gunCoords.getX());
-            hero.getActualGun().paint(graphicsContext, angle);
+            discardPictureWidth(gunCoords, angle, hero.getActualGun());
         }
         for (Enemy enemy : enemies) {
-            if (enemy instanceof ShooterEnemy) {
-                ((ShooterEnemy) enemy).getActualGun().paint(graphicsContext);
+            if (enemy instanceof ShooterEnemy shooter) {
+                //This is what I'm changing
+                Point2D gunCoords = shooter.getPosition();
+                //Calculate angle
+                double angle = Math.atan2(hero.getPosition().getY() - gunCoords.getY(), hero.getPosition().getX() - gunCoords.getX());
+                discardPictureWidth(gunCoords, angle, shooter.getActualGun());
             }
             enemy.paint(graphicsContext);
         }
@@ -126,16 +133,34 @@ public abstract class Scenario extends BaseScreen {
         run();
     }
 
+    private void discardPictureWidth(Point2D position, double angle, Gun actualGun) {
+        Point2D offset;
+        //System.out.println("Im: " + actualGun.getPicture().getWidth());
+        double realGunSize = actualGun.getPicture().getWidth() / 5;
+        if (Math.abs(angle) < Math.PI / 2) {
+            offset = new Point2D(position.getX() + realGunSize, position.getY() + 7);
+        } else {
+            offset = new Point2D(position.getX() - realGunSize, position.getY() + 7);
+        }
+        //System.out.println(offset);
+        actualGun.setEnd(translatePoint(angle, position, offset));
+        actualGun.paint(graphicsContext, angle);
+    }
+
     private void run() {
-        gunsLogic();
+        // gunsLogic();
         bullets.removeIf(this::bulletsLogic);
         if (movingEnemies) {
             for (Enemy enemy : enemies) {
                 if (enemy instanceof ShooterEnemy shooter) {
                     shooter.moveAndShot(hero.getPreferredArea(), getBullets());
                 }
-                if(enemy instanceof ChaserEnemy chaser) {
+                if (enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
+
+                    if (chaser.isColliding(hero)) {
+                        hero.takeDamage(chaser);
+                    }
                 }
             }
         }
@@ -143,6 +168,12 @@ public abstract class Scenario extends BaseScreen {
 
     private boolean bulletsLogic(Bullet bullet) {
         boolean ans = !isInBounds(bullet);
+
+        if (bullet.isColliding(hero)) {
+            hero.takeDamage(bullet);
+            ans = true;
+        }
+
         for (Enemy enemy : enemies) {
             if (bullet.isHurting(enemy)) {
                 bodyImpactSound.play();
@@ -177,33 +208,32 @@ public abstract class Scenario extends BaseScreen {
             //284 * 47 SG
             int x = random.nextInt(limitX[0] + 50, limitX[1] - 50);
             int y = random.nextInt(limitY[0] + 50, limitY[1] - 50);
-            if (checkFreePosition(x, y)) {
-                if (machineGun) {
-                    getGuns().add(
-                        new MachineGun(
-                            new Point2D(x, y),
-                            new Image(
-                                System.getProperty("user.dir") +
-                                    "/src/main/resources/com/nt/throne/Guns/minigun.png"
-                            ),
-                            30
-                        )
-                    );
-                    machineGun = false;
-                } else {
-                    getGuns().add(
-                        new ShotGun(
-                            new Point2D(x, y),
-                            new Image(
-                                System.getProperty("user.dir") +
-                                    "/src/main/resources/com/nt/throne/Guns/shotgun.png"
-                            ),
-                            30
-                        )
-                    );
-                    machineGun = true;
-                }
-                totalGuns += 1;
+            if (machineGun && checkFreePosition(x, y, 326, 121)) {
+                getGuns().add(
+                    new MachineGun(
+                        new Point2D(x, y),
+                        new Image(
+                            System.getProperty("user.dir") +
+                                "/src/main/resources/com/nt/throne/Guns/minigun.png"
+                        ),
+                        60
+                    )
+                );
+                totalGuns++;
+                machineGun = false;
+            } else if (!machineGun && checkFreePosition(x, y, 284, 47)) {
+                getGuns().add(
+                    new ShotGun(
+                        new Point2D(x, y),
+                        new Image(
+                            System.getProperty("user.dir") +
+                                "/src/main/resources/com/nt/throne/Guns/shotgun.png"
+                        ),
+                        40
+                    )
+                );
+                totalGuns++;
+                machineGun = true;
             }
         }
         areGunsGenerated = true;
@@ -213,7 +243,7 @@ public abstract class Scenario extends BaseScreen {
         for (Gun gun : guns) {
             if (hero.isColliding(gun)) {
                 if (hero.getActualGun() != null) {
-                    hero.getActualGun().setPosition(hero.getPosition());
+                    hero.getActualGun().setPosition(gun.getPosition());
                     guns.add(hero.getActualGun());
                 }
                 hero.setActualGun(gun);
@@ -222,10 +252,10 @@ public abstract class Scenario extends BaseScreen {
         }
     }
 
-    private Boolean checkFreePosition(int x, int y) {
-        Shape temp = new Rectangle(x, y, 60, 30);
+    private Boolean checkFreePosition(int x, int y, double width, double height) {
+        Rectangle temp = new Rectangle(x, y, width, height);
         for (Structure structure : structures) {
-            if (structure.getHitBox().intersects((Bounds) temp)) {
+            if (structure.getHitBox().intersects(temp.getBoundsInParent())) {
                 return false;
             }
         }
@@ -293,6 +323,19 @@ public abstract class Scenario extends BaseScreen {
         }
     }
 
+    public Point2D translatePoint(double angle, Point2D origin, Point2D dest) {
+        double x1 = origin.getX(), y1 = origin.getY();
+        double x2 = dest.getX(), y2 = dest.getY();
+
+        double longitude = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        //double toRadians = Math.toRadians(angle);
+
+        double newX = x1 + longitude * Math.cos(angle);
+        double newY = y1 + longitude * Math.sin(angle);
+
+        return new Point2D(newX, newY);
+    }
+
     @Override
     public void onMouseDragged(MouseEvent event) {
         mouseCoords = new Point2D(event.getX(), event.getY());
@@ -306,6 +349,7 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMouseClicked(MouseEvent event) {
+
     }
 
     @Override
@@ -315,7 +359,12 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onKeyPressed(KeyEvent event) {
-        hero.onKeyPressed(event);
+        if (event.getCode() == KeyCode.SHIFT) {
+            gunsLogic();
+        } else {
+            hero.onKeyPressed(event);
+        }
+
     }
 
     @Override

@@ -20,12 +20,17 @@ public abstract class Element {
         this.hitBox = new Rectangle(position.getX(), position.getY(), picture.getWidth(), picture.getHeight());
     }
 
+    public void updateHitBox() {
+        this.hitBox = new Rectangle(position.getX(), position.getY(), picture.getWidth(), picture.getHeight());
+    }
+
     public Point2D getPosition() {
         return position;
     }
 
     public void setPosition(Point2D position) {
         this.position = position;
+        updateHitBox();
     }
 
     public Shape getHitBox() {
