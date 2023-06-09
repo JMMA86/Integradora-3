@@ -220,6 +220,7 @@ public abstract class Scenario extends BaseScreen {
     }
 
     public void gunsLogic() {
+        boolean collides = false;
         for (Gun gun : guns) {
             if (hero.isColliding(gun)) {
                 if (hero.getActualGun() != null) {
@@ -228,7 +229,13 @@ public abstract class Scenario extends BaseScreen {
                 }
                 hero.setActualGun(gun);
                 guns.remove(gun);
+                collides = true;
             }
+        }
+        if(!collides && hero.getActualGun() != null) {
+            hero.getActualGun().setPosition(hero.getPosition());
+            guns.add(hero.getActualGun());
+            hero.setActualGun(null);
         }
     }
 

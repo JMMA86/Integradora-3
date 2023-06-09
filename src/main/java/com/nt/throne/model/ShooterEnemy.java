@@ -29,6 +29,9 @@ public class ShooterEnemy extends Enemy {
     }
 
     public void moveAndShot(Circle collidingElement, CopyOnWriteArrayList<Bullet> gameBullets) {
+        /*
+
+         */
         if (keep) {
             calculateMovement();
             setPosition(getPosition().add(getDirection().getX(), getDirection().getY()));

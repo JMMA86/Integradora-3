@@ -8,7 +8,7 @@ public class Structure extends AliveElement {
     public Structure(Point2D position, Image image) {
         super(position, image);
         setLife(1500);
-        setHitBox( new Rectangle(getPosition().getX(), getPosition().getY(), 68, 96) );
+        setHitBox( new Rectangle(getPosition().getX(), getPosition().getY() - 30, 68, 96) );
     }
 
     @Override

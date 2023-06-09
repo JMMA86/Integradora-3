@@ -16,7 +16,6 @@ public class Pantheon extends Scenario {
     public void initElements() {
         generateGuns();
 
-        /*
         getEnemies().add(
             new ShooterEnemy(
                 new Point2D(500, 600),
@@ -30,7 +29,6 @@ public class Pantheon extends Scenario {
             )
         );
 
-         */
         getEnemies().add(
                 new ChaserEnemy(
                         new Point2D(400, 500),
