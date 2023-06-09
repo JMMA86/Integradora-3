@@ -154,14 +154,18 @@ public abstract class Scenario extends BaseScreen {
             for (Enemy enemy : enemies) {
                 enemy.calculateMovement();
                 if (enemy instanceof ShooterEnemy shooter) {
+
                     shooter.moveAndShot(hero.getPreferredArea(), getBullets());
                 }
                 if (enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
 
+                    /*
                     if (chaser.isColliding(hero)) {
                         hero.takeDamage(chaser);
                     }
+
+                     */
                 }
             }
         }

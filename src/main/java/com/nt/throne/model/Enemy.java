@@ -113,7 +113,7 @@ public abstract class Enemy extends Character {
         }
     }
 
-    private boolean directPath(Point2D target) {
+    public boolean directPath(Point2D target) {
 
         CopyOnWriteArrayList<Structure> blocks = InGameViewController.getScreens().get(InGameViewController.getSCREEN()).getStructures();
 

@@ -52,6 +52,7 @@ public class Hero extends Character {
             }
             setCanGetDamage(false);
         }
+        damaged = true;
 
         startInvulnerabilityTimer();
     }
