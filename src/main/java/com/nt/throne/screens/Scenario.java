@@ -36,7 +36,6 @@ public abstract class Scenario extends BaseScreen {
     private Point2D mouseCoords;
     private boolean recharging;
     private final ImageView aim;
-    private boolean mouseMoved;
     private boolean levelPassed;
     private final Image closedDoor;
     private final Image openedDoor;
@@ -49,7 +48,6 @@ public abstract class Scenario extends BaseScreen {
         blockImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/blockImpactSound.mp3").toURI().toString()));
         closedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/closedDoor.png");
         openedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/openedDoor.png");
-        mouseMoved = false;
         levelPassed = false;
         endGameWin = false;
         endGameLose = false;
@@ -113,7 +111,7 @@ public abstract class Scenario extends BaseScreen {
             }
             enemy.paint(graphicsContext);
         }
-        if (Hero.getInstance().getActualGun() != null && mouseMoved) {
+        if (Hero.getInstance().getActualGun() != null) {
             graphicsContext.drawImage(aim.getImage(), 0, 0, 512, 512, mouseCoords.getX() - 40, mouseCoords.getY() - 40, 80, 80);
         }
         if (hero.getLife() <= 0) {
@@ -304,7 +302,6 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void onMouseMoved(MouseEvent event) {
         mouseCoords = new Point2D(event.getX(), event.getY());
-        mouseMoved = true;
     }
 
     @Override
