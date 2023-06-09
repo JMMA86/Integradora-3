@@ -85,15 +85,16 @@ public abstract class Scenario extends BaseScreen {
         graphicsContext.drawImage(background,
             0, 0);
         for (Structure structure : structures) structure.paint(graphicsContext);
-        hero.paint(graphicsContext);
-        for (Bullet bullet : bullets) bullet.paint(graphicsContext);
-        if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
         if (enemies.isEmpty()) {
             levelPassed = true;
             graphicsContext.drawImage(openedDoor, 1200, 320, openedDoor.getWidth() * 0.7, openedDoor.getHeight() * 0.8);
         } else {
+            levelPassed = false;
             graphicsContext.drawImage(closedDoor, 1200, 320, openedDoor.getWidth() * 0.7, openedDoor.getHeight() * 0.8);
         }
+        hero.paint(graphicsContext);
+        for (Bullet bullet : bullets) bullet.paint(graphicsContext);
+        if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
         if (hero.getActualGun() != null) {
             Point2D gunCoords = hero.getActualGun().getPosition();
             Image gun = hero.getActualGun().getPicture();
@@ -367,5 +368,9 @@ public abstract class Scenario extends BaseScreen {
 
     public void setMovingEnemies(boolean movingEnemies) {
         this.movingEnemies = movingEnemies;
+    }
+
+    public boolean isLevelPassed() {
+        return levelPassed;
     }
 }

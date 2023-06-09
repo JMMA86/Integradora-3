@@ -105,7 +105,7 @@ public class Hero extends Character {
         }
         if (pressedKeys[3]) {
             if (getPosition().getX() >= Scenario.getLimitX()[1]) {
-                if (getPosition().getY() > 330 && getPosition().getY() < 423 && InGameViewController.getSCREEN() < InGameViewController.getMapsSize() - 1) {
+                if (getPosition().getY() > 330 && getPosition().getY() < 423 && InGameViewController.getSCREEN() < InGameViewController.getMapsSize() - 1 && InGameViewController.getScreens().get(InGameViewController.getSCREEN()).isLevelPassed()) {
                     InGameViewController.getScreens().get(InGameViewController.getSCREEN()).clearBullets();
                     InGameViewController.setSCREEN(InGameViewController.getSCREEN() + 1);
                     setPosition(new Point2D(81, getPosition().getY()));
