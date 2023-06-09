@@ -134,6 +134,7 @@ public class Hero extends Character {
 
     public void setActualGun(Gun actualGun) {
         this.actualGun = actualGun;
+        actualGun.setPosition( new Point2D(getPosition().getX() - actualGun.getPicture().getWidth()/2, getPosition().getY()));
     }
 
     public boolean isShooting() {

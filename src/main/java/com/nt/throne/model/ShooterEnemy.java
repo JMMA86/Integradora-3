@@ -29,9 +29,9 @@ public class ShooterEnemy extends Enemy {
     }
 
     public void moveAndShot(Circle collidingElement, CopyOnWriteArrayList<Bullet> gameBullets) {
+        actualGun.setPosition(new Point2D(getPosition().getX()-actualGun.getPicture().getWidth()/4, getPosition().getY()));
         if (!getHitBox().intersects(collidingElement.getBoundsInParent())) {
             calculateMovement();
-            actualGun.setPosition(getPosition());
         } else {
             //actualGun.onShot(gameBullets,focus);
         }
