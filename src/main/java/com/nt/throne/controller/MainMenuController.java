@@ -15,7 +15,6 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -95,23 +94,12 @@ public class MainMenuController implements Initializable {
         returnBtn.setFont(customFont);
         loadingText.setFont(customFont);
 
-        //Video
-        File videoPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/MenuVideo.mp4");
-        String fullVideoPath = videoPath.toURI().toString();
-        videoMediaPlayer = new MediaPlayer(new Media(fullVideoPath));
-        videoMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-
-        //Song
-        File songPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/music.mp3");
-        String fullSongPath = songPath.toURI().toString();
-        songMediaPlayer = new MediaPlayer(new Media(fullSongPath));
-        songMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        songMediaPlayer.setVolume(0.5);
+        //Load video and audio
+        loadResources();
 
         //Loading screen
-        videoMediaPlayer.setOnReady(() -> videoReady = true);
-        songMediaPlayer.setOnReady(() -> audioReady = true);
         new Thread(() -> {
+            long currentTime = System.currentTimeMillis();
             while (!videoReady || !audioReady) {
                 pause(50);
                 if (videoReady && audioReady) {
@@ -124,6 +112,10 @@ public class MainMenuController implements Initializable {
                     skinBtn.setVisible(true);
                     exitBtn.setVisible(true);
                     break;
+                }
+                if (System.currentTimeMillis() - currentTime > 5000) {
+                    loadResources();
+                    currentTime = System.currentTimeMillis();
                 }
             }
         }).start();
@@ -153,6 +145,25 @@ public class MainMenuController implements Initializable {
 
         returnBtn.setOnMouseEntered(event -> returnBtn.setOpacity(0.5));
         returnBtn.setOnMouseExited(event -> returnBtn.setOpacity(1));
+    }
+
+    public void loadResources() {
+        //Video
+        File videoPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Menu/MenuVideo.mp4");
+        String fullVideoPath = videoPath.toURI().toString();
+        videoMediaPlayer = new MediaPlayer(new Media(fullVideoPath));
+        videoMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+
+        //Song
+        File songPath = new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/music.mp3");
+        String fullSongPath = songPath.toURI().toString();
+        songMediaPlayer = new MediaPlayer(new Media(fullSongPath));
+        songMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        songMediaPlayer.setVolume(0.5);
+
+        //Ready
+        videoMediaPlayer.setOnReady(() -> videoReady = true);
+        songMediaPlayer.setOnReady(() -> audioReady = true);
     }
 
     public void playResources() {

@@ -89,15 +89,20 @@ public abstract class Character extends AliveElement implements IAct {
 
     @Override
     public void takeDamage(Element origin) {
-        setDamaged(true);
         damageFrames = 0;
         if (canGetDamage) {
-            if (origin instanceof Bullet) {
-                setLife(getLife() - ((Bullet) origin).getDamage());
+            if (origin instanceof Bullet bullet) {
+                setLife(getLife() - bullet.getDamage());
+                canGetDamage = false;
+                startInvulnerabilityTimer();
+            }
+            if ( origin instanceof ChaserEnemy chaser ) {
+                setLife( getLife() - chaser.getDamage() );
                 canGetDamage = false;
                 startInvulnerabilityTimer();
             }
         }
+        setDamaged(true);
     }
 
     public boolean isDamaged() {

@@ -10,11 +10,17 @@ public class ChaserEnemy extends Enemy {
 
     @Override
     public void move() {
-        setPosition(getPosition().add(getDirection().getX(), getDirection().getY()));
+        Point2D target = Hero.getInstance().getPosition();
+        if( Math.sqrt( Math.pow(target.getX() - getPosition().getX(),2) + Math.pow(target.getY()-getPosition().getY() , 2) ) < 50 ) {
+            attack(Hero.getInstance());
+        } else {
+            setPosition(getPosition().add(getDirection().getX(), getDirection().getY()));
+        }
     }
 
     @Override
-    public void attack() {
-
+    public void attack(AliveElement target) {
+        Hero.getInstance().takeDamage(this);
     }
+
 }

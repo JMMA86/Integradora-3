@@ -2,7 +2,6 @@ package com.nt.throne.screens;
 
 import com.nt.throne.controller.InGameViewController;
 import com.nt.throne.model.*;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -15,8 +14,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import java.awt.MouseInfo;
 import javafx.util.Duration;
-
-import java.awt.*;
 import java.io.File;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -41,10 +38,9 @@ public abstract class Scenario extends BaseScreen {
     private boolean movingEnemies;
     private Point2D mouseCoords;
     private boolean recharging;
-    private boolean mouseMoved;
     private boolean levelPassed;
-    private boolean endGameWin;
-    private boolean endGameLose;
+    private static boolean endGameWin;
+    private static boolean endGameLose;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
@@ -152,15 +148,20 @@ public abstract class Scenario extends BaseScreen {
         bullets.removeIf(this::bulletsLogic);
         if (movingEnemies) {
             for (Enemy enemy : enemies) {
+                enemy.calculateMovement();
                 if (enemy instanceof ShooterEnemy shooter) {
+
                     shooter.moveAndShot(hero.getPreferredArea(), getBullets());
                 }
                 if (enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
 
+                    /*
                     if (chaser.isColliding(hero)) {
                         hero.takeDamage(chaser);
                     }
+
+                     */
                 }
             }
         }
@@ -175,9 +176,14 @@ public abstract class Scenario extends BaseScreen {
         }
 
         for (Enemy enemy : enemies) {
+            double previousLife = enemy.getLife();
             if (bullet.isHurting(enemy)) {
+                bodyImpactSound.setVolume(0.5);
+                bodyImpactSound.stop();
+                bodyImpactSound.seek(Duration.ZERO);
                 bodyImpactSound.play();
                 enemy.takeDamage(bullet);
+                if(previousLife == enemy.getLife()) continue;
                 if (enemy.getLife() <= 0) {
                     enemies.remove(enemy);
                 }
@@ -187,6 +193,9 @@ public abstract class Scenario extends BaseScreen {
 
         for (Structure structure : structures) {
             if (bullet.isHurting(structure)) {
+                blockImpactSound.setVolume(0.3);
+                blockImpactSound.stop();
+                blockImpactSound.seek(Duration.ZERO);
                 blockImpactSound.play();
                 structure.takeDamage(bullet);
                 if (structure.getLife() <= 0) {
@@ -240,6 +249,7 @@ public abstract class Scenario extends BaseScreen {
     }
 
     public void gunsLogic() {
+        boolean collides = false;
         for (Gun gun : guns) {
             if (hero.isColliding(gun)) {
                 if (hero.getActualGun() != null) {
@@ -248,7 +258,13 @@ public abstract class Scenario extends BaseScreen {
                 }
                 hero.setActualGun(gun);
                 guns.remove(gun);
+                collides = true;
             }
+        }
+        if(!collides && hero.getActualGun() != null) {
+            hero.getActualGun().setPosition(hero.getPosition());
+            guns.add(hero.getActualGun());
+            hero.setActualGun(null);
         }
     }
 
@@ -349,7 +365,6 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMouseClicked(MouseEvent event) {
-
     }
 
     @Override
