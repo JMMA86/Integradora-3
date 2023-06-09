@@ -30,7 +30,7 @@ public class MachineGun extends Gun {
                 picture.getHeight() / 2
             )
         );
-        setDelay(60);
+        setDelay(120);
         setBulletsPerShoot(1);
         setRechargeTime(2000);
         setDamage(8.5);
