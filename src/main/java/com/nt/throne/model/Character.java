@@ -40,7 +40,6 @@ public abstract class Character extends AliveElement implements IAct {
     public void paint(GraphicsContext context) {
         int frameWidth = 64, frameHeight = 64;
         move();
-        setHitBox(new Rectangle(getPosition().getX() - 16, getPosition().getY() - 32, 32, 64));
 
         switch (getState()) {
             case 0 -> currentFrame = 0;
@@ -81,6 +80,11 @@ public abstract class Character extends AliveElement implements IAct {
         };
 
         timer.schedule(task, invulnerability);
+    }
+
+    @Override
+    public void updateHitBox() {
+        setHitBox(new Rectangle(getPosition().getX() - 16, getPosition().getY() - 32, 32, 64));
     }
 
     @Override

@@ -38,11 +38,8 @@ public abstract class Scenario extends BaseScreen {
     private Random random;
     private boolean shooting;
     private boolean movingEnemies;
-    private final MediaPlayer bodyImpactSound;
-    private final MediaPlayer blockImpactSound;
     private Point2D mouseCoords;
     private boolean recharging;
-    private final ImageView aim;
     private boolean mouseMoved;
     private boolean levelPassed;
     private final Image closedDoor;
