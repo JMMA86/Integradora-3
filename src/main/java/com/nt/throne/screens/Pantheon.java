@@ -28,6 +28,12 @@ public class Pantheon extends Scenario {
                 new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png")
             )
         );
+        getEnemies().add(
+                new ChaserEnemy(
+                        new Point2D(400, 500),
+                        new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png")
+                )
+        );
 
         //Blocks: 68x135 (68x68 without shadow)
         getStructures().add(new Structure(new Point2D(300, 200), new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1-block.png")));
