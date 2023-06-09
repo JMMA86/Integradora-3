@@ -19,7 +19,7 @@ public class RedDesert extends Scenario {
 
         getEnemies().add(
             new ShooterEnemy(
-                new Point2D(800, 600),
+                new Point2D(800, 700),
                 new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/shooter.png")
             )
         );
