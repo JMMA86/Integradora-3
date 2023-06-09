@@ -37,12 +37,18 @@ public abstract class Scenario extends BaseScreen {
     private boolean recharging;
     private final ImageView aim;
     private boolean mouseMoved;
+    private boolean levelPassed;
+    private final Image closedDoor;
+    private final Image openedDoor;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
         bodyImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/bodyImpactSound.mp3").toURI().toString()));
         blockImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/blockImpactSound.mp3").toURI().toString()));
+        closedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/closedDoor.png");
+        openedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/openedDoor.png");
         mouseMoved = false;
+        levelPassed = false;
         mouseCoords = new Point2D(MouseInfo.getPointerInfo().getLocation().getX(), MouseInfo.getPointerInfo().getLocation().getY());
         aim = new ImageView(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Guns/aim.png"));
         recharging = false;
@@ -82,6 +88,12 @@ public abstract class Scenario extends BaseScreen {
         hero.paint(graphicsContext);
         for (Bullet bullet : bullets) bullet.paint(graphicsContext);
         if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
+        if (enemies.isEmpty()) {
+            levelPassed = true;
+            graphicsContext.drawImage(openedDoor, 1200, 320, openedDoor.getWidth() * 0.7, openedDoor.getHeight() * 0.8);
+        } else {
+            graphicsContext.drawImage(closedDoor, 1200, 320, openedDoor.getWidth() * 0.7, openedDoor.getHeight() * 0.8);
+        }
         if (hero.getActualGun() != null) {
             Point2D gunCoords = hero.getActualGun().getPosition();
             Image gun = hero.getActualGun().getPicture();
