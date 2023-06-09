@@ -43,50 +43,55 @@ public abstract class Enemy extends Character {
     public void calculateMovement() {
         Point2D target = Hero.getInstance().getPosition();
 
+        int step = 4;
+
+        if ( ( lockedDirection == -1 || lockedDirection == 0)) {
+            if(checkBlockCollision(0) && lastLocked != 0) {
+                lockedDirection = 0;
+                setDirection( new Point2D(step* calculateDeviation(target, true), 0) );
+            } else if(lockedDirection != -1) {
+                setDirection( new Point2D(0, 2*step* calculateDeviation(target, true)) );
+                lockedDirection = -1;
+                lastLocked = 0;
+
+            }
+        }
+        if ( (lockedDirection == -1 || lockedDirection == 1)) {
+            if(checkBlockCollision(1) && lastLocked != 1) {
+                lockedDirection = 1;
+                setDirection( new Point2D(step* calculateDeviation(target, true), 0) );
+            } else if(lockedDirection != -1) {
+                setDirection( new Point2D(0, 2*step* calculateDeviation(target, true)) );
+                lockedDirection = -1;
+                lastLocked = 1;
+            }
+        }
+        if ( (lockedDirection == -1 || lockedDirection == 2)) {
+            if(checkBlockCollision(2) && lastLocked != 2) {
+                lockedDirection = 2;
+                setDirection( new Point2D(0, step* calculateDeviation(target, false)) );
+            }else if(lockedDirection != -1) {
+                lockedDirection = -1;
+                lastLocked = 2;
+            }
+        }
+        if ( (lockedDirection == -1 || lockedDirection == 3)) {
+            if(checkBlockCollision(3) && lastLocked != 3) {
+                lockedDirection = 3;
+                setDirection( new Point2D(0, step* -calculateDeviation(target, false)) );
+            } else if(lockedDirection != -1) {
+                setDirection( new Point2D(2*step* calculateDeviation(target, false), 0) );
+                lockedDirection = -1;
+                lastLocked = 3;
+            }
+        }
+
         if (lockedDirection == -1 || directPath(target)) {
             Point2D direction = calcUnitVector(target);
             setDirection(direction);
             setDirection(new Point2D(getDirection().getX() * 4, getDirection().getY() * 4));
         }
 
-        int step = 4;
-
-        if ( (lockedDirection == -1 || lockedDirection == 0)) {
-            if(checkBlockCollision(0)) {
-                lockedDirection = 0;
-                setDirection( new Point2D(step* calculateDeviation(target, true), 0) );
-            } else if(lockedDirection != -1) {
-                setDirection( new Point2D(0, 2*step* calculateDeviation(target, true)) );
-                lockedDirection = -1;
-            }
-        }
-        if ( (lockedDirection == -1 || lockedDirection == 1)) {
-            if(checkBlockCollision(1)) {
-                lockedDirection = 1;
-                setDirection( new Point2D(step* calculateDeviation(target, true), 0) );
-            } else if(lockedDirection != -1) {
-                setDirection( new Point2D(0, 2*step* calculateDeviation(target, true)) );
-                lockedDirection = -1;
-            }
-        }
-        if ( (lockedDirection == -1 || lockedDirection == 2)) {
-            if(checkBlockCollision(2)) {
-                lockedDirection = 2;
-                setDirection( new Point2D(0, step* calculateDeviation(target, false)) );
-            }else if(lockedDirection != -1) {
-                setDirection( new Point2D(2*step* calculateDeviation(target, false), 0) );
-                lockedDirection = -1;
-            }
-        }
-        if ( (lockedDirection == -1 || lockedDirection == 3)) {
-            if(checkBlockCollision(3)) {
-                lockedDirection = 3;
-                setDirection( new Point2D(0, step* calculateDeviation(target, false)) );
-            } else if(lockedDirection != -1) {
-                setDirection( new Point2D(2*step* calculateDeviation(target, false), 0) );
-                lockedDirection = -1;
-            }
-        }
 
         if (getDirection().getY() < 0) {
             setState(1);
