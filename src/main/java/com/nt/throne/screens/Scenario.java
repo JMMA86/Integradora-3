@@ -76,34 +76,26 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void paint() {
-        graphicsContext.drawImage(background,
-            0, 0);
+        graphicsContext.drawImage(background, 0, 0);
         for (Structure structure : structures) structure.paint(graphicsContext);
         hero.paint(graphicsContext);
         for (Bullet bullet : bullets) bullet.paint(graphicsContext);
         if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
         if (hero.getActualGun() != null) {
+            //This is what I'm changing
             Point2D gunCoords = hero.getActualGun().getPosition();
             //Calculate angle
             double angle = Math.atan2(mouseCoords.getY() - gunCoords.getY(), mouseCoords.getX() - gunCoords.getX());
-            Point2D offset = hero.getPosition();
-            if (Math.abs(angle) < Math.PI / 2) {
-                offset.add(
-                    hero.getPosition().getX() - hero.getActualGun().getPicture().getWidth(),
-                    0
-                );
-            } else {
-                offset.add(
-                    hero.getPosition().getX() + hero.getActualGun().getPicture().getWidth(),
-                    0
-                );
-            }
-            hero.getActualGun().setEnd(translatePoint(angle, hero.getPosition(), offset));
-            hero.getActualGun().paint(graphicsContext, angle);
+            Point2D offset = hero.getActualGun().getPosition();
+            discardPictureWidth(offset, angle, hero.getPosition(), hero.getActualGun());
         }
         for (Enemy enemy : enemies) {
-            if (enemy instanceof ShooterEnemy) {
-                ((ShooterEnemy) enemy).getActualGun().paint(graphicsContext);
+            if (enemy instanceof ShooterEnemy shooter) {
+                //This is what I'm changing
+                Point2D gunCoords = shooter.getActualGun().getPosition();
+                //Calculate angle
+                double angle = Math.atan2(hero.getPosition().getY() - gunCoords.getY(), hero.getPosition().getX() - gunCoords.getX());
+                discardPictureWidth(gunCoords, angle, shooter.getPosition(), shooter.getActualGun());
             }
             enemy.paint(graphicsContext);
         }
@@ -111,6 +103,22 @@ public abstract class Scenario extends BaseScreen {
             graphicsContext.drawImage(aim.getImage(), 0, 0, 512, 512, mouseCoords.getX() - 40, mouseCoords.getY() - 40, 80, 80);
         }
         run();
+    }
+
+    private void discardPictureWidth(Point2D gunCoords, double angle, Point2D position, Gun actualGun) {
+        if (Math.abs(angle) < Math.PI / 2) {
+            gunCoords.add(
+                position.getX() - actualGun.getPicture().getWidth(),
+                0
+            );
+        } else {
+            gunCoords.add(
+                position.getX() + actualGun.getPicture().getWidth(),
+                0
+            );
+        }
+        actualGun.setEnd(translatePoint(angle, position, gunCoords));
+        actualGun.paint(graphicsContext, angle);
     }
 
     private void run() {
@@ -286,7 +294,7 @@ public abstract class Scenario extends BaseScreen {
         double newX = x1 + longitude * Math.cos(angle);
         double newY = y1 + longitude * Math.sin(angle);
 
-        return  new Point2D(newX, newY);
+        return new Point2D(newX, newY);
     }
 
     @Override
