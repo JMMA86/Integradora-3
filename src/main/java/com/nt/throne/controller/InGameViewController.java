@@ -70,6 +70,7 @@ public class InGameViewController implements Initializable {
         SCREEN = 0;
         canvas.setFocusTraversable(true);
         screens = new ArrayList<>();
+        Hero.setInstance(null);
         screens.add(new Pantheon(canvas, new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-1.png")));
         screens.add(new Winter(canvas, new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-2.png")));
         screens.add(new RedDesert(canvas, new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/scenario-3.png")));

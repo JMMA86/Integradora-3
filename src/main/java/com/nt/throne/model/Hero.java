@@ -151,4 +151,8 @@ public class Hero extends Character {
     public Circle getPreferredArea() {
         return preferredArea;
     }
+
+    public static void setInstance(Hero instance) {
+        Hero.instance = instance;
+    }
 }

@@ -98,8 +98,6 @@ public class MainMenuController implements Initializable {
         loadResources();
 
         //Loading screen
-        videoMediaPlayer.setOnReady(() -> videoReady = true);
-        songMediaPlayer.setOnReady(() -> audioReady = true);
         new Thread(() -> {
             long currentTime = System.currentTimeMillis();
             while (!videoReady || !audioReady) {
@@ -162,6 +160,10 @@ public class MainMenuController implements Initializable {
         songMediaPlayer = new MediaPlayer(new Media(fullSongPath));
         songMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         songMediaPlayer.setVolume(0.5);
+
+        //Ready
+        videoMediaPlayer.setOnReady(() -> videoReady = true);
+        songMediaPlayer.setOnReady(() -> audioReady = true);
     }
 
     public void playResources() {
