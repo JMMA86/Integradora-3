@@ -15,7 +15,7 @@ public abstract class Enemy extends Character {
 
     public Enemy(Point2D position, Image picture) {
         super(position, picture);
-        this.direction = new Point2D(-1, -1);
+        this.direction = new Point2D(0, 0);
         this.lockDirectionChange = false;
     }
 

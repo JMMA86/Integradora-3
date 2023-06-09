@@ -13,13 +13,13 @@ public class Hero extends Character {
     private final boolean[] pressedKeys;
     private Gun actualGun;
     private boolean canShot;
-    private Circle prefferedArea;
+    private final Circle preferredArea;
 
     private Hero(Point2D position, Image picture) {
         super(position, picture);
         actualGun = null;
         pressedKeys = new boolean[]{false, false, false, false};
-        prefferedArea = new Circle(getPosition().getX(), getPosition().getY(), 300);
+        preferredArea = new Circle(getPosition().getX(), getPosition().getY(), 300);
     }
 
     public static Hero getInstance() {
@@ -118,8 +118,8 @@ public class Hero extends Character {
             setPosition(getPosition().add(8, 0));
         }
         if (previous.equals(getPosition())) setState(0);
-        prefferedArea.setCenterX(getPosition().getX());
-        prefferedArea.setCenterY(getPosition().getY());
+        preferredArea.setCenterX(getPosition().getX());
+        preferredArea.setCenterY(getPosition().getY());
         if (actualGun != null) actualGun.setPosition(this.getPosition());
     }
 
@@ -136,15 +136,7 @@ public class Hero extends Character {
         this.actualGun = actualGun;
     }
 
-    public boolean isShooting() {
-        return canShot;
-    }
-
-    public void setCanShot(boolean canShot) {
-        this.canShot = canShot;
-    }
-
-    public Circle getPrefferedArea() {
-        return prefferedArea;
+    public Circle getPreferredArea() {
+        return preferredArea;
     }
 }

@@ -105,7 +105,7 @@ public abstract class Scenario extends BaseScreen {
         if (movingEnemies) {
             for (Enemy enemy : enemies) {
                 if (enemy instanceof ShooterEnemy shooter) {
-                    shooter.moveAndShot(hero.getPrefferedArea(), getBullets());
+                    shooter.moveAndShot(hero.getPreferredArea(), getBullets());
                 }
                 if(enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
@@ -349,4 +349,6 @@ public abstract class Scenario extends BaseScreen {
     public void setMovingEnemies(boolean movingEnemies) {
         this.movingEnemies = movingEnemies;
     }
+
+
 }
