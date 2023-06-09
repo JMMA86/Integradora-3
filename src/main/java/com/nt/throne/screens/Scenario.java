@@ -105,7 +105,6 @@ public abstract class Scenario extends BaseScreen {
         if (movingEnemies) {
             for (Enemy enemy : enemies) {
                 if (enemy instanceof ShooterEnemy shooter) {
-                    shooter.setFocus(hero.getPosition());
                     shooter.moveAndShot(hero.getPrefferedArea(), getBullets());
                 }
                 if(enemy instanceof ChaserEnemy chaser) {
@@ -224,6 +223,7 @@ public abstract class Scenario extends BaseScreen {
         shooting = true;
         new Thread(() -> {
             while (shooting) {
+                if (hero.getActualGun() == null) continue;
                 hero.getActualGun().getShotSound().stop();
                 hero.getActualGun().getShotSound().seek(Duration.ZERO);
                 if (hero.getActualGun().getAmmo() > 0) {
