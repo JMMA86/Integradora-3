@@ -16,8 +16,8 @@ import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ShotGun extends Gun {
-    private final double minAngle;
-    private final double maxAngle;
+    private double minAngle;
+    private double maxAngle;
     private boolean canShot;
     private final MediaPlayer shotSound;
     private final MediaPlayer reloadSound;
@@ -39,21 +39,24 @@ public class ShotGun extends Gun {
         setDelay(300);
         setBulletsPerShoot(5);
         setRechargeTime(2000);
-        setDamage(15);
-        minAngle = Math.toRadians(-90);
-        maxAngle = Math.toRadians(90);
+        setDamage(10);
         canShot = true;
     }
 
     @Override
     public void onShot(CopyOnWriteArrayList<Bullet> gameBullets, Point2D dest) {
+        double dx = dest.getX() - getEnd().getX() , dy = dest.getY() - getEnd().getY();
+        double initAngle = Math.atan( dy/dx );
+        minAngle =  initAngle - Math.toRadians(90);
+        maxAngle = initAngle + Math.toRadians(90);
+
         if (getAmmo() > 0) {
             if (canShot) {
                 setAmmo(getAmmo() - getBulletsPerShoot());
                 List<Bullet> bulletsBuffer = new ArrayList<>();
                 canShot = false;
                 for (int i = 0; i < getBulletsPerShoot(); i++) {
-                    double spreadAngle = getRandom().nextDouble() * (maxAngle - minAngle) + minAngle;
+                    double spreadAngle = getRandom().nextDouble(4*Math.PI) * (maxAngle - minAngle) + minAngle;
                     double angle = Math.toRadians(i * spreadAngle - (spreadAngle * (getBulletsPerShoot() - 1)) / 2.0);
                     Point2D dispersedDest = calcUnitVectorWithSpread(dest, angle);
                     bulletsBuffer.add(new Bullet(
@@ -64,7 +67,7 @@ public class ShotGun extends Gun {
                         new Image(
                             System.getProperty("user.dir") +
                                 "/src/main/resources/com/nt/throne/Guns/bullet.png"
-                        )
+                        ), 150
                     ));
                 }
                 gameBullets.addAll(bulletsBuffer);

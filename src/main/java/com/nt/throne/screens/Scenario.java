@@ -16,6 +16,8 @@ import java.awt.MouseInfo;
 import javafx.util.Duration;
 import java.io.File;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Scenario extends BaseScreen {
@@ -41,6 +43,7 @@ public abstract class Scenario extends BaseScreen {
     private boolean levelPassed;
     private static boolean endGameWin;
     private static boolean endGameLose;
+    private boolean allowShooting;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
@@ -69,6 +72,7 @@ public abstract class Scenario extends BaseScreen {
         limitY[0] = 70;
         limitY[1] = 620;
         initElements();
+        allowShooting = true;
     }
 
     public static int[] getLimitX() {
@@ -174,6 +178,7 @@ public abstract class Scenario extends BaseScreen {
             hero.takeDamage(bullet);
             ans = true;
         }
+        if(bullet.isOutOfRange()) ans = true;
 
         for (Enemy enemy : enemies) {
             double previousLife = enemy.getLife();
@@ -296,10 +301,18 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMousePressed(MouseEvent event) {
+        Timer timer = new Timer();
+        TimerTask startCadenceTimer = new TimerTask() {
+            @Override
+            public void run() {
+                allowShooting = true;
+            }
+        };
+
         shooting = true;
         if (hero.getActualGun() != null) {
             new Thread(() -> {
-                while (shooting) {
+                while (shooting && allowShooting) {
                     hero.getActualGun().getShotSound().stop();
                     hero.getActualGun().getShotSound().seek(Duration.ZERO);
                     if (hero.getActualGun().getAmmo() > 0) {
@@ -307,6 +320,13 @@ public abstract class Scenario extends BaseScreen {
                     }
                     if (!recharging) {
                         shoot(mouseCoords);
+                        if(hero.getActualGun() instanceof ShotGun) {
+                            shooting = false;
+                            if(allowShooting) {
+                                allowShooting = false;
+                                timer.schedule(startCadenceTimer, 750);
+                            }
+                        }
                     }
                     if (hero.getActualGun().getAmmo() > 0) {
                         try {

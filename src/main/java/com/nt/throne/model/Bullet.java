@@ -12,6 +12,8 @@ public class Bullet extends Element implements IAct {
     private boolean canDamage;
 
     private boolean movementLocked = false;
+    private Point2D origin;
+    private Double range;
 
     public Bullet(Point2D position, Point2D direction, double damage, int acceleration, Image picture) {
         super(position, picture);
@@ -19,6 +21,18 @@ public class Bullet extends Element implements IAct {
         this.acceleration = acceleration;
         this.damage = damage;
         this.canDamage = true;
+        this.origin = position;
+        this.range = Double.MAX_VALUE;
+    }
+
+    public Bullet(Point2D position, Point2D direction, double damage, int acceleration, Image picture, double range) {
+        super(position, picture);
+        this.direction = direction;
+        this.acceleration = acceleration;
+        this.damage = damage;
+        this.canDamage = true;
+        this.origin = position;
+        this.range = range;
     }
 
     @Override
@@ -45,5 +59,18 @@ public class Bullet extends Element implements IAct {
         move();
         setHitBox(new Circle(getPosition().getX(), getPosition().getY(), 20));
         context.drawImage(getPicture(), getPosition().getX(), getPosition().getY(), 20, 20);
+    }
+
+    public boolean isOutOfRange() {
+        double dist = Math.sqrt( Math.pow(getPosition().getX() - origin.getX(),2) + Math.pow( getPosition().getY() - origin.getY() ,2 ) );
+        return dist > range;
+    }
+
+    public Double getRange() {
+        return range;
+    }
+
+    public void setRange(Double range) {
+        this.range = range;
     }
 }
