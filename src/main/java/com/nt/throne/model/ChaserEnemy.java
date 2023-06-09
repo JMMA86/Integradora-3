@@ -1,6 +1,7 @@
 package com.nt.throne.model;
 
 import com.nt.throne.controller.InGameViewController;
+import com.nt.throne.screens.Scenario;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
@@ -9,12 +10,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ChaserEnemy extends Enemy {
     private Point2D direction;
-    private Boolean isMovingRandomly;
+    private Boolean movingY;
 
     public ChaserEnemy(Point2D position, Image picture) {
         super(position, picture);
-        this.direction = new Point2D(0,0);
-        this.isMovingRandomly = false;
+        this.direction = new Point2D(0,-4);
+        this.movingY = true;
     }
 
     @Override
@@ -36,38 +37,68 @@ public class ChaserEnemy extends Enemy {
     }
 
     public void calculateMovement() {
-
+        Point2D target = Hero.getInstance().getPosition();
         /*
-
-                boolean rx = false, ry = false;
-
-        if(rx || ry) {
-            if(rx) {
-                setDirection(getDirection().add(0, 4));
-            }
-            if(ry) {
-                setDirection(getDirection().add(4, 0));
-            }
-            isMovingRandomly = true;
+                if( !isThereIntersection(getPosition(), target)) {
+            Point2D direction = calcUnitVector( target );
+            setDirection( direction );
+            setDirection(new Point2D( getDirection().getX()*4, getDirection().getY()*4 ));
             return;
         }
 
-        Point2D target = Hero.getInstance().getPosition();
-        Random rnd = new Random();
-        if( !isThereIntersection(getPosition(), target)) {
-            if(!isMovingRandomly) {
-                isMovingRandomly = true;
-                target = new Point2D(
-                    rnd.nextInt(0, 1280), rnd.nextInt(0, 720)
-                );
-            }
-        } else {
-            isMovingRandomly = false;
+        if(checkBlockCollision(0)) {
+            setPosition(getPosition().add(0, 8));
+            setMovingY(false);
         }
-        Point2D direction = calcUnitVector( target );
-        setDirection( direction );
+        if(checkBlockCollision(1)) {
+            setPosition(getPosition().add(0, -8));
+            setMovingY(false);
+        }
+        if (checkBlockCollision(2)) {
+            setPosition(getPosition().add(8, 0));
+            setMovingY(true);
+        }
+        if(checkBlockCollision(3)) {
+            setPosition(getPosition().add(-8, 0));
+            setMovingY(true);
+        }
+
+        // check collisions with the map
+        if( getPosition().getY() < Scenario.getLimitY()[0] + 32 || getPosition().getY() > Scenario.getLimitY()[1] - 32 || checkBlockCollision(0) || checkBlockCollision(1) ) {
+            setMovingY(false);
+        }
+        if( getPosition().getX() < Scenario.getLimitX()[0] + 16 || getPosition().getX() > Scenario.getLimitX()[1] - 16 || checkBlockCollision(2) || checkBlockCollision(3) ) {
+            setMovingY(true);
+        }
+
+        if(movingY && !isThereIntersection(getPosition(), new Point2D(target.getX(), getPosition().getY())) ) {
+            movingY = false;
+            double xDir = target.getX() < getPosition().getX() ? -4 : 4;
+            setDirection(new Point2D(xDir, 0));
+        }
+
+        if(!movingY && !isThereIntersection( getPosition(), new Point2D(getPosition().getX(), target.getY()) )) {
+            movingY = true;
+            double yDir = target.getY() < getPosition().getY() ? -4 : 4;
+            setDirection(new Point2D(0, yDir));
+        }
          */
 
+
+    }
+
+    private void setMovingY(boolean movingY) {
+        Point2D target = Hero.getInstance().getPosition();
+        if(movingY) {
+            double yDir = target.getY() < getPosition().getY() ? -4 : 4;
+            setDirection(new Point2D(0, 4));
+        } else {
+            double xDir = target.getX() < getPosition().getX() ? -4 : 4;
+            setDirection(new Point2D(4, 0));
+        }
+    }
+
+    /*
         if(checkBlockCollision(0)) {
             setPosition(getPosition().add(0, 8));
             setDirection(new Point2D(0,0));
@@ -103,8 +134,7 @@ public class ChaserEnemy extends Enemy {
         } else {
             setState(4);
         }
-
-    }
+         */
 
     private boolean isThereIntersection(Point2D position, Point2D target) {
         double m = (position.getY() - target.getY())/(position.getX() - target.getX());
