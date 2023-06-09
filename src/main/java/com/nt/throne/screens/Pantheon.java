@@ -29,10 +29,10 @@ public class Pantheon extends Scenario {
             )
         );
         getEnemies().add(
-                new ChaserEnemy(
-                        new Point2D(400, 500),
-                        new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/chaser.png")
-                )
+            new ChaserEnemy(
+                new Point2D(400, 500),
+                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/chaser.png")
+            )
         );
 
         //Blocks: 68x135 (68x68 without shadow)
