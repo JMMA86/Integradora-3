@@ -20,6 +20,7 @@ public class Hero extends Character {
         actualGun = null;
         pressedKeys = new boolean[]{false, false, false, false};
         preferredArea = new Circle(getPosition().getX(), getPosition().getY(), 300);
+        setInvulnerability(1000);
     }
 
     public static Hero getInstance() {
@@ -41,8 +42,15 @@ public class Hero extends Character {
 
     @Override
     public void takeDamage(Element origin) {
-        if (origin instanceof Bullet bullet) {
-            setLife(getLife() - bullet.getDamage());
+        if (isCanGetDamage()) {
+            if (origin instanceof Bullet bullet) {
+                setLife(getLife() - bullet.getDamage());
+            }
+
+            if (origin instanceof ChaserEnemy) {
+                setLife(getLife() - 5);
+            }
+            setCanGetDamage(false);
         }
 
         startInvulnerabilityTimer();

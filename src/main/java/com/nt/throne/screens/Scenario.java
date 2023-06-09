@@ -2,7 +2,6 @@ package com.nt.throne.screens;
 
 import com.nt.throne.controller.InGameViewController;
 import com.nt.throne.model.*;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -12,8 +11,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import java.awt.MouseInfo;
-
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
@@ -29,6 +26,8 @@ public abstract class Scenario extends BaseScreen {
     private final MediaPlayer bodyImpactSound;
     private final MediaPlayer blockImpactSound;
     private final ImageView aim;
+    private final Image closedDoor;
+    private final Image openedDoor;
     private Hero hero = Hero.getInstance();
     private CopyOnWriteArrayList<Enemy> enemies;
     private CopyOnWriteArrayList<Structure> structures;
@@ -42,8 +41,6 @@ public abstract class Scenario extends BaseScreen {
     private boolean recharging;
     private boolean mouseMoved;
     private boolean levelPassed;
-    private final Image closedDoor;
-    private final Image openedDoor;
     private boolean endGameWin;
     private boolean endGameLose;
 
@@ -159,6 +156,10 @@ public abstract class Scenario extends BaseScreen {
                 }
                 if (enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
+
+                    if (chaser.isColliding(hero)) {
+                        hero.takeDamage(chaser);
+                    }
                 }
             }
         }
@@ -169,6 +170,7 @@ public abstract class Scenario extends BaseScreen {
 
         if (bullet.isColliding(hero)) {
             hero.takeDamage(bullet);
+            ans = true;
         }
 
         for (Enemy enemy : enemies) {
@@ -218,7 +220,7 @@ public abstract class Scenario extends BaseScreen {
                 );
                 totalGuns++;
                 machineGun = false;
-            } else if(!machineGun && checkFreePosition(x, y, 284, 47)){
+            } else if (!machineGun && checkFreePosition(x, y, 284, 47)) {
                 getGuns().add(
                     new ShotGun(
                         new Point2D(x, y),
