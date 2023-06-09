@@ -145,6 +145,9 @@ public abstract class Scenario extends BaseScreen {
         boolean ans = !isInBounds(bullet);
         for (Enemy enemy : enemies) {
             if (bullet.isHurting(enemy)) {
+                bodyImpactSound.setVolume(0.5);
+                bodyImpactSound.stop();
+                bodyImpactSound.seek(Duration.ZERO);
                 bodyImpactSound.play();
                 enemy.takeDamage(bullet);
                 if (enemy.getLife() <= 0) {
@@ -156,6 +159,9 @@ public abstract class Scenario extends BaseScreen {
 
         for (Structure structure : structures) {
             if (bullet.isHurting(structure)) {
+                blockImpactSound.setVolume(0.3);
+                blockImpactSound.stop();
+                blockImpactSound.seek(Duration.ZERO);
                 blockImpactSound.play();
                 structure.takeDamage(bullet);
                 if (structure.getLife() <= 0) {
