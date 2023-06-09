@@ -14,6 +14,7 @@ public abstract class Gun extends Element {
     private int numShots;
     private int ammo;
     private Random random;
+    private Point2D end;
     private long delay;
     private int bulletsPerShoot;
     private long rechargeTime;
@@ -87,5 +88,13 @@ public abstract class Gun extends Element {
 
     public MediaPlayer getReloadSound() {
         return reloadSound;
+    }
+
+    public Point2D getEnd() {
+        return end;
+    }
+
+    public void setEnd(Point2D end) {
+        this.end = end;
     }
 }

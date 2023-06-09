@@ -1,7 +1,6 @@
 package com.nt.throne.screens;
 
 import com.nt.throne.model.*;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -11,10 +10,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import java.awt.MouseInfo;
-
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
+import java.awt.*;
 import java.io.File;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,6 +22,9 @@ public abstract class Scenario extends BaseScreen {
     private static int[] limitX;
     private static int[] limitY;
     private final Image background;
+    private final MediaPlayer bodyImpactSound;
+    private final MediaPlayer blockImpactSound;
+    private final ImageView aim;
     private Hero hero = Hero.getInstance();
     private CopyOnWriteArrayList<Enemy> enemies;
     private CopyOnWriteArrayList<Structure> structures;
@@ -32,11 +34,8 @@ public abstract class Scenario extends BaseScreen {
     private Random random;
     private boolean shooting;
     private boolean movingEnemies;
-    private final MediaPlayer bodyImpactSound;
-    private final MediaPlayer blockImpactSound;
     private Point2D mouseCoords;
     private boolean recharging;
-    private final ImageView aim;
     private boolean mouseMoved;
 
     public Scenario(Canvas canvas, Image background) {
@@ -87,6 +86,8 @@ public abstract class Scenario extends BaseScreen {
             Point2D gunCoords = hero.getActualGun().getPosition();
             //Calculate angle
             double angle = Math.atan2(mouseCoords.getY() - gunCoords.getY(), mouseCoords.getX() - gunCoords.getX());
+
+            //hero.getActualGun().setEnd(translatePoint(angle, hero.getPosition(), ));
             hero.getActualGun().paint(graphicsContext, angle);
         }
         for (Enemy enemy : enemies) {
@@ -109,7 +110,7 @@ public abstract class Scenario extends BaseScreen {
                 if (enemy instanceof ShooterEnemy shooter) {
                     shooter.moveAndShot(hero.getPreferredArea(), getBullets());
                 }
-                if(enemy instanceof ChaserEnemy chaser) {
+                if (enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
                 }
             }
@@ -166,7 +167,7 @@ public abstract class Scenario extends BaseScreen {
                 totalGuns++;
                 machineGun = false;
             }
-            if(!machineGun && checkFreePosition(x, y, 284, 47)){
+            if (!machineGun && checkFreePosition(x, y, 284, 47)) {
                 getGuns().add(
                     new ShotGun(
                         new Point2D(x, y),
@@ -193,12 +194,7 @@ public abstract class Scenario extends BaseScreen {
                 }
                 hero.setActualGun(gun);
                 guns.remove(gun);
-                System.out.println(guns.size());
             }
-        }
-
-        for(Gun gun : guns) {
-            System.out.println(gun.getPosition());
         }
     }
 
@@ -269,6 +265,19 @@ public abstract class Scenario extends BaseScreen {
         }
     }
 
+    public Point2D translatePoint(double angle, Point2D origin, Point2D dest) {
+        double x1 = origin.getX(), y1 = origin.getY();
+        double x2 = dest.getX(), y2 = dest.getY();
+
+        double longitude = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        double toRadians = Math.toRadians(angle);
+
+        double newX = x1 + longitude * Math.cos(toRadians);
+        double newY = y1 + longitude * Math.sin(toRadians);
+
+        return  new Point2D(newX, newY);
+    }
+
     @Override
     public void onMouseDragged(MouseEvent event) {
         mouseCoords = new Point2D(event.getX(), event.getY());
@@ -293,7 +302,7 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onKeyPressed(KeyEvent event) {
-        if(event.getCode() == KeyCode.SHIFT) {
+        if (event.getCode() == KeyCode.SHIFT) {
             gunsLogic();
         } else {
             hero.onKeyPressed(event);
