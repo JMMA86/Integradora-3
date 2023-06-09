@@ -93,8 +93,13 @@ public class InGameViewController implements Initializable {
                 Platform.runLater(this::paint);
                 lifeTxt.setText("    Life: " + Hero.getInstance().getLife() + " / 100");
                 if (Hero.getInstance().getActualGun() != null) {
-                    ammoTxt.setText("    Ammo: " + Hero.getInstance().getActualGun().getAmmo() + " / " + Hero.getInstance().getActualGun().getCHARGER_SIZE());
+                    if (Hero.getInstance().getActualGun().getAmmo() <= 0) {
+                        ammoTxt.setText("    Ammo: -RECHARGING-");
+                    } else {
+                        ammoTxt.setText("    Ammo: " + Hero.getInstance().getActualGun().getAmmo() + " / " + Hero.getInstance().getActualGun().getCHARGER_SIZE());
+                    }
                 }
+                levelTxt.setText("Level " + (SCREEN + 1));
                 pause(50);
             }
         }).start();
