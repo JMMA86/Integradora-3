@@ -111,6 +111,8 @@ public class ShotGun extends Gun {
             getPicture().getWidth() / 2,
             getPicture().getHeight() / 2
         );
+
+
     }
 
     private Point2D calcUnitVectorWithSpread(Point2D target, double spreadAngle) {

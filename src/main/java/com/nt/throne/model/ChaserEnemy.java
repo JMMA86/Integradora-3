@@ -11,7 +11,7 @@ public class ChaserEnemy extends Enemy {
     @Override
     public void move() {
         Point2D target = Hero.getInstance().getPosition();
-        if( Math.sqrt( Math.pow(target.getX() - getPosition().getX(),2) + Math.pow(target.getY()-getPosition().getY() , 2) ) < 50 ) {
+        if( distanceFromHero(getPosition()) < 50 ) {
             attack(Hero.getInstance());
         } else {
             setPosition(getPosition().add(getDirection().getX(), getDirection().getY()));

@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 
 import java.util.Random;
@@ -107,4 +108,7 @@ public abstract class Gun extends Element {
     public void setDamage(double damage) {
         this.damage = damage;
     }
+
+
+
 }

@@ -123,7 +123,7 @@ public abstract class Character extends AliveElement implements IAct {
          */
         CopyOnWriteArrayList<Structure> blocks = InGameViewController.getScreens().get(InGameViewController.getSCREEN()).getStructures();
 
-        Shape hitBox = getHitBox();
+        Shape hitBox = new Rectangle( getPosition().getX()-16, getPosition().getY() + 10, 32, 54 );
 
         for (Structure block : blocks) {
             /*
@@ -131,12 +131,13 @@ public abstract class Character extends AliveElement implements IAct {
             posX1 - posX2
             posY1
              */
-            Point2D posX1 = new Point2D(block.getPosition().getX(), block.getPosition().getY() - 30);
-            Point2D posX2 = new Point2D(block.getPosition().getX() + 68, block.getPosition().getY() - 30);
-            Point2D posY1 = new Point2D(block.getPosition().getX(), block.getPosition().getY() + 34);
-            Point2D posY2 = new Point2D(block.getPosition().getX()+68, block.getPosition().getY()+34);
 
-            int diff = 10;
+            Point2D posX1 = new Point2D(block.getPosition().getX(), block.getPosition().getY());
+            Point2D posX2 = new Point2D(block.getPosition().getX()+68, block.getPosition().getY());
+            Point2D posY1 = new Point2D(block.getPosition().getX(), block.getPosition().getY() + 68);
+            Point2D posY2 = new Point2D(block.getPosition().getX()+68, block.getPosition().getY()+68);
+
+            int diff = this instanceof Hero ? 8 : 0;
 
             switch (movement) {
                 case 0 -> {

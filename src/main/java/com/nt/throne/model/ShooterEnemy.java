@@ -33,19 +33,20 @@ public class ShooterEnemy extends Enemy {
     }
 
     public void moveAndShot(Circle collidingElement, CopyOnWriteArrayList<Bullet> gameBullets) {
-        /*
-
-         */
+        Point2D target = Hero.getInstance().getPosition();
         if (keep) {
             calculateMovement();
             setPosition(getPosition().add(getDirection().getX(), getDirection().getY()));
-            actualGun.setPosition(new Point2D(getPosition().getX() - actualGun.getPicture().getWidth() / 10, getPosition().getY()));
+            // - actualGun.getPicture().getWidth() / 10
+            actualGun.setPosition(new Point2D(getPosition().getX() , getPosition().getY()));
         }
 
-        if (getHitBox().intersects(collidingElement.getBoundsInParent())) {
+        if (directPath(target) || getHitBox().intersects(collidingElement.getBoundsInParent())) {
             setState(getState());
-            actualGun.onShot(gameBullets, Hero.getInstance().getPosition());
-            keep = false;
+            if( directPath(target) ) {
+                actualGun.onShot(gameBullets, Hero.getInstance().getPosition());
+                keep = false;
+            }
         } else {
             keep = true;
         }
@@ -62,6 +63,6 @@ public class ShooterEnemy extends Enemy {
 
     public void setActualGun(Gun actualGun) {
         this.actualGun = actualGun;
-        actualGun.setPosition(new Point2D(getPosition().getX() - actualGun.getPicture().getWidth() / 10, getPosition().getY()));
+        actualGun.setPosition(new Point2D(getPosition().getX() - actualGun.getPicture().getWidth() / 10 , getPosition().getY()));
     }
 }

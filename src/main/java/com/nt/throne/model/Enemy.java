@@ -125,6 +125,11 @@ public abstract class Enemy extends Character {
         return true;
     }
 
+    public double distanceFromHero(Point2D init) {
+        Point2D target = Hero.getInstance().getPosition();
+        return Math.sqrt(Math.pow(target.getX() - init.getX(),2) + Math.pow(target.getY()-init.getY() , 2) );
+    }
+
     public Point2D getDirection() {
         return direction;
     }

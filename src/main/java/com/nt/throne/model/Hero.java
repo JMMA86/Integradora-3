@@ -19,7 +19,7 @@ public class Hero extends Character {
         super(position, picture);
         actualGun = null;
         pressedKeys = new boolean[]{false, false, false, false};
-        preferredArea = new Circle(getPosition().getX(), getPosition().getY(), 300);
+        preferredArea = new Circle(getPosition().getX(), getPosition().getY(), 100);
         setInvulnerability(1000);
     }
 

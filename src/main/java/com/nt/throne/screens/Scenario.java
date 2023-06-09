@@ -217,29 +217,33 @@ public abstract class Scenario extends BaseScreen {
             //284 * 47 SG
             int x = random.nextInt(limitX[0] + 50, limitX[1] - 50);
             int y = random.nextInt(limitY[0] + 50, limitY[1] - 50);
-            if (machineGun && checkFreePosition(x, y, 326, 121)) {
-                getGuns().add(
+
+            Gun newGun = machineGun ?
                     new MachineGun(
-                        new Point2D(x, y),
-                        new Image(
+                            new Point2D(x, y),
+                            new Image(
+                                    System.getProperty("user.dir") +
+                                            "/src/main/resources/com/nt/throne/Guns/minigun.png"
+                            ),
+                            60
+                    ) : new ShotGun(
+                    new Point2D(x, y),
+                    new Image(
                             System.getProperty("user.dir") +
-                                "/src/main/resources/com/nt/throne/Guns/minigun.png"
-                        ),
-                        60
-                    )
+                                    "/src/main/resources/com/nt/throne/Guns/shotgun.png"
+                    ),
+                    40
+            );
+
+            if (machineGun && checkFreePosition(x, y, newGun)) {
+                getGuns().add(
+                    newGun
                 );
                 totalGuns++;
                 machineGun = false;
-            } else if (!machineGun && checkFreePosition(x, y, 284, 47)) {
+            } else if (!machineGun && checkFreePosition(x, y, newGun)) {
                 getGuns().add(
-                    new ShotGun(
-                        new Point2D(x, y),
-                        new Image(
-                            System.getProperty("user.dir") +
-                                "/src/main/resources/com/nt/throne/Guns/shotgun.png"
-                        ),
-                        40
-                    )
+                        newGun
                 );
                 totalGuns++;
                 machineGun = true;
@@ -268,10 +272,9 @@ public abstract class Scenario extends BaseScreen {
         }
     }
 
-    private Boolean checkFreePosition(int x, int y, double width, double height) {
-        Rectangle temp = new Rectangle(x, y, width, height);
+    private Boolean checkFreePosition(int x, int y, Element e) {
         for (Structure structure : structures) {
-            if (structure.getHitBox().intersects(temp.getBoundsInParent())) {
+            if (e.getHitBox().intersects(structure.getHitBox().getBoundsInParent())) {
                 return false;
             }
         }
