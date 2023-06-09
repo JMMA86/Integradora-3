@@ -117,11 +117,10 @@ public class InGameViewController implements Initializable {
         songMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         songMediaPlayer.setVolume(0);
         songMediaPlayer.play();
-        for (double i = 0; i <= 0.5; i += 0.1) {
+        for (double i = 0; i <= 0.2; i += 0.1) {
             songMediaPlayer.setVolume(i);
             pause(100);
         }
-
     }
 
     public void paint() {
