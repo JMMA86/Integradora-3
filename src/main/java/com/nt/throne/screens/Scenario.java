@@ -152,15 +152,20 @@ public abstract class Scenario extends BaseScreen {
         bullets.removeIf(this::bulletsLogic);
         if (movingEnemies) {
             for (Enemy enemy : enemies) {
+                enemy.calculateMovement();
                 if (enemy instanceof ShooterEnemy shooter) {
+
                     shooter.moveAndShot(hero.getPreferredArea(), getBullets());
                 }
                 if (enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
 
+                    /*
                     if (chaser.isColliding(hero)) {
                         hero.takeDamage(chaser);
                     }
+
+                     */
                 }
             }
         }
@@ -175,9 +180,11 @@ public abstract class Scenario extends BaseScreen {
         }
 
         for (Enemy enemy : enemies) {
+            double previousLife = enemy.getLife();
             if (bullet.isHurting(enemy)) {
                 bodyImpactSound.play();
                 enemy.takeDamage(bullet);
+                if(previousLife == enemy.getLife()) continue;
                 if (enemy.getLife() <= 0) {
                     enemies.remove(enemy);
                 }
@@ -240,6 +247,7 @@ public abstract class Scenario extends BaseScreen {
     }
 
     public void gunsLogic() {
+        boolean collides = false;
         for (Gun gun : guns) {
             if (hero.isColliding(gun)) {
                 if (hero.getActualGun() != null) {
@@ -248,7 +256,13 @@ public abstract class Scenario extends BaseScreen {
                 }
                 hero.setActualGun(gun);
                 guns.remove(gun);
+                collides = true;
             }
+        }
+        if(!collides && hero.getActualGun() != null) {
+            hero.getActualGun().setPosition(hero.getPosition());
+            guns.add(hero.getActualGun());
+            hero.setActualGun(null);
         }
     }
 

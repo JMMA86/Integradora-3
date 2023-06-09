@@ -52,6 +52,7 @@ public class Hero extends Character {
             }
             setCanGetDamage(false);
         }
+        damaged = true;
 
         startInvulnerabilityTimer();
     }
@@ -140,7 +141,7 @@ public class Hero extends Character {
     }
 
     @Override
-    public void attack() {
+    public void attack(AliveElement target) {
 
     }
 
@@ -150,7 +151,7 @@ public class Hero extends Character {
 
     public void setActualGun(Gun actualGun) {
         this.actualGun = actualGun;
-        actualGun.setPosition( new Point2D(getPosition().getX() - actualGun.getPicture().getWidth()/2, getPosition().getY()));
+        if(actualGun != null) actualGun.setPosition( new Point2D(getPosition().getX() - actualGun.getPicture().getWidth()/2, getPosition().getY()));
     }
 
     public boolean isShooting() {

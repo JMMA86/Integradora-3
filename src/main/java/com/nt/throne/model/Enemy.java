@@ -1,17 +1,23 @@
 package com.nt.throne.model;
 
+import com.nt.throne.controller.InGameViewController;
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 
-import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Enemy extends Character {
     private Point2D direction;
     private Boolean lockDirectionChange;
+    private double damage = 10;
+
+    private int lockedDirection = -1;
+    private int lastLocked = -1;
 
     public Enemy(Point2D position, Image picture) {
         super(position, picture);
@@ -36,51 +42,54 @@ public abstract class Enemy extends Character {
 
     public void calculateMovement() {
         Point2D target = Hero.getInstance().getPosition();
-        boolean rotate = false;
-        Timer timer = new Timer();
 
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                lockDirectionChange = false;
+        int step = 4;
+
+        if ( ( lockedDirection == -1 || lockedDirection == 0)) {
+            if(checkBlockCollision(0) && lastLocked != 0) {
+                lockedDirection = 0;
+                setDirection( new Point2D(step* calculateDeviation(target, true), 0) );
+            } else if(lockedDirection != -1) {
+                setDirection( new Point2D(0, 2*step* calculateDeviation(target, true)) );
+                lockedDirection = -1;
+                lastLocked = 0;
+
             }
-        };
+        }
+        if ( (lockedDirection == -1 || lockedDirection == 1)) {
+            if(checkBlockCollision(1) && lastLocked != 1) {
+                lockedDirection = 1;
+                setDirection( new Point2D(step* calculateDeviation(target, true), 0) );
+            } else if(lockedDirection != -1) {
+                setDirection( new Point2D(0, 2*step* calculateDeviation(target, true)) );
+                lockedDirection = -1;
+                lastLocked = 1;
+            }
+        }
+        if ( (lockedDirection == -1 || lockedDirection == 2)) {
+            if(checkBlockCollision(2) && lastLocked != 2) {
+                lockedDirection = 2;
+                setDirection( new Point2D(0, step* calculateDeviation(target, false)) );
+            }else if(lockedDirection != -1) {
+                lockedDirection = -1;
+                lastLocked = 2;
+            }
+        }
+        if ( (lockedDirection == -1 || lockedDirection == 3)) {
+            if(checkBlockCollision(3) && lastLocked != 3) {
+                lockedDirection = 3;
+                setDirection( new Point2D(0, step* -calculateDeviation(target, false)) );
+            } else if(lockedDirection != -1) {
+                setDirection( new Point2D(2*step* calculateDeviation(target, false), 0) );
+                lockedDirection = -1;
+                lastLocked = 3;
+            }
+        }
 
-
-        if (!lockDirectionChange) {
+        if (lockedDirection == -1 || directPath(target)) {
             Point2D direction = calcUnitVector(target);
             setDirection(direction);
             setDirection(new Point2D(getDirection().getX() * 4, getDirection().getY() * 4));
-            setPosition(getPosition().add(getDirection().getX(), getDirection().getY()));
-        }
-
-        if (checkBlockCollision(0)) {
-            setPosition(getPosition().add(0, 8));
-            rotate = true;
-        }
-        if (checkBlockCollision(1)) {
-            setPosition(getPosition().add(0, -8));
-            rotate = true;
-        }
-        if (checkBlockCollision(2)) {
-            setPosition(getPosition().add(8, 0));
-            rotate = true;
-        }
-        if (checkBlockCollision(3)) {
-            setPosition(getPosition().add(-8, 0));
-            rotate = true;
-        }
-
-
-        if (rotate) {
-            Point2D v1 = new Point2D((-1) * getDirection().getY(), getDirection().getX());
-            Point2D v2 = new Point2D(getDirection().getY(), getDirection().getX() * (-1));
-            setDirection(whichIsCloser(v1, v2));
-            lockDirectionChange = true;
-            timer.schedule(task, 100);
-            return;
-        } else {
-            setPosition(getPosition().add(-getDirection().getX(), -getDirection().getY()));
         }
 
 
@@ -96,11 +105,35 @@ public abstract class Enemy extends Character {
         }
     }
 
+    private double calculateDeviation(Point2D target, boolean yAxis) {
+        if( yAxis ) {
+            return target.getY() < getPosition().getY() ? -1 : 1;
+        } else {
+            return target.getX() < getDirection().getX() ? -1 : 1;
+        }
+    }
+
+    public boolean directPath(Point2D target) {
+
+        CopyOnWriteArrayList<Structure> blocks = InGameViewController.getScreens().get(InGameViewController.getSCREEN()).getStructures();
+
+        for(Structure block : blocks) {
+            Line line = new Line( getPosition().getX(), getPosition().getY(), target.getX(), target.getY() );
+            if(line.intersects(block.getHitBox().getBoundsInParent())) return false;
+        }
+
+        return true;
+    }
+
     public Point2D getDirection() {
         return direction;
     }
 
     public void setDirection(Point2D direction) {
         this.direction = direction;
+    }
+
+    public double getDamage() {
+        return damage;
     }
 }

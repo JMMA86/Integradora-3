@@ -28,7 +28,7 @@ public class Bullet extends Element implements IAct {
     }
 
     @Override
-    public void attack() {
+    public void attack(AliveElement target) {
 
     }
 
