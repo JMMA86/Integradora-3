@@ -1,5 +1,7 @@
 package com.nt.throne.controller;
 
+import com.nt.throne.Launcher;
+import com.nt.throne.model.Hero;
 import com.nt.throne.screens.Pantheon;
 import com.nt.throne.screens.RedDesert;
 import com.nt.throne.screens.Scenario;
@@ -14,7 +16,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -45,7 +46,7 @@ public class InGameViewController implements Initializable {
     @FXML
     private Text ammoTxt;
     private MediaPlayer songMediaPlayer;
-    private boolean isRunning;
+    private static boolean isRunning;
 
     public static int getMapsSize() {
         return screens.size();
@@ -91,8 +92,18 @@ public class InGameViewController implements Initializable {
         new Thread(() -> {
             while (isRunning) {
                 Platform.runLater(this::paint);
+                lifeTxt.setText("    Life: " + Hero.getInstance().getLife() + " / 100");
+                if (Hero.getInstance().getActualGun() != null) {
+                    if (Hero.getInstance().getActualGun().getAmmo() <= 0) {
+                        ammoTxt.setText("    Ammo: -RECHARGING-");
+                    } else {
+                        ammoTxt.setText("    Ammo: " + Hero.getInstance().getActualGun().getAmmo() + " / " + Hero.getInstance().getActualGun().getCHARGER_SIZE());
+                    }
+                }
+                levelTxt.setText("Level " + (SCREEN + 1));
                 pause(50);
             }
+            songMediaPlayer.stop();
         }).start();
 
         //Counter
@@ -149,5 +160,17 @@ public class InGameViewController implements Initializable {
         canvas.setOnMouseMoved(event -> screens.get(SCREEN).onMouseMoved(event));
         canvas.setFocusTraversable(true);
         screens.get(SCREEN).setMovingEnemies(true);
+    }
+
+    public static void setWinScreen() {
+        isRunning = false;
+        EndGameViewController.setIsWinner(true);
+        Launcher.renderView("end-game-view.fxml", 1280, 720);
+    }
+
+    public static void setLoseScreen() {
+        isRunning = false;
+        EndGameViewController.setIsWinner(false);
+        Launcher.renderView("end-game-view.fxml", 1280, 720);
     }
 }

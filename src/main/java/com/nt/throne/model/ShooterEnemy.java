@@ -1,5 +1,7 @@
 package com.nt.throne.model;
 
+import com.nt.throne.controller.InGameViewController;
+import com.nt.throne.screens.Scenario;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
@@ -8,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ShooterEnemy extends Enemy {
     private Gun actualGun;
-
+    private boolean keep;
     public ShooterEnemy(Point2D position, Image picture) {
         super(position, picture);
         setLife(100);
@@ -21,19 +23,26 @@ public class ShooterEnemy extends Enemy {
             ),
             20
         );
+        keep = true;
     }
 
     @Override
     public void move() {
-        setPosition(getPosition().add(getDirection().getX(), getDirection().getY()));
     }
 
     public void moveAndShot(Circle collidingElement, CopyOnWriteArrayList<Bullet> gameBullets) {
-        actualGun.setPosition(new Point2D(getPosition().getX()-actualGun.getPicture().getWidth()/4, getPosition().getY()));
-        if (!getHitBox().intersects(collidingElement.getBoundsInParent())) {
+        if (keep) {
             calculateMovement();
+            setPosition(getPosition().add(getDirection().getX(), getDirection().getY()));
+            actualGun.setPosition(getPosition());
+        }
+
+        if (getHitBox().intersects(collidingElement.getBoundsInParent())) {
+            setState(getState());
+            actualGun.onShot(gameBullets, getDirection());
+            keep = false;
         } else {
-            //actualGun.onShot(gameBullets,focus);
+            keep = true;
         }
     }
 

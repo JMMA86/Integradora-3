@@ -1,5 +1,6 @@
 package com.nt.throne.screens;
 
+import com.nt.throne.controller.InGameViewController;
 import com.nt.throne.model.*;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -38,12 +39,22 @@ public abstract class Scenario extends BaseScreen {
     private boolean recharging;
     private final ImageView aim;
     private boolean mouseMoved;
+    private boolean levelPassed;
+    private final Image closedDoor;
+    private final Image openedDoor;
+    private boolean endGameWin;
+    private boolean endGameLose;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
         bodyImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/bodyImpactSound.mp3").toURI().toString()));
         blockImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/blockImpactSound.mp3").toURI().toString()));
+        closedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/closedDoor.png");
+        openedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/openedDoor.png");
         mouseMoved = false;
+        levelPassed = false;
+        endGameWin = false;
+        endGameLose = false;
         mouseCoords = new Point2D(MouseInfo.getPointerInfo().getLocation().getX(), MouseInfo.getPointerInfo().getLocation().getY());
         aim = new ImageView(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Guns/aim.png"));
         recharging = false;
@@ -80,11 +91,20 @@ public abstract class Scenario extends BaseScreen {
         graphicsContext.drawImage(background,
             0, 0);
         for (Structure structure : structures) structure.paint(graphicsContext);
+        if (enemies.isEmpty()) {
+            levelPassed = true;
+            graphicsContext.drawImage(openedDoor, 1200, 320, openedDoor.getWidth() * 0.7, openedDoor.getHeight() * 0.8);
+        } else {
+            levelPassed = false;
+            graphicsContext.drawImage(closedDoor, 1200, 320, openedDoor.getWidth() * 0.7, openedDoor.getHeight() * 0.8);
+        }
         hero.paint(graphicsContext);
         for (Bullet bullet : bullets) bullet.paint(graphicsContext);
         if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
         if (hero.getActualGun() != null) {
             Point2D gunCoords = hero.getActualGun().getPosition();
+            Image gun = hero.getActualGun().getPicture();
+            graphicsContext.drawImage(gun, 200 - gun.getWidth() / 2, 133 - gun.getHeight() / 2, gun.getWidth() / 1.5, gun.getHeight() / 1.5);
             //Calculate angle
             double angle = Math.atan2(mouseCoords.getY() - gunCoords.getY(), mouseCoords.getX() - gunCoords.getX());
             hero.getActualGun().paint(graphicsContext, angle);
@@ -98,6 +118,15 @@ public abstract class Scenario extends BaseScreen {
         if (Hero.getInstance().getActualGun() != null && mouseMoved) {
             graphicsContext.drawImage(aim.getImage(), 0, 0, 512, 512, mouseCoords.getX() - 40, mouseCoords.getY() - 40, 80, 80);
         }
+        if (hero.getLife() <= 0) {
+            endGameLose = true;
+        }
+        if (endGameWin) {
+            InGameViewController.setWinScreen();
+        }
+        if (endGameLose) {
+            InGameViewController.setLoseScreen();
+        }
         run();
     }
 
@@ -107,7 +136,7 @@ public abstract class Scenario extends BaseScreen {
         if (movingEnemies) {
             for (Enemy enemy : enemies) {
                 if (enemy instanceof ShooterEnemy shooter) {
-                    shooter.moveAndShot(hero.getPrefferedArea(), getBullets());
+                    shooter.moveAndShot(hero.getPreferredArea(), getBullets());
                 }
                 if(enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
@@ -222,39 +251,43 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void onMousePressed(MouseEvent event) {
         shooting = true;
-        new Thread(() -> {
-            while (shooting) {
-                if (hero.getActualGun() == null) continue;
-                hero.getActualGun().getShotSound().stop();
-                hero.getActualGun().getShotSound().seek(Duration.ZERO);
-                if (hero.getActualGun().getAmmo() > 0) {
-                    hero.getActualGun().getShotSound().play();
-                }
-                if (!recharging) {
-                    shoot(mouseCoords);
-                }
-                if (hero.getActualGun().getAmmo() > 0) {
-                    try {
-                        Thread.sleep(150);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+        if (hero.getActualGun() != null) {
+            new Thread(() -> {
+                while (shooting) {
+                    hero.getActualGun().getShotSound().stop();
+                    hero.getActualGun().getShotSound().seek(Duration.ZERO);
+                    if (hero.getActualGun().getAmmo() > 0) {
+                        hero.getActualGun().getShotSound().play();
                     }
-                } else {
-                    try {
-                        recharging = true;
-                        Thread.sleep(hero.getActualGun().getRechargeTime() + 10);
-                        recharging = false;
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                    if (!recharging) {
+                        shoot(mouseCoords);
+                    }
+                    if (hero.getActualGun().getAmmo() > 0) {
+                        try {
+                            Thread.sleep(150);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    } else {
+                        try {
+                            recharging = true;
+                            Thread.sleep(hero.getActualGun().getRechargeTime() + 10);
+                            recharging = false;
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
-            }
-        }).start();
+            }).start();
+        }
     }
 
     public void shoot(Point2D event) {
         if (hero.getActualGun() != null) {
             hero.getActualGun().onShot(bullets, new Point2D(event.getX(), event.getY()));
+            if (hero.getActualGun().getAmmo() == 0) {
+                hero.getActualGun().onShot(bullets, new Point2D(event.getX(), event.getY()));
+            }
         }
         try {
             Thread.sleep(150);
@@ -277,7 +310,6 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMouseClicked(MouseEvent event) {
-
     }
 
     @Override
@@ -354,5 +386,17 @@ public abstract class Scenario extends BaseScreen {
 
     public void setMovingEnemies(boolean movingEnemies) {
         this.movingEnemies = movingEnemies;
+    }
+
+    public boolean isLevelPassed() {
+        return levelPassed;
+    }
+
+    public void setEndGameWin(boolean endGame) {
+        this.endGameWin = endGame;
+    }
+
+    public void setEndGameLose(boolean endGameLose) {
+        this.endGameLose = endGameLose;
     }
 }
