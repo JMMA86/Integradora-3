@@ -83,19 +83,18 @@ public abstract class Scenario extends BaseScreen {
         if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
         if (hero.getActualGun() != null) {
             //This is what I'm changing
-            Point2D gunCoords = hero.getActualGun().getPosition();
+            Point2D gunCoords = hero.getPosition();
             //Calculate angle
             double angle = Math.atan2(mouseCoords.getY() - gunCoords.getY(), mouseCoords.getX() - gunCoords.getX());
-            Point2D offset = hero.getActualGun().getPosition();
-            discardPictureWidth(offset, angle, hero.getPosition(), hero.getActualGun());
+            discardPictureWidth(gunCoords, angle, hero.getActualGun());
         }
         for (Enemy enemy : enemies) {
             if (enemy instanceof ShooterEnemy shooter) {
                 //This is what I'm changing
-                Point2D gunCoords = shooter.getActualGun().getPosition();
+                Point2D gunCoords = shooter.getPosition();
                 //Calculate angle
                 double angle = Math.atan2(hero.getPosition().getY() - gunCoords.getY(), hero.getPosition().getX() - gunCoords.getX());
-                discardPictureWidth(gunCoords, angle, shooter.getPosition(), shooter.getActualGun());
+                discardPictureWidth(gunCoords, angle, shooter.getActualGun());
             }
             enemy.paint(graphicsContext);
         }
@@ -105,19 +104,19 @@ public abstract class Scenario extends BaseScreen {
         run();
     }
 
-    private void discardPictureWidth(Point2D gunCoords, double angle, Point2D position, Gun actualGun) {
+    private void discardPictureWidth(Point2D position, double angle, Gun actualGun) {
         if (Math.abs(angle) < Math.PI / 2) {
-            gunCoords.add(
+            position.add(
                 position.getX() - actualGun.getPicture().getWidth(),
                 0
             );
         } else {
-            gunCoords.add(
+            position.add(
                 position.getX() + actualGun.getPicture().getWidth(),
                 0
             );
         }
-        actualGun.setEnd(translatePoint(angle, position, gunCoords));
+        actualGun.setEnd(translatePoint(angle, position, position));
         actualGun.paint(graphicsContext, angle);
     }
 
