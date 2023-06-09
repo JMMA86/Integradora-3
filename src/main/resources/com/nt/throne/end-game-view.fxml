@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.media.MediaView?>
@@ -13,14 +8,13 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.nt.throne.controller.EndGameViewController"
             prefHeight="720.0" prefWidth="1280.0">
-    <StackPane>
-        <Canvas fx:id="canvas"/>
+    <StackPane prefWidth="1280" prefHeight="720">
         <MediaView fx:id="videoBackground"/>
-        <VBox>
-            <Text fx:id="titleScreen" text="YOU "/>
+        <VBox alignment="CENTER" prefWidth="1280" prefHeight="720" spacing="30">
+            <Text fx:id="titleScreen" text="YOU " scaleX="2" scaleY="2"/>
             <Text fx:id="backBtn" text="Back to menu" onMouseClicked="#backToMenu"/>
         </VBox>
-        <Canvas fx:id="loadingScreen"/>
-        <Text fx:id="loadingText" text="Loading..."/>
+        <Canvas fx:id="loadingScreen" height="720" width="1280"/>
+        <Text fx:id="loadingText" fill="WHITE" text="Loading..."/>
     </StackPane>
 </AnchorPane>

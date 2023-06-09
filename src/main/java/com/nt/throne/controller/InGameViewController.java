@@ -1,5 +1,6 @@
 package com.nt.throne.controller;
 
+import com.nt.throne.Launcher;
 import com.nt.throne.model.Hero;
 import com.nt.throne.screens.Pantheon;
 import com.nt.throne.screens.RedDesert;
@@ -102,6 +103,7 @@ public class InGameViewController implements Initializable {
                 levelTxt.setText("Level " + (SCREEN + 1));
                 pause(50);
             }
+            songMediaPlayer.stop();
         }).start();
 
         //Counter
@@ -162,10 +164,13 @@ public class InGameViewController implements Initializable {
 
     public static void setWinScreen() {
         isRunning = false;
-
+        EndGameViewController.setIsWinner(true);
+        Launcher.renderView("end-game-view.fxml", 1280, 720);
     }
 
     public static void setLoseScreen() {
         isRunning = false;
+        EndGameViewController.setIsWinner(false);
+        Launcher.renderView("end-game-view.fxml", 1280, 720);
     }
 }
