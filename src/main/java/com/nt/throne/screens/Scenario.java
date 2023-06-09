@@ -165,8 +165,7 @@ public abstract class Scenario extends BaseScreen {
                 );
                 totalGuns++;
                 machineGun = false;
-            }
-            if(!machineGun && checkFreePosition(x, y, 284, 47)){
+            } else if(!machineGun && checkFreePosition(x, y, 284, 47)){
                 getGuns().add(
                     new ShotGun(
                         new Point2D(x, y),
@@ -193,12 +192,7 @@ public abstract class Scenario extends BaseScreen {
                 }
                 hero.setActualGun(gun);
                 guns.remove(gun);
-                System.out.println(guns.size());
             }
-        }
-
-        for(Gun gun : guns) {
-            System.out.println(gun.getPosition());
         }
     }
 
