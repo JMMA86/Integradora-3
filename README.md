@@ -16,9 +16,9 @@ The game starts with a menu with three options: play, change character skin and 
 
 - WASD -> Player movement
 
-- Shift -> Pick/release a gun
+- Shift -> Pick/drop a gun
 
-- Left click -> Shoot
+- Left click -> Shoot (hold for automatic guns)
 
 ## Development
 

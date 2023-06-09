@@ -141,4 +141,5 @@ public abstract class Enemy extends Character {
     public double getDamage() {
         return damage;
     }
+
 }
