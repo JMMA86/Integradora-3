@@ -41,7 +41,11 @@ public class Hero extends Character {
 
     @Override
     public void takeDamage(Element origin) {
+        if (origin instanceof Bullet bullet) {
+            setLife(getLife() - bullet.getDamage());
+        }
 
+        startInvulnerabilityTimer();
     }
 
     public void onKeyPressed(KeyEvent event) {

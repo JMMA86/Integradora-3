@@ -23,6 +23,8 @@ public class ShooterEnemy extends Enemy {
             20
         ));
 
+        getActualGun().setDamage(5);
+
         keep = true;
     }
 

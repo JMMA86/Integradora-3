@@ -39,6 +39,7 @@ public class ShotGun extends Gun {
         setDelay(300);
         setBulletsPerShoot(5);
         setRechargeTime(2000);
+        setDamage(15);
         minAngle = Math.toRadians(-90);
         maxAngle = Math.toRadians(90);
         canShot = true;
@@ -58,7 +59,7 @@ public class ShotGun extends Gun {
                     bulletsBuffer.add(new Bullet(
                         getEnd(),
                         dispersedDest,
-                        15,
+                        getDamage(),
                         30,
                         new Image(
                             System.getProperty("user.dir") +

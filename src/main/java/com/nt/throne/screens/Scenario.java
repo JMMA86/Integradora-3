@@ -166,6 +166,11 @@ public abstract class Scenario extends BaseScreen {
 
     private boolean bulletsLogic(Bullet bullet) {
         boolean ans = !isInBounds(bullet);
+
+        if (bullet.isColliding(hero)) {
+            hero.takeDamage(bullet);
+        }
+
         for (Enemy enemy : enemies) {
             if (bullet.isHurting(enemy)) {
                 bodyImpactSound.play();

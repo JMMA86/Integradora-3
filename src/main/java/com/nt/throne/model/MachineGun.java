@@ -33,6 +33,7 @@ public class MachineGun extends Gun {
         setDelay(60);
         setBulletsPerShoot(1);
         setRechargeTime(2000);
+        setDamage(8.5);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class MachineGun extends Gun {
                             getEnd(),
                             calcUnitVector(
                                 dest
-                            ), 8.5, 30,
+                            ), getDamage(), 30,
                             new Image(
                                 System.getProperty("user.dir") +
                                     "/src/main/resources/com/nt/throne/Guns/bullet.png"
