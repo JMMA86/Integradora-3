@@ -321,6 +321,7 @@ public abstract class Scenario extends BaseScreen {
                         }
                     }
                 }
+                hero.getActualGun().getShotSound().stop();
             }).start();
         }
     }
