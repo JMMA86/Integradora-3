@@ -19,20 +19,20 @@ public class Pantheon extends Scenario {
         getEnemies().add(
             new ShooterEnemy(
                 new Point2D(500, 600),
-                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero3.png")
+                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/shooter.png")
             )
         );
         getEnemies().add(
             new ChaserEnemy(
                 new Point2D(800, 500),
-                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png")
+                new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/chaser.png")
             )
         );
 
         getEnemies().add(
                 new ChaserEnemy(
                         new Point2D(400, 500),
-                        new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/hero2.png")
+                        new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/SpriteSheets/chaser.png")
                 )
         );
 

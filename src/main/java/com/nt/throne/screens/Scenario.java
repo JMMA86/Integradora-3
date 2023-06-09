@@ -12,9 +12,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import java.awt.MouseInfo;
-
 import javafx.scene.shape.Rectangle;
+import java.awt.MouseInfo;
 import javafx.util.Duration;
 
 import java.awt.*;
@@ -29,6 +28,8 @@ public abstract class Scenario extends BaseScreen {
     private final MediaPlayer bodyImpactSound;
     private final MediaPlayer blockImpactSound;
     private final ImageView aim;
+    private final Image closedDoor;
+    private final Image openedDoor;
     private Hero hero = Hero.getInstance();
     private CopyOnWriteArrayList<Enemy> enemies;
     private CopyOnWriteArrayList<Structure> structures;
@@ -42,8 +43,6 @@ public abstract class Scenario extends BaseScreen {
     private boolean recharging;
     private boolean mouseMoved;
     private boolean levelPassed;
-    private final Image closedDoor;
-    private final Image openedDoor;
     private boolean endGameWin;
     private boolean endGameLose;
 
@@ -53,7 +52,6 @@ public abstract class Scenario extends BaseScreen {
         blockImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/blockImpactSound.mp3").toURI().toString()));
         closedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/closedDoor.png");
         openedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/openedDoor.png");
-        mouseMoved = false;
         levelPassed = false;
         endGameWin = false;
         endGameLose = false;
@@ -90,8 +88,7 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void paint() {
-        graphicsContext.drawImage(background,
-            0, 0);
+        graphicsContext.drawImage(background, 0, 0);
         for (Structure structure : structures) structure.paint(graphicsContext);
         if (enemies.isEmpty()) {
             levelPassed = true;
@@ -109,17 +106,19 @@ public abstract class Scenario extends BaseScreen {
             graphicsContext.drawImage(gun, 200 - gun.getWidth() / 2, 133 - gun.getHeight() / 2, gun.getWidth() / 1.5, gun.getHeight() / 1.5);
             //Calculate angle
             double angle = Math.atan2(mouseCoords.getY() - gunCoords.getY(), mouseCoords.getX() - gunCoords.getX());
-
-            //hero.getActualGun().setEnd(translatePoint(angle, hero.getPosition(), ));
-            hero.getActualGun().paint(graphicsContext, angle);
+            discardPictureWidth(gunCoords, angle, hero.getActualGun());
         }
         for (Enemy enemy : enemies) {
-            if (enemy instanceof ShooterEnemy) {
-                ((ShooterEnemy) enemy).getActualGun().paint(graphicsContext);
+            if (enemy instanceof ShooterEnemy shooter) {
+                //This is what I'm changing
+                Point2D gunCoords = shooter.getPosition();
+                //Calculate angle
+                double angle = Math.atan2(hero.getPosition().getY() - gunCoords.getY(), hero.getPosition().getX() - gunCoords.getX());
+                discardPictureWidth(gunCoords, angle, shooter.getActualGun());
             }
             enemy.paint(graphicsContext);
         }
-        if (Hero.getInstance().getActualGun() != null && mouseMoved) {
+        if (Hero.getInstance().getActualGun() != null) {
             graphicsContext.drawImage(aim.getImage(), 0, 0, 512, 512, mouseCoords.getX() - 40, mouseCoords.getY() - 40, 80, 80);
         }
         if (hero.getLife() <= 0) {
@@ -134,6 +133,20 @@ public abstract class Scenario extends BaseScreen {
         run();
     }
 
+    private void discardPictureWidth(Point2D position, double angle, Gun actualGun) {
+        Point2D offset;
+        //System.out.println("Im: " + actualGun.getPicture().getWidth());
+        double realGunSize = actualGun.getPicture().getWidth() / 5;
+        if (Math.abs(angle) < Math.PI / 2) {
+            offset = new Point2D(position.getX() + realGunSize, position.getY() + 7);
+        } else {
+            offset = new Point2D(position.getX() - realGunSize, position.getY() + 7);
+        }
+        //System.out.println(offset);
+        actualGun.setEnd(translatePoint(angle, position, offset));
+        actualGun.paint(graphicsContext, angle);
+    }
+
     private void run() {
         // gunsLogic();
         bullets.removeIf(this::bulletsLogic);
@@ -145,6 +158,10 @@ public abstract class Scenario extends BaseScreen {
                 }
                 if (enemy instanceof ChaserEnemy chaser) {
                     chaser.calculateMovement();
+
+                    if (chaser.isColliding(hero)) {
+                        hero.takeDamage(chaser);
+                    }
                 }
             }
         }
@@ -152,6 +169,12 @@ public abstract class Scenario extends BaseScreen {
 
     private boolean bulletsLogic(Bullet bullet) {
         boolean ans = !isInBounds(bullet);
+
+        if (bullet.isColliding(hero)) {
+            hero.takeDamage(bullet);
+            ans = true;
+        }
+
         for (Enemy enemy : enemies) {
             double previousLife = enemy.getLife();
             if (bullet.isHurting(enemy)) {
@@ -201,7 +224,7 @@ public abstract class Scenario extends BaseScreen {
                 );
                 totalGuns++;
                 machineGun = false;
-            } else if(!machineGun && checkFreePosition(x, y, 284, 47)){
+            } else if (!machineGun && checkFreePosition(x, y, 284, 47)) {
                 getGuns().add(
                     new ShotGun(
                         new Point2D(x, y),
@@ -315,12 +338,12 @@ public abstract class Scenario extends BaseScreen {
         double x2 = dest.getX(), y2 = dest.getY();
 
         double longitude = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-        double toRadians = Math.toRadians(angle);
+        //double toRadians = Math.toRadians(angle);
 
-        double newX = x1 + longitude * Math.cos(toRadians);
-        double newY = y1 + longitude * Math.sin(toRadians);
+        double newX = x1 + longitude * Math.cos(angle);
+        double newY = y1 + longitude * Math.sin(angle);
 
-        return  new Point2D(newX, newY);
+        return new Point2D(newX, newY);
     }
 
     @Override
@@ -332,11 +355,11 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void onMouseMoved(MouseEvent event) {
         mouseCoords = new Point2D(event.getX(), event.getY());
-        mouseMoved = true;
     }
 
     @Override
     public void onMouseClicked(MouseEvent event) {
+
     }
 
     @Override
