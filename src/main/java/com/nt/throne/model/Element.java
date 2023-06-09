@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Rotate;
 
 public abstract class Element {
     private Point2D position;
@@ -66,4 +67,21 @@ public abstract class Element {
     public void paint(GraphicsContext context) {
         context.drawImage(this.picture, this.position.getX(), this.position.getY());
     }
+
+    public void paint(GraphicsContext context, double rotation) {
+        //Scale
+        double scaleFactor = 0.5;
+        //Rotation
+        context.save();
+        context.translate(position.getX() + picture.getWidth() / 2 - picture.getWidth() / 2, position.getY() + picture.getHeight() / 2 - picture.getHeight() / 4);
+        context.rotate(Math.toDegrees(rotation));
+        if (rotation > Math.toRadians(90) || rotation < Math.toRadians(-90)) {
+            context.scale(1, -1);
+        }
+        context.scale(scaleFactor, scaleFactor);
+        context.drawImage(this.picture, -picture.getWidth() / 2, -picture.getHeight() / 2);
+        context.restore();
+    }
+
+
 }

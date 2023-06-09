@@ -1,15 +1,15 @@
 package com.nt.throne.model;
 
 import javafx.geometry.Point2D;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.transform.Rotate;
 
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Gun extends Element {
-
     private final int CHARGER_SIZE;
     private int numShots;
     private int ammo;

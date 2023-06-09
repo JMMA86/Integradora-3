@@ -10,6 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import java.awt.MouseInfo;
 import javafx.util.Duration;
 import java.awt.*;
 import java.io.File;
@@ -31,14 +32,17 @@ public abstract class Scenario extends BaseScreen {
     private boolean movingEnemies;
     private final MediaPlayer bodyImpactSound;
     private final MediaPlayer blockImpactSound;
-    private MouseEvent mouseCoords;
+    private Point2D mouseCoords;
     private boolean recharging;
     private final ImageView aim;
+    private boolean mouseMoved;
 
     public Scenario(Canvas canvas, Image background) {
         super(canvas);
         bodyImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/bodyImpactSound.mp3").toURI().toString()));
         blockImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/blockImpactSound.mp3").toURI().toString()));
+        mouseMoved = false;
+        mouseCoords = new Point2D(MouseInfo.getPointerInfo().getLocation().getX(), MouseInfo.getPointerInfo().getLocation().getY());
         aim = new ImageView(new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Guns/aim.png"));
         recharging = false;
         this.background = background;
@@ -77,14 +81,19 @@ public abstract class Scenario extends BaseScreen {
         hero.paint(graphicsContext);
         for (Bullet bullet : bullets) bullet.paint(graphicsContext);
         if (areGunsGenerated) for (Gun gun : guns) gun.paint(graphicsContext);
-        if (hero.getActualGun() != null) hero.getActualGun().paint(graphicsContext);
+        if (hero.getActualGun() != null) {
+            Point2D gunCoords = hero.getActualGun().getPosition();
+            //Calculate angle
+            double angle = Math.atan2(mouseCoords.getY() - gunCoords.getY(), mouseCoords.getX() - gunCoords.getX());
+            hero.getActualGun().paint(graphicsContext, angle);
+        }
         for (Enemy enemy : enemies) {
             if (enemy instanceof ShooterEnemy) {
                 ((ShooterEnemy) enemy).getActualGun().paint(graphicsContext);
             }
             enemy.paint(graphicsContext);
         }
-        if (mouseCoords != null) {
+        if (Hero.getInstance().getActualGun() != null && mouseMoved) {
             graphicsContext.drawImage(aim.getImage(), 0, 0, 512, 512, mouseCoords.getX() - 40, mouseCoords.getY() - 40, 80, 80);
         }
         run();
@@ -242,7 +251,7 @@ public abstract class Scenario extends BaseScreen {
         }).start();
     }
 
-    public void shoot(MouseEvent event) {
+    public void shoot(Point2D event) {
         if (hero.getActualGun() != null) {
             hero.getActualGun().onShot(bullets, new Point2D(event.getX(), event.getY()));
         }
@@ -255,13 +264,14 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onMouseDragged(MouseEvent event) {
-        mouseCoords = event;
+        mouseCoords = new Point2D(event.getX(), event.getY());
 
     }
 
     @Override
     public void onMouseMoved(MouseEvent event) {
-        mouseCoords = event;
+        mouseCoords = new Point2D(event.getX(), event.getY());
+        mouseMoved = true;
     }
 
     @Override
