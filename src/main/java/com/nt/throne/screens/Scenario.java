@@ -2,6 +2,7 @@ package com.nt.throne.screens;
 
 import com.nt.throne.controller.InGameViewController;
 import com.nt.throne.model.*;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -12,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
+import java.awt.MouseInfo;
 import javafx.util.Duration;
 
 import java.awt.*;
@@ -50,7 +52,6 @@ public abstract class Scenario extends BaseScreen {
         blockImpactSound = new MediaPlayer(new Media(new File(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Audio/GameSong/blockImpactSound.mp3").toURI().toString()));
         closedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/closedDoor.png");
         openedDoor = new Image(System.getProperty("user.dir") + "/src/main/resources/com/nt/throne/Scenario/openedDoor.png");
-        mouseMoved = false;
         levelPassed = false;
         endGameWin = false;
         endGameLose = false;
@@ -117,7 +118,7 @@ public abstract class Scenario extends BaseScreen {
             }
             enemy.paint(graphicsContext);
         }
-        if (Hero.getInstance().getActualGun() != null && mouseMoved) {
+        if (Hero.getInstance().getActualGun() != null) {
             graphicsContext.drawImage(aim.getImage(), 0, 0, 512, 512, mouseCoords.getX() - 40, mouseCoords.getY() - 40, 80, 80);
         }
         if (hero.getLife() <= 0) {
@@ -344,7 +345,6 @@ public abstract class Scenario extends BaseScreen {
     @Override
     public void onMouseMoved(MouseEvent event) {
         mouseCoords = new Point2D(event.getX(), event.getY());
-        mouseMoved = true;
     }
 
     @Override
