@@ -20,6 +20,7 @@ public class Hero extends Character {
         actualGun = null;
         pressedKeys = new boolean[]{false, false, false, false};
         preferredArea = new Circle(getPosition().getX(), getPosition().getY(), 300);
+        setInvulnerability(1000);
     }
 
     public static Hero getInstance() {
@@ -41,7 +42,19 @@ public class Hero extends Character {
 
     @Override
     public void takeDamage(Element origin) {
+        if (isCanGetDamage()) {
+            if (origin instanceof Bullet bullet) {
+                setLife(getLife() - bullet.getDamage());
+            }
 
+            if (origin instanceof ChaserEnemy) {
+                setLife(getLife() - 5);
+            }
+            setCanGetDamage(false);
+        }
+        damaged = true;
+
+        startInvulnerabilityTimer();
     }
 
     public void onKeyPressed(KeyEvent event) {
@@ -128,7 +141,7 @@ public class Hero extends Character {
     }
 
     @Override
-    public void attack() {
+    public void attack(AliveElement target) {
 
     }
 
@@ -138,6 +151,7 @@ public class Hero extends Character {
 
     public void setActualGun(Gun actualGun) {
         this.actualGun = actualGun;
+        if(actualGun != null) actualGun.setPosition( new Point2D(getPosition().getX() - actualGun.getPicture().getWidth()/2, getPosition().getY()));
     }
 
     public boolean isShooting() {

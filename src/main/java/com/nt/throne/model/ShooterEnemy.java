@@ -1,7 +1,5 @@
 package com.nt.throne.model;
 
-import com.nt.throne.controller.InGameViewController;
-import com.nt.throne.screens.Scenario;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
@@ -11,18 +9,22 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ShooterEnemy extends Enemy {
     private Gun actualGun;
     private boolean keep;
+
     public ShooterEnemy(Point2D position, Image picture) {
         super(position, picture);
         setLife(100);
         setInvulnerability(100);
-        actualGun = new ShotGun(
+        setActualGun(new ShotGun(
             getPosition(),
             new Image(
                 System.getProperty("user.dir") +
                     "/src/main/resources/com/nt/throne/Guns/shotgun.png"
             ),
             20
-        );
+        ));
+
+        getActualGun().setDamage(5);
+
         keep = true;
     }
 
@@ -31,15 +33,18 @@ public class ShooterEnemy extends Enemy {
     }
 
     public void moveAndShot(Circle collidingElement, CopyOnWriteArrayList<Bullet> gameBullets) {
+        /*
+
+         */
         if (keep) {
             calculateMovement();
             setPosition(getPosition().add(getDirection().getX(), getDirection().getY()));
-            actualGun.setPosition(getPosition());
+            actualGun.setPosition(new Point2D(getPosition().getX() - actualGun.getPicture().getWidth() / 10, getPosition().getY()));
         }
 
         if (getHitBox().intersects(collidingElement.getBoundsInParent())) {
             setState(getState());
-            actualGun.onShot(gameBullets, getDirection());
+            actualGun.onShot(gameBullets, Hero.getInstance().getPosition());
             keep = false;
         } else {
             keep = true;
@@ -47,7 +52,7 @@ public class ShooterEnemy extends Enemy {
     }
 
     @Override
-    public void attack() {
+    public void attack(AliveElement element) {
 
     }
 
@@ -57,5 +62,6 @@ public class ShooterEnemy extends Enemy {
 
     public void setActualGun(Gun actualGun) {
         this.actualGun = actualGun;
+        actualGun.setPosition(new Point2D(getPosition().getX() - actualGun.getPicture().getWidth() / 10, getPosition().getY()));
     }
 }

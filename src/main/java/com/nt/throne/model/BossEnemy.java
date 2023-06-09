@@ -20,7 +20,7 @@ public class BossEnemy extends Enemy {
     }
 
     @Override
-    public void attack() {
+    public void attack(AliveElement target) {
 
     }
 }

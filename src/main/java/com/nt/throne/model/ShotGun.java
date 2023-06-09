@@ -18,9 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ShotGun extends Gun {
     private final double minAngle;
     private final double maxAngle;
-    private double spreadAngle;
     private boolean canShot;
-    private boolean recharging;
     private final MediaPlayer shotSound;
     private final MediaPlayer reloadSound;
 
@@ -41,10 +39,10 @@ public class ShotGun extends Gun {
         setDelay(300);
         setBulletsPerShoot(5);
         setRechargeTime(2000);
+        setDamage(15);
         minAngle = Math.toRadians(-90);
         maxAngle = Math.toRadians(90);
         canShot = true;
-        recharging = true;
     }
 
     @Override
@@ -55,13 +53,13 @@ public class ShotGun extends Gun {
                 List<Bullet> bulletsBuffer = new ArrayList<>();
                 canShot = false;
                 for (int i = 0; i < getBulletsPerShoot(); i++) {
-                    spreadAngle = getRandom().nextDouble() * (maxAngle - minAngle) + minAngle;
+                    double spreadAngle = getRandom().nextDouble() * (maxAngle - minAngle) + minAngle;
                     double angle = Math.toRadians(i * spreadAngle - (spreadAngle * (getBulletsPerShoot() - 1)) / 2.0);
                     Point2D dispersedDest = calcUnitVectorWithSpread(dest, angle);
                     bulletsBuffer.add(new Bullet(
-                        getPosition(),
+                        getEnd(),
                         dispersedDest,
-                        15,
+                        getDamage(),
                         30,
                         new Image(
                             System.getProperty("user.dir") +

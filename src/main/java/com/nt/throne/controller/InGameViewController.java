@@ -101,6 +101,8 @@ public class InGameViewController implements Initializable {
                     } else {
                         ammoTxt.setText("    Ammo: " + Hero.getInstance().getActualGun().getAmmo() + " / " + Hero.getInstance().getActualGun().getCHARGER_SIZE());
                     }
+                } else {
+                    ammoTxt.setText("    Ammo: -not selected-");
                 }
                 levelTxt.setText("Level " + (SCREEN + 1));
                 pause(50);
