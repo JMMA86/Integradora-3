@@ -6,13 +6,15 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.awt.MouseInfo;
+
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import java.awt.*;
 import java.io.File;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -100,7 +102,7 @@ public abstract class Scenario extends BaseScreen {
     }
 
     private void run() {
-        gunsLogic();
+        // gunsLogic();
         bullets.removeIf(this::bulletsLogic);
         if (movingEnemies) {
             for (Enemy enemy : enemies) {
@@ -150,33 +152,33 @@ public abstract class Scenario extends BaseScreen {
             //284 * 47 SG
             int x = random.nextInt(limitX[0] + 50, limitX[1] - 50);
             int y = random.nextInt(limitY[0] + 50, limitY[1] - 50);
-            if (checkFreePosition(x, y)) {
-                if (machineGun) {
-                    getGuns().add(
-                        new MachineGun(
-                            new Point2D(x, y),
-                            new Image(
-                                System.getProperty("user.dir") +
-                                    "/src/main/resources/com/nt/throne/Guns/minigun.png"
-                            ),
-                            60
-                        )
-                    );
-                    machineGun = false;
-                } else {
-                    getGuns().add(
-                        new ShotGun(
-                            new Point2D(x, y),
-                            new Image(
-                                System.getProperty("user.dir") +
-                                    "/src/main/resources/com/nt/throne/Guns/shotgun.png"
-                            ),
-                            40
-                        )
-                    );
-                    machineGun = true;
-                }
-                totalGuns += 1;
+            if (machineGun && checkFreePosition(x, y, 326, 121)) {
+                getGuns().add(
+                    new MachineGun(
+                        new Point2D(x, y),
+                        new Image(
+                            System.getProperty("user.dir") +
+                                "/src/main/resources/com/nt/throne/Guns/minigun.png"
+                        ),
+                        60
+                    )
+                );
+                totalGuns++;
+                machineGun = false;
+            }
+            if(!machineGun && checkFreePosition(x, y, 284, 47)){
+                getGuns().add(
+                    new ShotGun(
+                        new Point2D(x, y),
+                        new Image(
+                            System.getProperty("user.dir") +
+                                "/src/main/resources/com/nt/throne/Guns/shotgun.png"
+                        ),
+                        40
+                    )
+                );
+                totalGuns++;
+                machineGun = true;
             }
         }
         areGunsGenerated = true;
@@ -186,19 +188,24 @@ public abstract class Scenario extends BaseScreen {
         for (Gun gun : guns) {
             if (hero.isColliding(gun)) {
                 if (hero.getActualGun() != null) {
-                    hero.getActualGun().setPosition(hero.getPosition());
+                    hero.getActualGun().setPosition(gun.getPosition());
                     guns.add(hero.getActualGun());
                 }
                 hero.setActualGun(gun);
                 guns.remove(gun);
+                System.out.println(guns.size());
             }
+        }
+
+        for(Gun gun : guns) {
+            System.out.println(gun.getPosition());
         }
     }
 
-    private Boolean checkFreePosition(int x, int y) {
-        Shape temp = new Rectangle(x, y, 60, 30);
+    private Boolean checkFreePosition(int x, int y, double width, double height) {
+        Rectangle temp = new Rectangle(x, y, width, height);
         for (Structure structure : structures) {
-            if (structure.getHitBox().intersects((Bounds) temp)) {
+            if (structure.getHitBox().intersects(temp.getBoundsInParent())) {
                 return false;
             }
         }
@@ -286,7 +293,12 @@ public abstract class Scenario extends BaseScreen {
 
     @Override
     public void onKeyPressed(KeyEvent event) {
-        hero.onKeyPressed(event);
+        if(event.getCode() == KeyCode.SHIFT) {
+            gunsLogic();
+        } else {
+            hero.onKeyPressed(event);
+        }
+
     }
 
     @Override

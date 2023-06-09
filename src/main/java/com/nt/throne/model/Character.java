@@ -4,7 +4,9 @@ import com.nt.throne.controller.InGameViewController;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -89,16 +91,46 @@ public abstract class Character extends AliveElement implements IAct {
         3 -> right
          */
         CopyOnWriteArrayList<Structure> blocks = InGameViewController.getScreens().get(InGameViewController.getSCREEN()).getStructures();
+
+        Shape hitBox = getHitBox();
+
         for (Structure block : blocks) {
-            Point2D posHero = getPosition();
             /*
             Shape coords (Block = 68x68)
             posX1 - posX2
             posY1
              */
-            Point2D posX1 = new Point2D(block.getPosition().getX(), block.getPosition().getY());
-            Point2D posX2 = new Point2D(block.getPosition().getX() + 68, block.getPosition().getY());
-            Point2D posY1 = new Point2D(block.getPosition().getX(), block.getPosition().getY() + 68);
+            Point2D posX1 = new Point2D(block.getPosition().getX(), block.getPosition().getY() - 30);
+            Point2D posX2 = new Point2D(block.getPosition().getX() + 68, block.getPosition().getY() - 30);
+            Point2D posY1 = new Point2D(block.getPosition().getX(), block.getPosition().getY() + 34);
+            Point2D posY2 = new Point2D(block.getPosition().getX()+68, block.getPosition().getY()+34);
+
+            int diff = 10;
+
+            switch (movement) {
+                case 0 -> {
+                    if (( new Line(posY1.getX() + diff, posY1.getY(), posY2.getX() - diff, posY2.getY()) ).intersects(hitBox.getBoundsInParent())) {
+                        return true;
+                    }
+                }
+                case 1 -> {
+                    if(( new Line(posX1.getX() + diff, posX1.getY(), posX2.getX() - diff, posX2.getY()) ).intersects(hitBox.getBoundsInParent())) {
+                        return true;
+                    }
+                }
+                case 2 -> {
+                    if(( new Line(posX2.getX(), posX2.getY() + diff, posY2.getX(), posY2.getY() - diff )).intersects(hitBox.getBoundsInParent())) {
+                        return true;
+                    }
+                }
+                case 3 -> {
+                    if(( new Line(posX1.getX(), posX1.getY() + diff, posY1.getX(), posY1.getY()- diff ) ).intersects(hitBox.getBoundsInParent())) {
+                        return true;
+                    }
+                }
+            }
+
+            /*
             switch (movement) {
                 case 0 -> {
                     //From below
@@ -112,18 +144,21 @@ public abstract class Character extends AliveElement implements IAct {
                 }
                 case 2 -> {
                     //From right
-                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() <= posX2.getX() + 35 && posHero.getX() > posX1.getX())
+                    if (posHero.getY() > posX1.getY() - 70 && posHero.getY() + 10 < posY1.getY() && posHero.getX() <= posX2.getX() + 35 && posHero.getX() > posX1.getX())
                         return true;
                 }
                 case 3 -> {
                     //From left
-                    if (posHero.getY() > posX1.getY() - 60 && posHero.getY() + 10 < posY1.getY() && posHero.getX() >= posX1.getX() - 35 && posHero.getX() < posX2.getX())
+                    if (posHero.getY() > posX1.getY() - 70 && posHero.getY() + 10 < posY1.getY() && posHero.getX() >= posX1.getX() - 35 && posHero.getX() < posX2.getX())
                         return true;
                 }
             }
+             */
         }
         return false;
     }
+
+
 
     public int getCurrentFrame() {
         return currentFrame;
