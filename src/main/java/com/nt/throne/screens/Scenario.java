@@ -86,8 +86,19 @@ public abstract class Scenario extends BaseScreen {
             Point2D gunCoords = hero.getActualGun().getPosition();
             //Calculate angle
             double angle = Math.atan2(mouseCoords.getY() - gunCoords.getY(), mouseCoords.getX() - gunCoords.getX());
-
-            //hero.getActualGun().setEnd(translatePoint(angle, hero.getPosition(), ));
+            Point2D offset = hero.getPosition();
+            if (Math.abs(angle) < Math.PI / 2) {
+                offset.add(
+                    hero.getPosition().getX() - hero.getActualGun().getPicture().getWidth(),
+                    0
+                );
+            } else {
+                offset.add(
+                    hero.getPosition().getX() + hero.getActualGun().getPicture().getWidth(),
+                    0
+                );
+            }
+            hero.getActualGun().setEnd(translatePoint(angle, hero.getPosition(), offset));
             hero.getActualGun().paint(graphicsContext, angle);
         }
         for (Enemy enemy : enemies) {
@@ -270,10 +281,10 @@ public abstract class Scenario extends BaseScreen {
         double x2 = dest.getX(), y2 = dest.getY();
 
         double longitude = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-        double toRadians = Math.toRadians(angle);
+        //double toRadians = Math.toRadians(angle);
 
-        double newX = x1 + longitude * Math.cos(toRadians);
-        double newY = y1 + longitude * Math.sin(toRadians);
+        double newX = x1 + longitude * Math.cos(angle);
+        double newY = y1 + longitude * Math.sin(angle);
 
         return  new Point2D(newX, newY);
     }

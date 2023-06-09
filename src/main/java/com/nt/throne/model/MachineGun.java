@@ -44,9 +44,10 @@ public class MachineGun extends Gun {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
+                    setEnd(getPosition());
                     gameBullets.add(
                         new Bullet(
-                            getPosition(),
+                            getEnd(),
                             calcUnitVector(
                                 dest
                             ), 8.5, 30,

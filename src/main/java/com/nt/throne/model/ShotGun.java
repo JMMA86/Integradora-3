@@ -54,12 +54,13 @@ public class ShotGun extends Gun {
                 setAmmo(getAmmo() - getBulletsPerShoot());
                 List<Bullet> bulletsBuffer = new ArrayList<>();
                 canShot = false;
+                setEnd(getPosition());
                 for (int i = 0; i < getBulletsPerShoot(); i++) {
                     spreadAngle = getRandom().nextDouble() * (maxAngle - minAngle) + minAngle;
                     double angle = Math.toRadians(i * spreadAngle - (spreadAngle * (getBulletsPerShoot() - 1)) / 2.0);
                     Point2D dispersedDest = calcUnitVectorWithSpread(dest, angle);
                     bulletsBuffer.add(new Bullet(
-                        getPosition(),
+                        getEnd(),
                         dispersedDest,
                         15,
                         30,
