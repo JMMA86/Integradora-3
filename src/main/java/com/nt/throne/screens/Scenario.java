@@ -136,18 +136,13 @@ public abstract class Scenario extends BaseScreen {
     }
 
     private void discardPictureWidth(Point2D position, double angle, Gun actualGun) {
+        Point2D offset = new Point2D(position.getX(), position.getY());
         if (Math.abs(angle) < Math.PI / 2) {
-            position.add(
-                position.getX() - actualGun.getPicture().getWidth(),
-                0
-            );
+            offset.subtract(actualGun.getPicture().getWidth(), 0);
         } else {
-            position.add(
-                position.getX() + actualGun.getPicture().getWidth(),
-                0
-            );
+            offset.add(actualGun.getPicture().getWidth(), 0);
         }
-        actualGun.setEnd(translatePoint(angle, position, position));
+        actualGun.setEnd(translatePoint(angle, position, offset));
         actualGun.paint(graphicsContext, angle);
     }
 
